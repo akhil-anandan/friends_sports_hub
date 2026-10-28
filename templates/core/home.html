@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Friends Sports Hub Mulayankavu | Turf, Pool & Kids Park Booking{% endblock %}
+
+{% block content %}
+<!-- ===================== HERO SECTION ===================== -->
+<section class="hero-sports py-5 position-relative overflow-hidden">
+    <div class="hero-overlay-pattern"></div>
+    <div class="container py-lg-5 position-relative">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-success bg-opacity-20 border border-success border-opacity-40 text-success mb-3">
+                    <span class="badge bg-success rounded-circle p-1"><i class="bi bi-geo-alt-fill text-white small"></i></span>
+                    <span class="small fw-semibold">Kulukkallur, Palakkad &bull; Mulayankavu</span>
+                </div>
+                
+                <h1 class="display-3 fw-extrabold text-white mb-3 lh-sm font-heading">
+                    PLAY HARD. <br>
+                    <span class="text-success">BOOK YOUR TURF</span> IN SECONDS.
+                </h1>
+                
+                <p class="lead text-secondary mb-4 fs-5" style="max-width: 620px;">
+                    Welcome to <strong>Friends Sports Hub Mulayankavu</strong>. Experience world-class FIFA-standard artificial grass turf with night floodlights, plus a hygienic swimming pool and children's park.
+                </p>
+
+                <div class="d-flex flex-wrap align-items-center gap-3 mb-5">
+                    <a href="{% url 'book_slot' %}" class="btn btn-success btn-lg px-4 py-3 rounded-pill fw-bold d-inline-flex align-items-center gap-2 shadow">
+                        <i class="bi bi-eye-fill fs-5"></i> View Slot Availability
+                    </a>
+                    <a href="tel:+91{{ phone_primary }}" class="btn btn-outline-light btn-lg px-4 py-3 rounded-pill d-inline-flex align-items-center gap-2">
+                        <i class="bi bi-telephone-fill text-success"></i> Call: {{ phone_primary }}
+                    </a>
+                    <a href="https://wa.me/91{{ phone_primary }}?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20book%20a%20turf%20slot."
+                       target="_blank" class="btn btn-lg px-4 py-3 rounded-pill fw-bold d-inline-flex align-items-center gap-2"
+                       style="background:#25D366; color:#fff; border:none;">
+                        <i class="bi bi-whatsapp fs-5"></i> WhatsApp
+                    </a>
+                </div>
+
+                <!-- Quick Stats Badge -->
+                <div class="row g-3 text-center text-sm-start" style="max-width: 550px;">
+                    <div class="col-4 border-end border-secondary border-opacity-25">
+                        <div class="fs-4 fw-extrabold text-white">All-Weather</div>
+                        <div class="small text-secondary">Synthetic Turf</div>
+                    </div>
+                    <div class="col-4 border-end border-secondary border-opacity-25">
+                        <div class="fs-4 fw-extrabold text-success">Pro Mast</div>
+                        <div class="small text-secondary">LED Floodlights</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="fs-4 fw-extrabold text-white">3-in-1</div>
+                        <div class="small text-secondary">Turf, Pool, Park</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Contact Card -->
+            <div class="col-lg-5">
+                <div class="card glass-panel shadow-lg p-4 p-md-4 text-white">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="fw-bold mb-0 text-white"><i class="bi bi-lightning-charge-fill text-success me-2"></i>Quick Slot Check</h4>
+                        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50">Live</span>
+                    </div>
+                    <p class="small text-secondary mb-3">Select your sport facility and target date to view live availability.</p>
+
+                    <form action="{% url 'book_slot' %}" method="GET">
+                        <div class="mb-3">
+                            <label class="form-label small text-secondary fw-semibold">Select Facility</label>
+                            <select name="facility" class="form-select bg-dark text-white border-secondary">
+                                {% for fac in facilities %}
+                                    <option value="{{ fac.slug }}">{{ fac.name }} (₹{{ fac.price_per_hour|floatformat:0 }}/hr)</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label small text-secondary fw-semibold">Select Date</label>
+                            <input type="date" name="date" class="form-control bg-dark text-white border-secondary" value="{% now 'Y-m-d' %}">
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold fs-6">
+                            Check Available Slots <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    </form>
+
+                    <hr class="border-secondary my-3">
+
+                    <!-- Contact Owner Directly -->
+                    <p class="small text-secondary text-center mb-2">To reserve a slot, contact the owner:</p>
+                    <div class="d-grid gap-2">
+                        <a href="tel:+91{{ phone_primary }}"
+                           class="btn btn-outline-light rounded-pill d-flex align-items-center justify-content-center gap-2 fw-semibold">
+                            <i class="bi bi-telephone-fill text-success"></i> Call: +91 {{ phone_primary }}
+                        </a>
+                        <a href="https://wa.me/91{{ phone_primary }}?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20book%20a%20turf%20slot."
+                           target="_blank"
+                           class="btn rounded-pill d-flex align-items-center justify-content-center gap-2 fw-semibold"
+                           style="background:#25D366; color:#fff; border:none;">
+                            <i class="bi bi-whatsapp fs-5"></i> WhatsApp to Book
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ===================== REAL BANNER SHOWCASE ===================== -->
+<section class="py-5 bg-black">
+    <div class="container">
+        <div class="card bg-dark border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow-lg">
+            <div class="row g-0 align-items-center">
+                <div class="col-lg-6">
+                    <img src="{% static 'images/hub_banner.jpg' %}" alt="Friends Sports Hub Mulayankavu banner showing turf, swimming pool and children's park" class="img-fluid w-100" style="object-fit: cover; min-height: 280px; max-height: 380px;">
+                </div>
+                <div class="col-lg-6 p-4 p-md-5">
+                    <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill mb-2">Complete Family Sports Destination</span>
+                    <h2 class="fw-bold text-white mb-3">FRIENDS SPORTS HUB MULAYANKAVU</h2>
+                    <p class="text-secondary mb-4">
+                        We offer a complete recreation experience with top-tier artificial grass sports ground, covered hygienic swimming pool, and an exciting children's amusement park with slides and swings.
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-check2 text-success me-1"></i> Football 7s & 5s</span>
+                        <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-check2 text-success me-1"></i> Box Cricket</span>
+                        <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-check2 text-success me-1"></i> Swimming Sessions</span>
+                        <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-check2 text-success me-1"></i> Kids Play Park</span>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <a href="tel:{{ phone_primary }}" class="btn btn-outline-success rounded-pill px-4">
+                            <i class="bi bi-telephone-fill me-1"></i> {{ phone_primary }}
+                        </a>
+                        <a href="tel:{{ phone_secondary }}" class="btn btn-outline-light rounded-pill px-4">
+                            <i class="bi bi-telephone-fill me-1"></i> {{ phone_secondary }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== FACILITIES SHOWCASE ===================== -->
+<section class="py-5" style="background-color: #08100b;">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <span class="badge bg-success bg-opacity-20 text-success px-3 py-2 rounded-pill fw-semibold mb-2">Our Amenities</span>
+            <h2 class="display-5 fw-extrabold text-white mb-2">World-Class Sports Facilities</h2>
+            <p class="text-secondary mx-auto" style="max-width: 600px;">
+                Maintained to the highest standards of cleanliness and safety for athletes, friends, and families.
+            </p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            {% for facility in facilities %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card sports-card h-100 d-flex flex-column">
+                        <div class="card-img-wrapper position-relative">
+                            <img src="{{ facility.image_url }}" alt="{{ facility.name }}">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-black bg-opacity-75 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill fw-bold">
+                                    ₹{{ facility.price_per_hour|floatformat:0 }} <small class="text-white">/ hr</small>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                            <h4 class="card-title text-white fw-bold mb-2">{{ facility.name }}</h4>
+                            <p class="card-text text-secondary small mb-3 flex-grow-1">
+                                {{ facility.description|truncatewords:20 }}
+                            </p>
+
+                            <ul class="list-unstyled small mb-4 text-light">
+                                <li class="mb-1"><i class="bi bi-clock-fill text-success me-2"></i><strong>Timing:</strong> {{ facility.open_time|time:"g:i A" }} - {{ facility.close_time|time:"g:i A" }}</li>
+                                <li class="mb-1"><i class="bi bi-hourglass-split text-success me-2"></i><strong>Slot:</strong> {{ facility.slot_duration_minutes }} Minutes</li>
+                                <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Status:</strong> Active & Bookable</li>
+                            </ul>
+
+                            <a href="{% url 'book_facility_slot' facility.slug %}" class="btn btn-success w-100 py-2 rounded-pill fw-bold mt-auto">
+                                <i class="bi bi-calendar-plus me-1"></i> Book Slot
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ===================== LOCATION & CONTACT CALLOUT ===================== -->
+<section class="py-5 bg-black">
+    <div class="container py-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">Find Us in Palakkad</span>
+                <h2 class="display-6 fw-bold text-white mb-3">Conveniently Located at Kulukkallur</h2>
+                <p class="text-secondary mb-4">
+                    Situated in the serene environment of Mulayankavu, Kulukkallur in Palakkad District, Kerala. Easy access from major roads with ample free parking for cars and two-wheelers.
+                </p>
+
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="badge bg-success p-3 rounded-circle"><i class="bi bi-geo-alt fs-5 text-white"></i></div>
+                        <div>
+                            <h6 class="text-white fw-bold mb-1">Address</h6>
+                            <p class="text-secondary small mb-0">Kulukkallur, Mulayankavu, Palakkad District, Kerala, India</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="badge bg-success p-3 rounded-circle"><i class="bi bi-telephone fs-5 text-white"></i></div>
+                        <div>
+                            <h6 class="text-white fw-bold mb-1">Direct Help Desk</h6>
+                            <p class="text-secondary small mb-0">+91 6238006820</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <a href="{{ google_maps_url }}" target="_blank" rel="noopener" class="btn btn-outline-success px-4 py-2 rounded-pill">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> Open Google Maps Link
+                    </a>
+                    <a href="{% url 'contact' %}" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                        Contact Page
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card glass-panel p-3 border-secondary border-opacity-50 overflow-hidden shadow">
+                    <div class="p-3 text-center">
+                        <i class="bi bi-map-fill text-success display-3 mb-3"></i>
+                        <h4 class="text-white fw-bold">Kulukkallur, Palakkad</h4>
+                        <p class="text-secondary small mb-3">Friends Sports Hub Mulayankavu is open 7 days a week from 6:00 AM to 11:00 PM.</p>
+                        <a href="{{ google_maps_url }}" target="_blank" rel="noopener" class="btn btn-success btn-lg px-5 py-3 rounded-pill fw-bold shadow">
+                            <i class="bi bi-cursor-fill me-2"></i> Get Turn-by-Turn Directions
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

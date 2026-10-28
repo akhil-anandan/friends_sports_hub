@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Dashboard | Friends Sports Hub Mulayankavu{% endblock %}
+
+{% block content %}
+<div class="py-5" style="background-color: #070d09;">
+    <div class="container">
+        
+        <!-- Welcome Header -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+                <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">Customer Account</span>
+                <h1 class="h2 fw-bold text-white mb-1">Welcome, {{ user.first_name|default:user.username }}!</h1>
+                <p class="text-secondary small mb-0">Manage your turf bookings, view receipts, and reserve new slots.</p>
+            </div>
+            <div>
+                <a href="{% url 'book_slot' %}" class="btn btn-success fw-bold px-4 py-2 rounded-pill shadow">
+                    <i class="bi bi-plus-circle me-1"></i> Book Another Slot
+                </a>
+            </div>
+        </div>
+
+        <!-- Metrics Row -->
+        <div class="row g-3 mb-5">
+            <div class="col-sm-6 col-md-4">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-secondary small">Upcoming Slots</div>
+                            <div class="fs-2 fw-extrabold text-success">{{ active_bookings_count }}</div>
+                        </div>
+                        <div class="badge bg-success bg-opacity-20 text-success p-3 rounded-circle fs-4">
+                            <i class="bi bi-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-md-4">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-secondary small">Total Reservations</div>
+                            <div class="fs-2 fw-extrabold text-white">{{ total_bookings_count }}</div>
+                        </div>
+                        <div class="badge bg-secondary bg-opacity-20 text-light p-3 rounded-circle fs-4">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-4">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="text-secondary small">Helpline Support</div>
+                            <div class="fs-5 fw-bold text-light">+91 6238006820</div>
+                        </div>
+                        <a href="tel:6238006820" class="btn btn-sm btn-outline-success rounded-circle social-icon">
+                            <i class="bi bi-telephone-fill"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Upcoming Active Bookings -->
+        <div class="mb-5">
+            <h4 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-calendar-event text-success"></i> Upcoming Scheduled Matches
+            </h4>
+
+            {% if upcoming_bookings %}
+                <div class="row g-3">
+                    {% for booking in upcoming_bookings %}
+                        <div class="col-lg-6">
+                            <div class="card sports-card p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <span class="badge bg-success px-3 py-1 rounded-pill small mb-1">
+                                            {{ booking.get_status_display }}
+                                        </span>
+                                        <h5 class="text-white fw-bold mb-0 mt-1">{{ booking.facility.name }}</h5>
+                                        <small class="text-success font-monospace">{{ booking.booking_id }}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="text-success fw-bold fs-5">₹{{ booking.total_price|floatformat:0 }}</div>
+                                        <small class="text-secondary">{{ booking.get_payment_status_display }}</small>
+                                    </div>
+                                </div>
+
+                                <div class="p-3 bg-dark rounded-3 border border-secondary border-opacity-25 mb-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="badge bg-black p-2 rounded text-success fs-5">
+                                            <i class="bi bi-calendar3"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-white fw-bold">{{ booking.booking_date|date:"l, d M Y" }}</div>
+                                            <div class="text-warning small">{{ booking.start_time|time:"g:i A" }} - {{ booking.end_time|time:"g:i A" }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="{% url 'booking_detail' booking.booking_id %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                                        <i class="bi bi-receipt me-1"></i> View Voucher
+                                    </a>
+
+                                    {% if booking.is_cancellable %}
+                                        <a href="{% url 'cancel_booking' booking.booking_id %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                                            <i class="bi bi-x-circle me-1"></i> Cancel Slot
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-5 text-center">
+                    <i class="bi bi-calendar-x fs-1 text-secondary mb-3 d-block"></i>
+                    <h5 class="text-white fw-bold mb-1">No Upcoming Bookings</h5>
+                    <p class="text-secondary small mb-4">You have no active slots scheduled right now. Book a turf or pool session today!</p>
+                    <a href="{% url 'book_slot' %}" class="btn btn-success rounded-pill px-4 py-2 fw-bold d-inline-block mx-auto">
+                        <i class="bi bi-calendar-plus me-1"></i> Reserve a Slot
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Section 2: Booking History -->
+        <div>
+            <h4 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-clock-history text-secondary"></i> Past / Cancelled History
+            </h4>
+
+            {% if past_or_cancelled_bookings %}
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0 align-middle">
+                            <thead class="border-secondary text-secondary small">
+                                <tr>
+                                    <th class="ps-4">Reference</th>
+                                    <th>Facility</th>
+                                    <th>Date & Time</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th class="text-end pe-4">Receipt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for b in past_or_cancelled_bookings %}
+                                    <tr>
+                                        <td class="ps-4 font-monospace small text-secondary">{{ b.booking_id }}</td>
+                                        <td class="fw-semibold text-white">{{ b.facility.name }}</td>
+                                        <td>
+                                            <div class="small">{{ b.booking_date|date:"d M Y" }}</div>
+                                            <div class="small text-secondary">{{ b.start_time|time:"g:i A" }}</div>
+                                        </td>
+                                        <td class="fw-bold text-success">₹{{ b.total_price|floatformat:0 }}</td>
+                                        <td>
+                                            <span class="badge {% if b.status == 'CANCELLED' %}bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50{% else %}bg-secondary{% endif %}">
+                                                {{ b.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <a href="{% url 'booking_detail' b.booking_id %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                                                View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-secondary small">No prior booking history found.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

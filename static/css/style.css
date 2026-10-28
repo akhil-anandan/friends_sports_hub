@@ -1,0 +1,207 @@
+/* ==========================================================================
+   Friends Sports Hub Mulayankavu - Custom Theme
+   Colors: Dark Green (#0fa958, #0a4f2a), Deep Pitch (#08120c), Gold (#eab308)
+   ========================================================================== */
+
+:root {
+    --primary-green: #0fa958;
+    --primary-green-hover: #0d8c48;
+    --dark-green: #0a4f2a;
+    --pitch-dark: #070d09;
+    --card-dark: #101813;
+    --card-border: rgba(15, 169, 88, 0.2);
+    --gold: #eab308;
+    --text-primary: #ffffff;
+    --text-muted: #9ca3af;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--pitch-dark);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .brand-text, .font-heading {
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.hover-white:hover {
+    color: #ffffff !important;
+}
+
+/* Header & Navigation */
+.top-bar {
+    background-color: #040805;
+}
+
+.navbar {
+    background-color: rgba(7, 13, 9, 0.95) !important;
+    backdrop-filter: blur(12px);
+}
+
+.nav-link {
+    font-weight: 500;
+    color: #cbd5e1 !important;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--primary-green) !important;
+}
+
+/* Custom Buttons */
+.btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    font-weight: 600;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+}
+
+.btn-outline-success {
+    border-color: var(--primary-green);
+    color: var(--primary-green);
+}
+
+.btn-outline-success:hover {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    color: #ffffff;
+}
+
+/* Hero Section */
+.hero-sports {
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, rgba(7, 13, 9, 0.94) 30%, rgba(7, 13, 9, 0.65) 100%),
+                url('../images/turf_hero.jpg') center/cover no-repeat;
+    background-attachment: fixed;
+}
+
+.hero-overlay-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(16, 185, 129, 0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+}
+
+/* Sports Feature Cards */
+.sports-card {
+    background-color: var(--card-dark);
+    border: 1px solid var(--card-border);
+    border-radius: 1.25rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.sports-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary-green);
+    box-shadow: 0 20px 30px -10px rgba(16, 185, 129, 0.2);
+}
+
+.card-img-wrapper {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.sports-card:hover .card-img-wrapper img {
+    transform: scale(1.08);
+}
+
+/* Slot Selection Styling */
+.slot-badge-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 0.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.slot-badge-btn.available:hover {
+    background-color: rgba(16, 185, 129, 0.15);
+    border-color: var(--primary-green);
+    transform: translateY(-2px);
+}
+
+.slot-badge-btn.selected {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    border-color: #10b981 !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.35);
+}
+
+.slot-badge-btn.booked {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.25);
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.slot-badge-btn.past {
+    background-color: rgba(148, 163, 184, 0.05);
+    border-color: rgba(148, 163, 184, 0.1);
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+/* Glass Panels */
+.glass-panel {
+    background: rgba(16, 24, 19, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 1.25rem;
+}
+
+/* Social icons */
+.social-icon {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    background-color: #0b120e;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #0e1712;
+    border-color: var(--primary-green);
+    color: #ffffff;
+    box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25);
+}
+
+.form-control::placeholder {
+    color: #6b7280;
+}

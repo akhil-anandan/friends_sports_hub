@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account | Friends Sports Hub Mulayankavu{% endblock %}
+
+{% block content %}
+<div class="py-5" style="background-color: #070d09;">
+    <div class="container" style="max-width: 520px;">
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 p-md-5 shadow-lg">
+            <div class="text-center mb-4">
+                <div class="badge bg-success p-3 rounded-circle shadow mb-2">
+                    <i class="bi bi-person-plus-fill fs-3 text-white"></i>
+                </div>
+                <h3 class="fw-bold text-white mb-1">Create Player Account</h3>
+                <p class="text-secondary small mb-0">Join Friends Sports Hub Mulayankavu to book slots anytime.</p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger border-0 p-3 mb-3 small">
+                        Please correct the errors indicated below.
+                    </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-semibold">Username *</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-semibold">Full Name *</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}<div class="text-danger small mt-1">{{ form.first_name.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-semibold">Phone Number *</label>
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}<div class="text-danger small mt-1">{{ form.phone_number.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-semibold">Email Address *</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-semibold">Password *</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-secondary small fw-semibold">Confirm Password *</label>
+                    {{ form.confirm_password }}
+                    {% if form.confirm_password.errors %}<div class="text-danger small mt-1">{{ form.confirm_password.errors.0 }}</div>{% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow">
+                    Complete Registration <i class="bi bi-arrow-right ms-1"></i>
+                </button>
+            </form>
+
+            <div class="text-center mt-4 pt-3 border-top border-secondary border-opacity-25 small text-secondary">
+                Already registered? <a href="{% url 'login' %}" class="text-success fw-bold text-decoration-none">Sign In Here</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

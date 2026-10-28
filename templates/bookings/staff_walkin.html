@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Walk-in Ground Booking | Friends Sports Hub Staff{% endblock %}
+
+{% block content %}
+<div class="py-5" style="background-color: #070d09;">
+    <div class="container" style="max-width: 680px;">
+        
+        <div class="mb-3">
+            <a href="{% url 'staff_dashboard' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                <i class="bi bi-arrow-left me-1"></i> Back to Staff Dashboard
+            </a>
+        </div>
+
+        <div class="card bg-black border border-success border-opacity-40 rounded-4 p-4 p-md-5 shadow-lg">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="badge bg-success p-3 rounded-circle shadow">
+                    <i class="bi bi-person-badge fs-3 text-white"></i>
+                </div>
+                <div>
+                    <span class="badge bg-warning text-dark px-2 py-1 rounded small fw-bold">Ground Staff Action</span>
+                    <h3 class="text-white fw-bold mb-0">Record Walk-in / Phone Booking</h3>
+                    <small class="text-secondary">Instant slot lock for counter customers or phone callers</small>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary small fw-semibold">Sport Facility *</label>
+                        <select name="facility_id" class="form-select bg-dark text-white border-secondary" required>
+                            {% for f in facilities %}
+                                <option value="{{ f.id }}" {% if request.GET.facility_id == f.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ f.name }} (₹{{ f.price_per_hour|floatformat:0 }}/hr)
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary small fw-semibold">Match Date *</label>
+                        <input type="date" name="booking_date" class="form-control bg-dark text-white border-secondary" required 
+                               value="{{ request.GET.date|default:today_str }}">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-semibold">Slot Start Time *</label>
+                    <select name="start_time" class="form-select bg-dark text-white border-secondary" required>
+                        <option value="">-- Choose Slot --</option>
+                        <option value="06:00" {% if request.GET.start_time == '06:00' %}selected{% endif %}>06:00 AM - 07:00 AM</option>
+                        <option value="07:00" {% if request.GET.start_time == '07:00' %}selected{% endif %}>07:00 AM - 08:00 AM</option>
+                        <option value="08:00" {% if request.GET.start_time == '08:00' %}selected{% endif %}>08:00 AM - 09:00 AM</option>
+                        <option value="09:00" {% if request.GET.start_time == '09:00' %}selected{% endif %}>09:00 AM - 10:00 AM</option>
+                        <option value="10:00" {% if request.GET.start_time == '10:00' %}selected{% endif %}>10:00 AM - 11:00 AM</option>
+                        <option value="11:00" {% if request.GET.start_time == '11:00' %}selected{% endif %}>11:00 AM - 12:00 PM</option>
+                        <option value="14:00" {% if request.GET.start_time == '14:00' %}selected{% endif %}>02:00 PM - 03:00 PM</option>
+                        <option value="15:00" {% if request.GET.start_time == '15:00' %}selected{% endif %}>03:00 PM - 04:00 PM</option>
+                        <option value="16:00" {% if request.GET.start_time == '16:00' %}selected{% endif %}>04:00 PM - 05:00 PM</option>
+                        <option value="17:00" {% if request.GET.start_time == '17:00' %}selected{% endif %}>05:00 PM - 06:00 PM</option>
+                        <option value="18:00" {% if request.GET.start_time == '18:00' %}selected{% endif %}>06:00 PM - 07:00 PM (Floodlights)</option>
+                        <option value="19:00" {% if request.GET.start_time == '19:00' %}selected{% endif %}>07:00 PM - 08:00 PM (Floodlights)</option>
+                        <option value="20:00" {% if request.GET.start_time == '20:00' %}selected{% endif %}>08:00 PM - 09:00 PM (Floodlights)</option>
+                        <option value="21:00" {% if request.GET.start_time == '21:00' %}selected{% endif %}>09:00 PM - 10:00 PM (Floodlights)</option>
+                        <option value="22:00" {% if request.GET.start_time == '22:00' %}selected{% endif %}>10:00 PM - 11:00 PM (Floodlights)</option>
+                    </select>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary small fw-semibold">Customer / Team Name *</label>
+                        <input type="text" name="customer_name" class="form-control" required placeholder="e.g. Kulukkallur Warriors">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary small fw-semibold">Player Mobile Number *</label>
+                        <input type="tel" name="customer_phone" class="form-control" required placeholder="10-digit phone number">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary small fw-semibold">Payment Collection Status *</label>
+                    <select name="payment_status" class="form-select bg-dark text-white border-secondary" required>
+                        <option value="PAID">Cash / UPI Paid at Counter</option>
+                        <option value="PAY_AT_VENUE">Pay Later at Match Time</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-secondary small fw-semibold">Staff Notes (Optional)</label>
+                    <textarea name="staff_notes" class="form-control" rows="2" placeholder="e.g. Phone reservation by captain Jaleel, requested football"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow">
+                    <i class="bi bi-check-circle-fill me-1"></i> Lock & Confirm Walk-in Slot
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

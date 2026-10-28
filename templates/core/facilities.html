@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Facilities | Friends Sports Hub Mulayankavu{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-black border-bottom border-secondary border-opacity-25">
+    <div class="container text-center">
+        <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">Sports Facilities</span>
+        <h1 class="display-5 fw-extrabold text-white mb-2 font-heading">Explore Our Sports Infrastructure</h1>
+        <p class="text-secondary mx-auto" style="max-width: 650px;">
+            Book slots across our premier turf ground, clean swimming pool, and dedicated kids recreation area.
+        </p>
+    </div>
+</section>
+
+<!-- Facilities Cards Section -->
+<section class="py-5" style="background-color: #070d09;">
+    <div class="container py-3">
+        <div class="row g-4 justify-content-center">
+            {% for fac in facilities %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card sports-card h-100 d-flex flex-column shadow">
+                        <div class="card-img-wrapper position-relative">
+                            <img src="{{ fac.image_url }}" alt="{{ fac.name }}">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-black bg-opacity-75 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill fw-bold">
+                                    ₹{{ fac.price_per_hour|floatformat:0 }} <small class="text-white">/ hr</small>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column flex-grow-1">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="badge bg-success bg-opacity-20 text-success">{{ fac.get_facility_type_display }}</span>
+                            </div>
+
+                            <h3 class="card-title text-white fw-bold mb-3 fs-4">{{ fac.name }}</h3>
+                            <p class="text-secondary small mb-3">
+                                {{ fac.description }}
+                            </p>
+
+                            {% if fac.features %}
+                                <div class="mb-3">
+                                    <h6 class="text-white small fw-bold mb-2">Highlights:</h6>
+                                    <ul class="list-unstyled small text-secondary mb-0">
+                                        {% for feat in fac.features %}
+                                            <li class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>{{ feat }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            <div class="p-3 bg-dark rounded-3 border border-secondary border-opacity-25 mb-4 mt-auto">
+                                <div class="d-flex justify-content-between small text-secondary mb-1">
+                                    <span>Operating Hours:</span>
+                                    <span class="text-light fw-semibold">{{ fac.open_time|time:"g:i A" }} - {{ fac.close_time|time:"g:i A" }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between small text-secondary">
+                                    <span>Slot Duration:</span>
+                                    <span class="text-light fw-semibold">{{ fac.slot_duration_minutes }} Mins</span>
+                                </div>
+                            </div>
+
+                            <a href="{% url 'book_facility_slot' fac.slug %}" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow">
+                                <i class="bi bi-calendar2-check me-1"></i> Book Slot Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Callout Banner -->
+        <div class="card glass-panel p-4 p-md-5 mt-5 text-center">
+            <h4 class="text-white fw-bold mb-2">Planning a Tournament or Special Event?</h4>
+            <p class="text-secondary small mb-4 mx-auto" style="max-width: 600px;">
+                We offer tailored slot packages for club tournaments, corporate friendlies, and school sports days with floodlight support.
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="tel:6238006820" class="btn btn-outline-success rounded-pill px-4">
+                    <i class="bi bi-telephone-fill me-1"></i> Call: 6238006820
+                </a>
+                <a href="https://wa.me/916238006820" target="_blank" rel="noopener" class="btn btn-success rounded-pill px-4">
+                    <i class="bi bi-whatsapp me-1"></i> Chat on WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

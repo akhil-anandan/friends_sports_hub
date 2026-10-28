@@ -1,0 +1,479 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Booking #{{ booking.booking_id }} | Friends Sports Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+  body { background: #0a0f0d; }
+
+  .ticket-wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 16px 16px 60px;
+  }
+
+  /* ── Success banner ── */
+  .status-banner {
+    background: #0d1f12;
+    border: 1.5px solid #16a34a;
+    border-radius: 18px;
+    padding: 20px 16px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .status-icon {
+    width: 52px; height: 52px;
+    background: #16a34a;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    font-size: 1.6rem; color: #fff;
+    margin-bottom: 10px;
+  }
+  .status-title { font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0 0 4px; }
+  .status-sub   { font-size: 0.8rem; color: #8aab92; margin: 0; }
+
+  /* ── WhatsApp action box ── */
+  .wa-action-box {
+    background: #131e16;
+    border: 1.5px solid #22c55e;
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .wa-action-title {
+    font-size: 0.85rem; font-weight: 700; color: #22c55e;
+    margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .wa-action-desc { font-size: 0.75rem; color: #6b8c73; margin-bottom: 12px; }
+
+  .btn-wa-customer {
+    width: 100%;
+    background: #25D366;
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .btn-wa-customer:hover, .btn-wa-customer:active { background: #1ebe5d; color: #fff; }
+
+  .btn-copy-details {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid #1e2e22;
+    border-radius: 12px;
+    color: #8aab92;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 9px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .btn-copy-details:hover { border-color: #16a34a; color: #22c55e; }
+
+  .btn-wa-sub {
+    background: #141f17;
+    border: 1px solid #1e2e22;
+    border-radius: 10px;
+    color: #8aab92;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 8px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+  }
+  .btn-wa-sub:hover, .btn-wa-sub:active {
+    background: #1e2e22;
+    color: #22c55e;
+    border-color: #22c55e;
+  }
+  .copy-alert {
+    background: #0d2818;
+    border: 1px solid #16a34a;
+    color: #22c55e;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* ── Voucher card ── */
+  .voucher-card {
+    background: #0e1712;
+    border: 1px solid #1e2e22;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .voucher-header {
+    background: #131e16;
+    border-bottom: 1px dashed #1e2e22;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .voucher-brand { font-size: 1rem; font-weight: 800; color: #fff; }
+  .voucher-loc   { font-size: 0.7rem; color: #6b8c73; }
+  .voucher-ref   { font-family: monospace; font-size: 0.8rem; font-weight: 700; color: #22c55e; }
+
+  .voucher-body { padding: 18px 16px; }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-label { font-size: 0.75rem; color: #6b8c73; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+  .detail-val   { font-size: 0.9rem; color: #fff; font-weight: 700; text-align: right; }
+  .detail-val.highlight { color: #22c55e; font-size: 1.1rem; }
+  .detail-sub   { font-size: 0.72rem; color: #8aab92; font-weight: 500; }
+
+  /* ── Instructions pill ── */
+  .rules-box {
+    background: #131e16;
+    border: 1px solid #1e2e22;
+    border-radius: 14px;
+    padding: 14px;
+    margin-top: 14px;
+    font-size: 0.74rem;
+    color: #6b8c73;
+    line-height: 1.5;
+  }
+  .rules-box strong { color: #fff; }
+
+  /* ── Quick action buttons ── */
+  .action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .btn-action {
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-action.home  { background: #131e16; border: 1.5px solid #1e2e22; color: #fff; }
+  .btn-action.admin { background: #16a34a; border: none; color: #fff; }
+  .btn-action:hover { opacity: .9; }
+
+  /* ── Auto Send Banner ── */
+  .auto-send-card {
+    background: #0d2818;
+    border: 1.5px solid #22c55e;
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.25);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ticket-wrap">
+
+  {% if request.GET.auto_send == '1' %}
+  <!-- Auto-Send Live Banner -->
+  <div class="auto-send-card" id="autoSendCard">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div class="d-flex align-items-center gap-2">
+        <div class="spinner-grow text-success spinner-grow-sm" role="status"></div>
+        <span class="text-white fw-bold small">Sending WhatsApp confirmation automatically...</span>
+      </div>
+      <a href="{{ customer_wa_url }}" class="btn btn-sm btn-success px-3 py-1 rounded-pill fw-bold" id="autoSendNowLink">
+        <i class="bi bi-whatsapp me-1"></i> Open Now
+      </a>
+    </div>
+    <div class="small text-secondary mt-1" style="font-size:0.75rem;">
+      Opening chat with <strong>{{ booking.customer_name }}</strong> ({{ customer_phone_clean|default:booking.customer_phone }})...
+    </div>
+    <div class="progress mt-2" style="height: 3px; background: rgba(255,255,255,0.08);">
+      <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: 100%;"></div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Status banner -->
+  <div class="status-banner">
+    <div class="status-icon">
+      <i class="bi bi-check2"></i>
+    </div>
+    <h2 class="status-title">Booking Confirmed!</h2>
+    <p class="status-sub">Slot has been reserved in system. Payment is collected at venue.</p>
+  </div>
+
+  <!-- WhatsApp Send to Customer -->
+  <div class="wa-action-box">
+    <div class="wa-action-title">
+      <i class="bi bi-whatsapp"></i> Send Details to Player / Club
+    </div>
+    <div class="wa-action-desc">
+      Send WhatsApp confirmation to <strong>{{ booking.customer_name }}</strong> ({{ booking.customer_phone }})
+    </div>
+
+    <!-- Primary 1-Tap Link: Direct Anchor Tag to WhatsApp (Bypasses all pop-up blockers) -->
+    <a href="{{ customer_wa_url }}" target="_blank" rel="noopener noreferrer" class="btn-wa-customer">
+      <i class="bi bi-whatsapp fs-5"></i> Send Confirmation on WhatsApp
+    </a>
+
+    <!-- Alternative WhatsApp Options -->
+    <div class="d-flex gap-2 mt-2">
+      <a href="{{ customer_wa_short }}" target="_blank" rel="noopener noreferrer" class="btn-wa-sub flex-fill">
+        <i class="bi bi-box-arrow-up-right me-1"></i> Alternate wa.me
+      </a>
+      <a href="{{ owner_wa_url }}" target="_blank" rel="noopener noreferrer" class="btn-wa-sub flex-fill">
+        <i class="bi bi-shield-check me-1"></i> Copy to Owner
+      </a>
+    </div>
+
+    <!-- Custom Number Input (if player provided alternate WhatsApp number) -->
+    <div class="mt-3 pt-2 border-top border-secondary border-opacity-25 text-start">
+      <div class="small text-secondary mb-1" style="font-size:0.75rem;">Send to different WhatsApp number:</div>
+      <div class="input-group input-group-sm">
+        <span class="input-group-text bg-dark text-secondary border-secondary">+91</span>
+        <input type="tel" id="customWaInput" class="form-control bg-dark text-white border-secondary" placeholder="10-digit phone" value="{{ customer_phone_clean|default:booking.customer_phone }}">
+        <button class="btn btn-outline-success" type="button" onclick="sendCustomWhatsApp()">
+          <i class="bi bi-send-fill me-1"></i> Send
+        </button>
+      </div>
+    </div>
+
+    <!-- Copy to Clipboard -->
+    <button type="button" class="btn-copy-details" onclick="copyConfirmationText()">
+      <i class="bi bi-clipboard me-1"></i> Copy Confirmation Text
+    </button>
+    <div id="copySuccessMsg" class="copy-alert" style="display:none;">
+      ✅ Copied to clipboard! You can paste it directly into WhatsApp or SMS.
+    </div>
+  </div>
+
+  <!-- Voucher Card -->
+  <div class="voucher-card" id="printArea">
+    <div class="voucher-header">
+      <div>
+        <div class="voucher-brand">⚽ FRIENDS SPORTS HUB</div>
+        <div class="voucher-loc">Mulayankavu, Kulukkallur, Palakkad</div>
+      </div>
+      <div style="text-align:right;">
+        <span class="badge {% if booking.status == 'CONFIRMED' %}bg-success{% else %}bg-secondary{% endif %} rounded-pill px-3 py-1">
+          {{ booking.get_status_display }}
+        </span>
+        <div class="voucher-ref mt-1">{{ booking.booking_id }}</div>
+      </div>
+    </div>
+
+    <div class="voucher-body">
+      <div class="detail-row">
+        <span class="detail-label">Facility</span>
+        <div class="detail-val">
+          {{ booking.facility.name }}
+          <div class="detail-sub">FIFA Standard Artificial Turf</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Match Date</span>
+        <div class="detail-val">
+          {{ booking.booking_date|date:"l, d F Y" }}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Time Slot</span>
+        <div class="detail-val" style="color:#22c55e;">
+          {{ booking.start_time|time:"g:i A" }} – {{ booking.end_time|time:"g:i A" }}
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Player Name</span>
+        <div class="detail-val">{{ booking.customer_name }}</div>
+      </div>
+
+      {% if booking.notes %}
+      <div class="detail-row">
+        <span class="detail-label">Club / Team</span>
+        <div class="detail-val">{{ booking.notes }}</div>
+      </div>
+      {% endif %}
+
+      <div class="detail-row">
+        <span class="detail-label">Mobile</span>
+        <div class="detail-val">{{ booking.customer_phone }}</div>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Total Fee</span>
+        <div class="detail-val highlight">
+          ₹{{ booking.total_price|floatformat:0 }}
+          <div class="detail-sub" style="color:#fbbf24;">Pay at Venue</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-label">Booked At</span>
+        <div class="detail-val" style="font-size:0.8rem; color:#8aab92;">
+          {{ booking.created_at|date:"d M Y, h:i A" }}
+        </div>
+      </div>
+
+      <!-- Ground Instructions -->
+      <div class="rules-box">
+        <strong>⚠️ Ground Instructions:</strong><br>
+        • Please report 10 minutes before slot time.<br>
+        • Turf football boots / sports shoes only (no metal studs).<br>
+        • Ground Helpline: <strong>6238006820</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Buttons -->
+  <div class="action-grid">
+    <a href="{% url 'home' %}" class="btn-action home">
+      <i class="bi bi-calendar3"></i> View Slots
+    </a>
+    {% if user.is_staff %}
+    <a href="{% url 'staff_dashboard' %}" class="btn-action admin">
+      <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+    {% else %}
+    <button type="button" onclick="window.print()" class="btn-action home">
+      <i class="bi bi-printer"></i> Print Ticket
+    </button>
+    {% endif %}
+  </div>
+
+  <!-- Hidden data payload for WhatsApp script -->
+  <div id="bookingData"
+       data-id="{{ booking.booking_id }}"
+       data-name="{{ booking.customer_name }}"
+       data-club="{{ booking.notes|default:'' }}"
+       data-facility="{{ booking.facility.name }}"
+       data-date="{{ booking.booking_date|date:'l, d F Y' }}"
+       data-start="{{ booking.start_time|time:'g:i A' }}"
+       data-end="{{ booking.end_time|time:'g:i A' }}"
+       data-price="{{ booking.total_price|floatformat:0 }}"
+       data-phone="{{ booking.customer_phone }}"
+       style="display:none;"></div>
+
+  <!-- Hidden raw confirmation text for clean copy -->
+  <textarea id="rawConfirmationText" style="display:none;" readonly>{{ confirmation_text }}</textarea>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyConfirmationText() {
+  const ta = document.getElementById('rawConfirmationText');
+  if (!ta) return;
+  const txt = ta.value;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(txt).then(showCopiedNotice).catch(function() {
+      fallbackCopy(ta);
+    });
+  } else {
+    fallbackCopy(ta);
+  }
+}
+
+function fallbackCopy(ta) {
+  ta.style.display = 'block';
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showCopiedNotice();
+  } catch (err) {
+    prompt('Copy confirmation text:', ta.value);
+  }
+  ta.style.display = 'none';
+}
+
+function showCopiedNotice() {
+  const el = document.getElementById('copySuccessMsg');
+  if (el) {
+    el.style.display = 'block';
+    setTimeout(function() { el.style.display = 'none'; }, 4000);
+  }
+}
+
+function sendCustomWhatsApp() {
+  const input = document.getElementById('customWaInput');
+  if (!input) return;
+  const raw = input.value.replace(/\D/g, '');
+  if (!raw) {
+    alert('Please enter a valid mobile number.');
+    input.focus();
+    return;
+  }
+  let phone = raw;
+  if (phone.length === 11 && phone.startsWith('0')) {
+    phone = phone.substring(1);
+  }
+  if (phone.length === 10) {
+    phone = '91' + phone;
+  }
+  const ta = document.getElementById('rawConfirmationText');
+  const txt = ta ? ta.value : '';
+  const url = 'https://api.whatsapp.com/send?phone=' + phone + '&text=' + encodeURIComponent(txt);
+  window.open(url, '_blank');
+}
+
+// Auto-launch WhatsApp if page was loaded with ?auto_send=1
+(function checkAutoSend() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('auto_send') === '1') {
+    const waLink = document.querySelector('.btn-wa-customer');
+    if (waLink && waLink.href) {
+      setTimeout(function() {
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if (isMobile) {
+          window.location.href = waLink.href;
+        } else {
+          const a = document.createElement('a');
+          a.href = waLink.href;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
+      }, 700);
+    }
+  }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pricing & Hourly Rates | Friends Sports Hub Mulayankavu{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-black border-bottom border-secondary border-opacity-25">
+    <div class="container text-center">
+        <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">Transparent Pricing</span>
+        <h1 class="display-5 fw-extrabold text-white mb-2 font-heading">Affordable Hourly Slot Rates</h1>
+        <p class="text-secondary mx-auto" style="max-width: 650px;">
+            Clear per-hour rates with pay-at-venue convenience. No hidden maintenance charges or surprise fees.
+        </p>
+    </div>
+</section>
+
+<!-- Pricing Cards -->
+<section class="py-5" style="background-color: #070d09;">
+    <div class="container py-3">
+        <div class="row g-4 justify-content-center">
+            {% for fac in facilities %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card sports-card h-100 p-4 p-md-5 d-flex flex-column text-center position-relative shadow">
+                        {% if fac.slug == 'turf' %}
+                            <div class="position-absolute top-0 start-50 translate-middle">
+                                <span class="badge bg-success text-white px-3 py-1 rounded-pill small fw-bold shadow">MOST POPULAR</span>
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-1 rounded-pill small">{{ fac.get_facility_type_display }}</span>
+                        </div>
+
+                        <h3 class="text-white fw-bold mb-3 fs-4">{{ fac.name }}</h3>
+                        
+                        <div class="my-3">
+                            <span class="display-5 fw-extrabold text-success">₹{{ fac.price_per_hour|floatformat:0 }}</span>
+                            <span class="text-secondary small">/ hour</span>
+                        </div>
+
+                        <p class="text-secondary small mb-4">
+                            Includes complete access to {{ fac.name|lower }} with all standard on-ground amenities.
+                        </p>
+
+                        <hr class="border-secondary border-opacity-25 my-2">
+
+                        <ul class="list-unstyled small text-light text-start my-4 flex-grow-1 d-flex flex-column gap-2">
+                            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Slot:</strong> {{ fac.slot_duration_minutes }} Minutes duration</li>
+                            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Timings:</strong> {{ fac.open_time|time:"g:i A" }} - {{ fac.close_time|time:"g:i A" }}</li>
+                            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Payment:</strong> Cash or UPI at venue</li>
+                            <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Cancellation:</strong> Free prior to match</li>
+                            <li><i class="bi bi-check-circle-fill text-success me-2"></i>Dressing rooms & pure drinking water</li>
+                        </ul>
+
+                        <a href="{% url 'book_facility_slot' fac.slug %}" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow mt-auto">
+                            Book This Slot
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- FAQ Row -->
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 p-md-5 mt-5">
+            <h4 class="text-white fw-bold mb-4 text-center">Frequently Asked Questions</h4>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h6 class="text-white fw-bold"><i class="bi bi-question-circle text-success me-2"></i>How do I pay for my booking?</h6>
+                    <p class="text-secondary small">
+                        You can reserve your slot online without paying in advance. Payment can be settled in cash or via UPI at the venue reception counter when you arrive.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-white fw-bold"><i class="bi bi-question-circle text-success me-2"></i>What if I need to cancel my slot?</h6>
+                    <p class="text-secondary small">
+                        You can easily cancel any upcoming reservation directly from your Customer Dashboard before your slot start time without penalty.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-white fw-bold"><i class="bi bi-question-circle text-success me-2"></i>Are floodlights included in the turf price?</h6>
+                    <p class="text-secondary small">
+                        Yes! High-mast LED floodlight illumination is included for evening and night matches at no extra charge.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="text-white fw-bold"><i class="bi bi-question-circle text-success me-2"></i>Can we book consecutive back-to-back slots?</h6>
+                    <p class="text-secondary small">
+                        Yes, you can reserve multiple hours sequentially for tournaments or long match sessions.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

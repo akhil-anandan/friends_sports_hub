@@ -1,0 +1,980 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ selected_facility.name|default:"Turf Booking" }} | Friends Sports Hub Mulayankavu{% endblock %}
+
+{% block extra_css %}
+<style>
+  :root {
+    --hub-bg: #070d09;
+    --hub-card-bg: #0e1712;
+    --hub-card-border: #1e2e22;
+    --hub-accent: #16a34a;
+    --hub-accent-bright: #22c55e;
+    --hub-text-muted: #8aab92;
+    --hub-text-subtle: #4d6854;
+  }
+
+  body {
+    background-color: var(--hub-bg);
+    color: #e5e7eb;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ── Responsive Container ── */
+  .hub-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 18px 16px 80px;
+  }
+
+  /* ── Facility Pill Tabs ── */
+  .facility-tabs-wrap {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .facility-tabs-wrap::-webkit-scrollbar { display: none; }
+
+  .facility-tab-pill {
+    flex-shrink: 0;
+    background: #111a14;
+    border: 1.5px solid var(--hub-card-border);
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--hub-text-muted);
+    text-decoration: none;
+    transition: all .15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .facility-tab-pill:hover {
+    border-color: var(--hub-accent);
+    color: #fff;
+  }
+  .facility-tab-pill.active {
+    background: var(--hub-accent);
+    border-color: var(--hub-accent);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+  }
+
+  /* ── Turf Info Card (Left Column on Desktop) ── */
+  .turf-showcase-card {
+    background: var(--hub-card-bg);
+    border: 1px solid var(--hub-card-border);
+    border-radius: 20px;
+    overflow: hidden;
+    position: sticky;
+    top: 80px;
+  }
+
+  .turf-photo-box {
+    position: relative;
+    height: 220px;
+    background: #000;
+    overflow: hidden;
+  }
+  .turf-photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.88;
+    transition: transform .3s ease;
+  }
+  .turf-photo-box:hover img { transform: scale(1.03); }
+
+  .turf-overlay-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(14, 23, 18, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--hub-accent-bright);
+  }
+
+  .turf-rate-tag {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(8px);
+    border: 1px solid #22c55e;
+    border-radius: 12px;
+    padding: 6px 14px;
+    text-align: right;
+  }
+  .turf-rate-tag .amount {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #22c55e;
+    line-height: 1;
+  }
+  .turf-rate-tag .unit {
+    font-size: 0.65rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+
+  .turf-info-body {
+    padding: 20px;
+  }
+  .turf-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .turf-sub {
+    font-size: 0.8rem;
+    color: var(--hub-text-muted);
+    margin-bottom: 16px;
+  }
+
+  /* ── Turf Highlights Pill Grid ── */
+  .turf-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .feature-item {
+    background: #121c15;
+    border: 1px solid var(--hub-card-border);
+    border-radius: 12px;
+    padding: 9px 11px;
+    font-size: 0.75rem;
+    color: #d1d5db;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .feature-item i {
+    color: var(--hub-accent-bright);
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Ground Rules & Info Banner ── */
+  .ground-rules-box {
+    background: #101913;
+    border-left: 3px solid var(--hub-accent-bright);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    font-size: 0.74rem;
+    color: var(--hub-text-muted);
+    line-height: 1.5;
+  }
+  .ground-rules-box strong { color: #fff; }
+
+  /* ── Contact Callout in Left Column ── */
+  .turf-contact-strip {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-quick-call {
+    flex: 1;
+    background: #141f17;
+    border: 1.5px solid var(--hub-card-border);
+    border-radius: 12px;
+    padding: 10px;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all .15s;
+  }
+  .btn-quick-call:hover { border-color: #22c55e; color: #fff; }
+
+  .btn-quick-wa {
+    flex: 1.2;
+    background: #16a34a;
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background .15s;
+  }
+  .btn-quick-wa:hover { background: #15803d; color: #fff; }
+
+  /* ── Booking Engine Card (Right Column) ── */
+  .booking-engine-card {
+    background: var(--hub-card-bg);
+    border: 1px solid var(--hub-card-border);
+    border-radius: 20px;
+    padding: 22px;
+  }
+
+  .engine-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap-2;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--hub-card-border);
+  }
+  .engine-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .engine-date-label {
+    font-size: 0.8rem;
+    color: var(--hub-accent-bright);
+    font-weight: 700;
+  }
+
+  /* ── Date Bar ── */
+  .date-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    background: #121c15;
+    border: 1.5px solid var(--hub-card-border);
+    border-radius: 14px;
+    padding: 6px 12px;
+  }
+  .date-picker-wrap i {
+    color: var(--hub-accent-bright);
+    font-size: 1.1rem;
+  }
+  .date-picker-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    outline: none;
+    padding: 6px 0;
+  }
+
+  /* ── Status Legend ── */
+  .slot-legend-strip {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.74rem;
+    color: var(--hub-text-muted);
+    margin-bottom: 16px;
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .legend-dot.vacant { background: #22c55e; }
+  .legend-dot.booked { background: #ef4444; }
+  .legend-dot.past   { background: #4b5563; }
+
+  /* ── Responsive Slots Grid ── */
+  .slots-matrix {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (min-width: 576px) {
+    .slots-matrix { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 992px) {
+    .slots-matrix { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1200px) {
+    .slots-matrix { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .slot-btn {
+    border-radius: 14px;
+    padding: 13px 10px;
+    border: 1.5px solid transparent;
+    text-align: center;
+    position: relative;
+    transition: all .15s ease;
+    user-select: none;
+  }
+
+  .slot-btn.vacant {
+    background: #0d1f12;
+    border-color: #16a34a;
+    cursor: pointer;
+  }
+  .slot-btn.vacant:hover {
+    background: #112817;
+    border-color: #22c55e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.22);
+  }
+  .slot-btn.vacant:active { transform: scale(0.97); }
+
+  .slot-btn.booked {
+    background: #1a0e0e;
+    border-color: #3b1717;
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .slot-btn.past {
+    background: #111412;
+    border-color: #1f2421;
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  .slot-btn .time-text {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .slot-btn .duration-text {
+    font-size: 0.68rem;
+    color: var(--hub-text-muted);
+    margin-top: 3px;
+  }
+
+  .slot-badge-pill {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border-radius: 999px;
+    padding: 2px 8px;
+    margin-top: 6px;
+  }
+  .slot-btn.vacant .slot-badge-pill {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.4);
+  }
+  .slot-btn.booked .slot-badge-pill {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+  }
+  .slot-btn.past .slot-badge-pill {
+    background: rgba(107, 114, 128, 0.15);
+    color: #9ca3af;
+    border: 1px solid rgba(107, 114, 128, 0.3);
+  }
+
+  .tap-badge {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 0.58rem;
+    font-weight: 800;
+    color: #22c55e;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+  }
+
+  /* ── Booking Bottom Sheet / Modal ── */
+  .booking-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 998;
+  }
+  .booking-overlay.show { display: block; }
+
+  .booking-modal-box {
+    position: fixed;
+    z-index: 999;
+    background: #0e1712;
+    border: 1.5px solid var(--hub-accent-bright);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85);
+    box-sizing: border-box;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #1e2e22 transparent;
+  }
+
+  /* Desktop & Tablet: Centered directly in middle of viewport */
+  @media (min-width: 768px) {
+    .booking-modal-box {
+      top: 50%;
+      left: 50%;
+      right: auto;
+      bottom: auto;
+      width: 92%;
+      max-width: 480px;
+      max-height: 88vh;
+      border-radius: 20px;
+      padding: 22px 24px;
+      transform: translate(-50%, -46%) scale(0.96);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    }
+    .booking-modal-box.open {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-drag-handle { display: none; }
+  }
+
+  /* Mobile: Clean Bottom Sheet */
+  @media (max-width: 767px) {
+    .booking-modal-box {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: auto;
+      width: 100%;
+      max-height: 85vh;
+      border-radius: 22px 22px 0 0;
+      padding: 16px 18px 26px;
+      transform: translateY(115%);
+      transition: transform 0.28s cubic-bezier(0.32, 1, 0.23, 1);
+    }
+    .booking-modal-box.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-drag-handle {
+      width: 42px;
+      height: 4px;
+      background: #1e2e22;
+      border-radius: 99px;
+      margin: 0 auto 12px;
+    }
+  }
+
+  .modal-header-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .modal-title-text {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+  }
+  .modal-close-x {
+    background: #141f17;
+    border: 1px solid var(--hub-card-border);
+    color: #8aab92;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .modal-slot-meta {
+    font-size: 0.82rem;
+    color: var(--hub-accent-bright);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .field-group { margin-bottom: 10px; }
+  .field-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--hub-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .field-input {
+    width: 100%;
+    background: #121c15;
+    border: 1.5px solid var(--hub-card-border);
+    border-radius: 12px;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color .15s;
+  }
+  .field-input:focus { border-color: var(--hub-accent-bright); }
+  .field-input::placeholder { color: #374c3e; }
+
+  .btn-submit-wa {
+    width: 100%;
+    background: #16a34a;
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    padding: 12px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background .15s;
+    letter-spacing: 0.2px;
+  }
+  .btn-submit-wa:hover, .btn-submit-wa:active { background: #15803d; }
+
+  .btn-admin-direct {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid #3b82f6;
+    border-radius: 14px;
+    color: #93c5fd;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 10px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .btn-admin-direct:hover { background: rgba(59, 130, 246, 0.12); }
+
+  /* ── Mobile Sticky Call Bar (phones only) ── */
+  .mobile-call-dock {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 15, 13, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--hub-card-border);
+    padding: 10px 16px 14px;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+  }
+  @media (min-width: 992px) {
+    .mobile-call-dock { display: none; }
+  }
+  .mobile-call-dock a {
+    flex: 1;
+    border-radius: 12px;
+    padding: 11px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .mobile-call-dock .btn-dock-call { background: #141f17; border: 1.5px solid var(--hub-card-border); color: #fff; }
+  .mobile-call-dock .btn-dock-wa   { background: #16a34a; color: #fff; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hub-container">
+
+  <!-- Top Facility Selector Bar -->
+  <div class="mb-3">
+    <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+      <div>
+        <h1 class="h5 fw-extrabold text-white mb-0">
+          <i class="bi bi-shield-shaded text-success me-1"></i> Friends Sports Hub
+        </h1>
+        <small class="text-secondary">Mulayankavu, Kulukkallur, Palakkad · Open 6:00 AM – 11:00 PM</small>
+      </div>
+      {% if user.is_staff %}
+      <a href="{% url 'staff_dashboard' %}" class="btn btn-sm btn-outline-info rounded-pill px-3">
+        <i class="bi bi-speedometer2 me-1"></i> Admin Dashboard
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Facility Switcher Tabs -->
+    <div class="facility-tabs-wrap">
+      {% for fac in facilities %}
+        <a href="{% url 'book_facility_slot' fac.slug %}?date={{ date_str }}"
+           class="facility-tab-pill {% if fac == selected_facility %}active{% endif %}">
+          {% if fac.slug == 'turf' %}
+            <i class="bi bi-dribbble"></i>
+          {% elif fac.slug == 'swimming-pool' %}
+            <i class="bi bi-water"></i>
+          {% else %}
+            <i class="bi bi-balloon"></i>
+          {% endif %}
+          {{ fac.name }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if selected_facility %}
+  <div class="row g-4">
+
+    <!-- ── LEFT COLUMN: Turf & Facility Showcase & Details ── -->
+    <div class="col-lg-5 col-xl-4">
+      <div class="turf-showcase-card">
+
+        <!-- Photo Header with Live Badge -->
+        <div class="turf-photo-box">
+          {% if selected_facility.slug == 'turf' %}
+            <img src="{% static 'images/turf_hero.jpg' %}" alt="{{ selected_facility.name }}">
+          {% else %}
+            <img src="{% static 'images/hub_banner.jpg' %}" alt="{{ selected_facility.name }}">
+          {% endif %}
+          <div class="turf-overlay-tag">
+            <i class="bi bi-stars me-1"></i>
+            {% if selected_facility.slug == 'turf' %}
+              FIFA Standard Grass
+            {% elif selected_facility.slug == 'swimming-pool' %}
+              Hygienic Filtered Water
+            {% else %}
+              Kids Amusement
+            {% endif %}
+          </div>
+          <div class="turf-rate-tag">
+            <div class="amount">₹{{ selected_facility.price_per_hour|floatformat:0 }}</div>
+            <div class="unit">per {{ selected_facility.slot_duration_minutes }} min slot</div>
+          </div>
+        </div>
+
+        <div class="turf-info-body">
+          <h2 class="turf-title">{{ selected_facility.name }}</h2>
+          <p class="turf-sub">
+            {{ selected_facility.description }}
+          </p>
+
+          <!-- Highlights Grid -->
+          <div class="turf-features-grid">
+            {% if selected_facility.slug == 'turf' %}
+              <div class="feature-item"><i class="bi bi-grid-3x3-gap-fill"></i> 7s & 5s Football Ready</div>
+              <div class="feature-item"><i class="bi bi-lightning-charge-fill"></i> Pro LED Floodlights</div>
+              <div class="feature-item"><i class="bi bi-shield-check"></i> Safety Cage Enclosure</div>
+              <div class="feature-item"><i class="bi bi-cup-hot-fill"></i> Water & Washrooms</div>
+              <div class="feature-item"><i class="bi bi-p-circle-fill"></i> Ample Free Parking</div>
+              <div class="feature-item"><i class="bi bi-people-fill"></i> Spectator Gallery</div>
+            {% elif selected_facility.slug == 'swimming-pool' %}
+              <div class="feature-item"><i class="bi bi-water"></i> Filtered Clean Pool</div>
+              <div class="feature-item"><i class="bi bi-shield-check"></i> Shower & Changing Cabins</div>
+              <div class="feature-item"><i class="bi bi-life-preserver"></i> Safety Ring & Gear</div>
+              <div class="feature-item"><i class="bi bi-clock-fill"></i> Hourly Batch Access</div>
+            {% else %}
+              <div class="feature-item"><i class="bi bi-balloon-fill"></i> Colorful Slides & Swings</div>
+              <div class="feature-item"><i class="bi bi-shield-check"></i> Fenced Safe Play Area</div>
+              <div class="feature-item"><i class="bi bi-heart-fill"></i> Toddler Play Equipment</div>
+              <div class="feature-item"><i class="bi bi-tree-fill"></i> Family Sitting Benches</div>
+            {% endif %}
+          </div>
+
+          <!-- Ground Guidelines -->
+          <div class="ground-rules-box">
+            <strong>⚠️ Ground Guidelines:</strong><br>
+            • Report 10 mins before slot time.<br>
+            • Turf boots or rubber studs only (metal studs strictly prohibited).<br>
+            • Operating daily from {{ selected_facility.open_time|time:"g:i A" }} to {{ selected_facility.close_time|time:"g:i A" }}.
+          </div>
+
+          <!-- Direct Contact & Map Actions -->
+          <div class="turf-contact-strip mb-2">
+            <a href="tel:+91{{ owner_phone }}" class="btn-quick-call">
+              <i class="bi bi-telephone-fill text-success"></i> Call Owner
+            </a>
+            <a href="https://wa.me/{{ whatsapp_phone }}?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20inquire%20about%20{{ selected_facility.name|urlencode }}."
+               target="_blank" class="btn-quick-wa">
+              <i class="bi bi-whatsapp"></i> WhatsApp
+            </a>
+          </div>
+
+          <div class="text-center mt-2">
+            <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" class="small text-secondary text-decoration-none">
+              <i class="bi bi-geo-alt-fill text-success me-1"></i> Open Location in Google Maps ›
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RIGHT COLUMN: Live Slot Schedule & Instant Booking ── -->
+    <div class="col-lg-7 col-xl-8">
+      <div class="booking-engine-card">
+
+        <!-- Header -->
+        <div class="engine-header">
+          <h3 class="engine-title">
+            <i class="bi bi-calendar2-week text-success"></i>
+            Live Slot Schedule
+          </h3>
+          <div class="engine-date-label">
+            <i class="bi bi-clock-history me-1"></i>
+            {{ selected_facility.slot_duration_minutes }} Min Slots
+          </div>
+        </div>
+
+        <!-- Date Selector -->
+        <form method="GET" id="datePickerForm" class="date-picker-wrap">
+          {% if selected_facility %}
+            <input type="hidden" name="facility" value="{{ selected_facility.slug }}">
+          {% endif %}
+          <i class="bi bi-calendar3"></i>
+          <input type="date" name="date" class="date-picker-input"
+                 value="{{ date_str }}" min="{{ min_date }}" max="{{ max_date }}"
+                 onchange="document.getElementById('datePickerForm').submit()">
+          <span class="small text-secondary d-none d-sm-inline">Tap to change date</span>
+        </form>
+
+        <!-- Status Legend -->
+        <div class="slot-legend-strip">
+          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (Tap to Book)</div>
+          <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
+          <div class="legend-item"><span class="legend-dot past"></span> Past</div>
+        </div>
+
+        <!-- Slot Matrix -->
+        {% if slots %}
+        <div class="slots-matrix">
+          {% for slot in slots %}
+            {% if slot.is_past %}
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">{{ slot.start_time }}</div>
+                <div class="duration-text">– {{ slot.end_time }}</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            {% elif slot.is_available %}
+              <div class="slot-btn vacant"
+                   onclick="openBookingModal('{{ slot.start_time }}', '{{ slot.end_time }}', '{{ selected_facility.id }}', '{{ selected_facility.name|escapejs }}', '{{ date_str }}', '{{ selected_facility.price_per_hour|floatformat:0 }}')">
+                <span class="tap-badge">TAP</span>
+                <div class="time-text">{{ slot.start_time }}</div>
+                <div class="duration-text">– {{ slot.end_time }}</div>
+                <span class="slot-badge-pill">✓ Vacant</span>
+              </div>
+            {% else %}
+              <div class="slot-btn booked" title="Already booked by another club / player">
+                <div class="time-text">{{ slot.start_time }}</div>
+                <div class="duration-text">– {{ slot.end_time }}</div>
+                <span class="slot-badge-pill">✗ Booked</span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5 text-secondary">
+          <i class="bi bi-calendar-x display-5 d-block mb-2 text-muted"></i>
+          No slots available for this facility on {{ target_date|date:"d M Y" }}.
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- ── Booking Bottom Sheet / Modal ── -->
+<div class="booking-overlay" id="bookingOverlay" onclick="closeBookingModal()"></div>
+
+<div class="booking-modal-box" id="bookingModalBox">
+  <div class="modal-drag-handle"></div>
+
+  <div class="modal-header-line">
+    <h4 class="modal-title-text" id="modalSlotTitle">📅 Book Slot</h4>
+    <button type="button" class="modal-close-x" onclick="closeBookingModal()">✕</button>
+  </div>
+
+  <div class="modal-slot-meta" id="modalSlotSubtitle"></div>
+
+  <!-- Hidden state values -->
+  <input type="hidden" id="stateFacilityId">
+  <input type="hidden" id="stateFacilityName">
+  <input type="hidden" id="stateDate">
+  <input type="hidden" id="stateStart">
+  <input type="hidden" id="statePrice">
+
+  <!-- Customer Entry Form -->
+  <div class="field-group">
+    <label class="field-label">Your Name <span class="text-danger">*</span></label>
+    <input type="text" id="inputCustomerName" class="field-input" placeholder="e.g. Rahul Kumar" autocomplete="name">
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Club / Team Name</label>
+    <input type="text" id="inputClubName" class="field-input" placeholder="e.g. Friends FC, Kulukkallur Warriors (optional)">
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Phone Number <span class="text-danger">*</span></label>
+    <input type="tel" id="inputCustomerPhone" class="field-input" placeholder="e.g. 9876543210" inputmode="numeric">
+  </div>
+
+  <!-- Send WhatsApp to Owner -->
+  <button type="button" class="btn-submit-wa" onclick="submitToWhatsApp()">
+    <i class="bi bi-whatsapp fs-5"></i> Send Booking Request on WhatsApp
+  </button>
+
+  {% if user.is_staff %}
+  <!-- Admin direct database booking form -->
+  <form method="POST" action="{% url 'confirm_booking' %}" id="adminDirectForm">
+    {% csrf_token %}
+    <input type="hidden" name="facility_id" id="adminFacilityId">
+    <input type="hidden" name="booking_date" id="adminBookingDate">
+    <input type="hidden" name="start_time" id="adminStartTime">
+    <input type="hidden" name="customer_name" id="adminCustomerName">
+    <input type="hidden" name="customer_phone" id="adminCustomerPhone">
+    <input type="hidden" name="notes" id="adminNotes">
+    <button type="button" class="btn-admin-direct" onclick="submitAdminBooking()">
+      <i class="bi bi-shield-check"></i> Lock & Confirm in System (Admin)
+    </button>
+  </form>
+  {% endif %}
+</div>
+
+<!-- Mobile Sticky Call Bar (Phones Only) -->
+<div class="mobile-call-dock">
+  <a href="tel:+91{{ owner_phone }}" class="btn-dock-call">
+    <i class="bi bi-telephone-fill text-success"></i> Call Owner
+  </a>
+  <a href="https://wa.me/{{ whatsapp_phone }}?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20inquire%20about%20booking."
+     target="_blank" class="btn-dock-wa">
+    <i class="bi bi-whatsapp"></i> WhatsApp Owner
+  </a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const OWNER_WHATSAPP_NUMBER = '{{ whatsapp_phone }}';
+
+function openBookingModal(start, end, facilityId, facilityName, dateStr, price) {
+  document.getElementById('modalSlotTitle').textContent = '📅 Slot: ' + start + ' – ' + end;
+  document.getElementById('modalSlotSubtitle').textContent =
+    facilityName + '  ·  ' + formatFriendlyDate(dateStr) + '  ·  ₹' + price + ' / slot';
+
+  document.getElementById('stateFacilityId').value = facilityId;
+  document.getElementById('stateFacilityName').value = facilityName;
+  document.getElementById('stateDate').value = dateStr;
+  document.getElementById('stateStart').value = start;
+  document.getElementById('statePrice').value = price;
+
+  // Clear inputs
+  document.getElementById('inputCustomerName').value = '';
+  document.getElementById('inputClubName').value = '';
+  document.getElementById('inputCustomerPhone').value = '';
+
+  document.getElementById('bookingModalBox').classList.add('open');
+  document.getElementById('bookingOverlay').classList.add('show');
+  document.getElementById('inputCustomerName').focus();
+}
+
+function closeBookingModal() {
+  document.getElementById('bookingModalBox').classList.remove('open');
+  document.getElementById('bookingOverlay').classList.remove('show');
+}
+
+function submitToWhatsApp() {
+  const name  = document.getElementById('inputCustomerName').value.trim();
+  const club  = document.getElementById('inputClubName').value.trim();
+  const phone = document.getElementById('inputCustomerPhone').value.trim();
+  const slot  = document.getElementById('modalSlotTitle').textContent.replace('📅 Slot: ', '');
+  const date  = document.getElementById('stateDate').value;
+  const fac   = document.getElementById('stateFacilityName').value;
+  const price = document.getElementById('statePrice').value;
+
+  if (!name || !phone) {
+    alert('Please enter your Name and Phone Number to book.');
+    return;
+  }
+
+  const message = [
+    '🏟️ *BOOKING REQUEST — Friends Sports Hub*',
+    '',
+    '📅 Date: ' + formatFriendlyDate(date),
+    '⏰ Slot: ' + slot,
+    '🏟️ Facility: ' + fac,
+    '💰 Rate: ₹' + price + ' / slot',
+    '',
+    '👤 Name: ' + name,
+    '🏆 Club/Team: ' + (club || '—'),
+    '📞 Phone: ' + phone,
+    '',
+    'Please confirm the slot. Thank you!'
+  ].join('\n');
+
+  const url = 'https://api.whatsapp.com/send?phone=' + OWNER_WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
+  
+  const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) {
+    window.location.href = url;
+  } else {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+  closeBookingModal();
+}
+
+function submitAdminBooking() {
+  const name  = document.getElementById('inputCustomerName').value.trim();
+  const phone = document.getElementById('inputCustomerPhone').value.trim();
+  const club  = document.getElementById('inputClubName').value.trim();
+
+  if (!name || !phone) {
+    alert('Admin: Please enter Customer Name and Phone Number.');
+    return;
+  }
+
+  document.getElementById('adminFacilityId').value   = document.getElementById('stateFacilityId').value;
+  document.getElementById('adminBookingDate').value  = document.getElementById('stateDate').value;
+  document.getElementById('adminStartTime').value    = document.getElementById('stateStart').value;
+  document.getElementById('adminCustomerName').value = name;
+  document.getElementById('adminCustomerPhone').value= phone;
+  document.getElementById('adminNotes').value        = club;
+  document.getElementById('adminDirectForm').submit();
+}
+
+function formatFriendlyDate(d) {
+  if (!d) return '';
+  const parts = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return parseInt(parts[2]) + ' ' + months[parseInt(parts[1])-1] + ' ' + parts[0];
+}
+</script>
+{% endblock %}

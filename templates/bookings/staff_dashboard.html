@@ -1,0 +1,311 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Owner & Staff Operations Portal | Friends Sports Hub{% endblock %}
+
+{% block content %}
+<div class="py-4" style="background-color: #070d09;">
+    <div class="container-fluid px-lg-5">
+        
+        <!-- Staff Top Navigation Bar -->
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 mb-4 shadow-sm">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold">
+                        <i class="bi bi-shield-lock-fill me-1"></i> 
+                        {% if is_owner %}Owner / Director Portal{% else %}Ground Staff Desk{% endif %}
+                    </span>
+                    <span class="text-white fw-bold d-none d-sm-inline">Friends Sports Hub Mulayankavu</span>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'staff_dashboard' %}" class="btn btn-sm btn-success rounded-pill px-3 fw-bold">
+                        <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                    </a>
+                    <a href="{% url 'staff_walkin_booking' %}" class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold">
+                        <i class="bi bi-plus-circle-fill me-1"></i> New Walk-in Booking
+                    </a>
+                    {% if is_owner %}
+                        <a href="{% url 'staff_manage_employees' %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                            <i class="bi bi-people-fill me-1 text-warning"></i> Manage Staff
+                        </a>
+                        <a href="{% url 'staff_reports' %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                            <i class="bi bi-graph-up-arrow me-1 text-info"></i> Revenue Reports
+                        </a>
+                    {% endif %}
+                    <a href="/admin/" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-gear-fill me-1"></i> Django Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 mb-4 shadow">
+            <form method="GET" class="row g-2 align-items-center">
+                <div class="col-md-3">
+                    <label class="small text-secondary fw-semibold mb-1"><i class="bi bi-calendar3 me-1 text-success"></i> Match Date</label>
+                    <input type="date" name="date" class="form-control form-control-sm bg-dark text-white border-secondary" value="{{ date_str }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="small text-secondary fw-semibold mb-1"><i class="bi bi-dribbble me-1 text-success"></i> Facility</label>
+                    <select name="facility" class="form-select form-select-sm bg-dark text-white border-secondary">
+                        <option value="">All Facilities</option>
+                        {% for f in facilities %}
+                            <option value="{{ f.slug }}" {% if facility_slug == f.slug %}selected{% endif %}>{{ f.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="small text-secondary fw-semibold mb-1"><i class="bi bi-search me-1 text-success"></i> Search Customer / Phone</label>
+                    <input type="text" name="q" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Search phone, name, or booking ref..." value="{{ search_query }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end pt-md-4">
+                    <button type="submit" class="btn btn-success btn-sm w-100 rounded-pill fw-bold">
+                        Filter Schedule
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- KPI Metrics Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="text-secondary small fw-semibold">Confirmed Matches</div>
+                    <div class="fs-2 fw-extrabold text-white mt-1">{{ total_confirmed_count }}</div>
+                    <small class="text-success"><i class="bi bi-calendar-check me-1"></i>{{ selected_date|date:"D, d M" }}</small>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="text-secondary small fw-semibold">Revenue Collected</div>
+                    <div class="fs-2 fw-extrabold text-success mt-1">₹{{ total_revenue_paid|floatformat:0 }}</div>
+                    <small class="text-light"><i class="bi bi-check2-circle text-success me-1"></i>Paid at counter/UPI</small>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="text-secondary small fw-semibold">Cash Pending at Venue</div>
+                    <div class="fs-2 fw-extrabold text-warning mt-1">₹{{ total_revenue_pending|floatformat:0 }}</div>
+                    <small class="text-secondary">To be collected upon arrival</small>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="text-secondary small fw-semibold">Matches Completed</div>
+                    <div class="fs-2 fw-extrabold text-info mt-1">{{ total_completed_count }}</div>
+                    <small class="text-secondary">Cancelled: {{ total_cancelled_count }}</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Visual Match Timeline for Selected Facility -->
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 mb-5 shadow">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h5 class="text-white fw-bold mb-0">
+                        <i class="bi bi-clock-history text-success me-2"></i>
+                        Hourly Pitch Schedule: <span class="text-success">{{ selected_facility.name }}</span>
+                    </h5>
+                    <small class="text-secondary">Timeline for {{ selected_date|date:"l, d F Y" }} &bull; Open {{ selected_facility.open_time|time:"g:i A" }} to {{ selected_facility.close_time|time:"g:i A" }}</small>
+                </div>
+                <div>
+                    <a href="{% url 'staff_walkin_booking' %}?facility_id={{ selected_facility.id }}&date={{ date_str }}" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                        <i class="bi bi-plus-lg me-1"></i> Add Walk-in to This Pitch
+                    </a>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+                {% for slot in schedule_slots %}
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border {% if slot.booking %}border-success bg-dark bg-opacity-75{% elif slot.is_past %}border-secondary border-opacity-25 bg-black bg-opacity-50 opacity-75{% else %}border-secondary border-opacity-25 bg-dark{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">{{ slot.display_time }}</span>
+                                {% if slot.booking %}
+                                    <span class="badge {% if slot.booking.payment_status == 'PAID' %}bg-success{% else %}bg-warning text-dark{% endif %} small">
+                                        {{ slot.booking.get_payment_status_display }}
+                                    </span>
+                                {% elif slot.is_past %}
+                                    <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
+                                {% else %}
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                {% endif %}
+                            </div>
+
+                            {% if slot.booking %}
+                                <div class="mb-2">
+                                    <div class="text-light fw-bold text-truncate">{{ slot.booking.customer_name }}</div>
+                                    <div class="small text-secondary">
+                                        <i class="bi bi-telephone text-success me-1"></i>
+                                        <a href="tel:{{ slot.booking.customer_phone }}" class="text-secondary text-decoration-none">{{ slot.booking.customer_phone }}</a>
+                                    </div>
+                                    <div class="small text-success fw-bold mt-1">Fee: ₹{{ slot.booking.total_price|floatformat:0 }}</div>
+                                    {% if slot.booking.payment_status == 'ADVANCE_PAID' %}
+                                        <div class="small text-info"><i class="bi bi-qr-code text-success me-1"></i>Adv: ₹{{ slot.booking.advance_amount|floatformat:0 }}</div>
+                                        <div class="small text-warning fw-bold">Bal to Collect: ₹{{ slot.booking.balance_amount|floatformat:0 }}</div>
+                                        {% if slot.booking.upi_transaction_id %}
+                                            <div class="small text-secondary font-monospace" style="font-size: 0.65rem;">Ref: {{ slot.booking.upi_transaction_id }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if slot.booking.created_by_staff %}
+                                        <span class="badge bg-info bg-opacity-25 text-info mt-1" style="font-size: 0.65rem;">Counter Walk-in</span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="d-flex gap-1 mt-auto pt-2 border-top border-secondary border-opacity-25 flex-wrap">
+                                    {% if slot.booking.payment_status != 'PAID' and slot.booking.status == 'CONFIRMED' %}
+                                        <form method="POST" action="{% url 'staff_update_booking_status' slot.booking.booking_id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="collect_balance">
+                                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                            <button type="submit" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                                <i class="bi bi-cash-coin"></i> {% if slot.booking.balance_amount > 0 %}Collect Bal ₹{{ slot.booking.balance_amount|floatformat:0 }}{% else %}Mark Paid{% endif %}
+                                            </button>
+                                        </form>
+                                    {% endif %}
+
+
+                                    {% if slot.booking.status == 'CONFIRMED' %}
+                                        <form method="POST" action="{% url 'staff_update_booking_status' slot.booking.booking_id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="mark_completed">
+                                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                            <button type="submit" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                                <i class="bi bi-check-all"></i> Complete
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{% url 'staff_update_booking_status' slot.booking.booking_id %}" class="d-inline" onsubmit="return confirm('Cancel this slot?');">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="cancel_booking">
+                                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                            <button type="submit" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                                Cancel
+                                            </button>
+                                        </form>
+                                    {% endif %}
+
+                                    <a href="{% url 'booking_detail' slot.booking.booking_id %}" target="_blank" class="btn btn-xs btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                        Receipt
+                                    </a>
+                                </div>
+                            {% elif slot.is_available %}
+                                <div class="mt-auto pt-3">
+                                    <a href="{% url 'staff_walkin_booking' %}?facility_id={{ selected_facility.id }}&date={{ date_str }}&start_time={{ slot.start_time }}" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="mt-auto pt-3 text-secondary small text-center">
+                                    <i class="bi bi-clock"></i> Hour Passed
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Section 2: Detailed Bookings Table -->
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 shadow">
+            <h5 class="text-white fw-bold mb-3 d-flex align-items-center justify-content-between">
+                <span>All Scheduled Reservations ({{ bookings.count }})</span>
+                <span class="small text-secondary">{{ selected_date|date:"D, d M Y" }}</span>
+            </h5>
+
+            {% if bookings %}
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0 align-middle">
+                        <thead class="border-secondary text-secondary small">
+                            <tr>
+                                <th>Ref ID</th>
+                                <th>Player / Customer</th>
+                                <th>Facility</th>
+                                <th>Slot Timing</th>
+                                <th>Fee</th>
+                                <th>Payment</th>
+                                <th>Match Status</th>
+                                <th class="text-end">Quick Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for b in bookings %}
+                                <tr>
+                                    <td class="font-monospace small text-success fw-bold">{{ b.booking_id }}</td>
+                                    <td>
+                                        <div class="fw-bold text-white">{{ b.customer_name }}</div>
+                                        <div class="small text-secondary"><i class="bi bi-telephone text-success me-1"></i>{{ b.customer_phone }}</div>
+                                    </td>
+                                    <td class="text-light">{{ b.facility.name }}</td>
+                                    <td>
+                                        <div class="text-warning fw-semibold">{{ b.start_time|time:"g:i A" }} - {{ b.end_time|time:"g:i A" }}</div>
+                                        <small class="text-secondary">{{ b.booking_date|date:"d M Y" }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold text-success">₹{{ b.total_price|floatformat:0 }}</div>
+                                        {% if b.payment_status == 'ADVANCE_PAID' %}
+                                            <div class="small text-info"><i class="bi bi-qr-code text-success me-1"></i>Adv: ₹{{ b.advance_amount|floatformat:0 }}</div>
+                                            <div class="small text-warning fw-bold">Bal: ₹{{ b.balance_amount|floatformat:0 }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if b.payment_status == 'PAID' %}bg-success{% elif b.payment_status == 'ADVANCE_PAID' %}bg-info text-dark{% else %}bg-warning text-dark{% endif %}">
+                                            {{ b.get_payment_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if b.status == 'CONFIRMED' %}bg-primary{% elif b.status == 'COMPLETED' %}bg-info text-dark{% else %}bg-danger{% endif %}">
+                                            {{ b.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-inline-flex gap-1">
+                                            {% if b.payment_status != 'PAID' and b.status == 'CONFIRMED' %}
+                                                <form method="POST" action="{% url 'staff_update_booking_status' b.booking_id %}" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="action" value="collect_balance">
+                                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                                    <button type="submit" class="btn btn-sm btn-success rounded-pill px-2" title="Collect Balance">
+                                                        <i class="bi bi-cash-stack"></i> {% if b.balance_amount > 0 %}Collect ₹{{ b.balance_amount|floatformat:0 }}{% else %}Mark Paid{% endif %}
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+
+                                            
+                                            {% if b.status == 'CONFIRMED' %}
+                                                <form method="POST" action="{% url 'staff_update_booking_status' b.booking_id %}" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="action" value="mark_completed">
+                                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                                    <button type="submit" class="btn btn-sm btn-outline-info rounded-pill px-2" title="Mark Completed">
+                                                        <i class="bi bi-check2"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+
+                                            <a href="{% url 'booking_detail' b.booking_id %}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-2">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4 text-secondary">
+                    <i class="bi bi-inbox fs-2 mb-2 d-block"></i>
+                    No bookings found for the selected date or search filter.
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

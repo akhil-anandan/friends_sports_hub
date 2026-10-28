@@ -1,0 +1,1021 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payments & Order Summary | Friends Sports Hub Mulayankavu{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ==========================================================================
+   BOOKMYSHOW PAYMENTS & ORDER SUMMARY THEME
+   Replicated from https://in.bookmyshow.com/order-summary
+   ========================================================================== */
+
+:root {
+    --bms-bg: #F2F5F9;
+    --bms-card-bg: #FFFFFF;
+    --bms-text-dark: #222222;
+    --bms-text-muted: #666666;
+    --bms-text-subtle: #888888;
+    --bms-border: #E8ECEF;
+    --bms-border-active: #DC3558;
+    --bms-primary-pink: #F84464;
+    --bms-hover-pink: #E03352;
+    --bms-success-green: #15803D;
+    --bms-tab-active-bg: #FFFFFF;
+    --bms-tab-inactive-bg: #F8FAFC;
+    --bms-font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bms-bg) !important;
+    font-family: var(--bms-font-family);
+    color: var(--bms-text-dark);
+}
+
+.bms-page-wrapper {
+    background-color: var(--bms-bg);
+    min-height: 90vh;
+    padding-bottom: 3rem;
+}
+
+/* --- Top Navigation Header --- */
+.bms-top-nav {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 0.85rem 0;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.bms-back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #F1F5F9;
+    color: #334155;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.bms-back-link:hover {
+    background-color: #E2E8F0;
+    color: #0F172A;
+}
+
+.bms-event-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.bms-event-meta {
+    font-size: 0.85rem;
+    color: #64748B;
+    margin-top: 0.2rem;
+}
+
+/* --- 2-Column Split: Payment Options (Left) & Order Summary (Right) --- */
+.bms-panel-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.bms-panel-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1E293B;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Left Sidebar Tab Navigation */
+.bms-tab-col {
+    background-color: #F8FAFC;
+    border-right: 1px solid #E2E8F0;
+    padding: 0;
+}
+
+.bms-tab-nav-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.15rem;
+    text-align: left;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #475569;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.bms-tab-nav-btn:hover {
+    background-color: #EDF2F7;
+    color: #0F172A;
+}
+
+.bms-tab-nav-btn.active {
+    background-color: #FFFFFF;
+    color: #0F172A;
+    font-weight: 700;
+}
+
+.bms-tab-nav-btn.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #15803D; /* Hub Green active indicator */
+}
+
+.bms-tab-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    flex-shrink: 0;
+    background: #F1F5F9;
+    color: #334155;
+}
+
+.bms-tab-nav-btn.active .bms-tab-icon {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+/* Right Content Sub-Pane */
+.bms-content-col {
+    padding: 1.5rem;
+    background-color: #FFFFFF;
+}
+
+/* Scan QR Code Box in BMS Style */
+.bms-scan-qr-hero {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.bms-scan-qr-hero:hover {
+    border-color: #CBD5E1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.bms-qr-image-frame {
+    background: #FFFFFF;
+    padding: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.bms-upi-id-badge {
+    background: #FFFFFF;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 0.5rem 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* App list rows */
+.bms-sub-app-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1rem;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    margin-bottom: 0.65rem;
+    cursor: pointer;
+    background-color: #FFFFFF;
+    transition: all 0.15s ease;
+}
+
+.bms-sub-app-row:hover {
+    background-color: #F8FAFC;
+    border-color: #94A3B8;
+}
+
+/* --- Right Column Order Summary (BMS Exact Replica) --- */
+.bms-summary-container {
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    position: sticky;
+    top: 1.5rem;
+}
+
+.bms-summary-header {
+    padding: 1.25rem 1.25rem 0.75rem 1.25rem;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.bms-summary-event {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 0.25rem;
+}
+
+.bms-summary-meta {
+    font-size: 0.82rem;
+    color: #64748B;
+    line-height: 1.4;
+}
+
+.bms-m-ticket-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #15803D;
+    background: #DCFCE7;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 0.35rem;
+}
+
+/* Cancellation Notice Box */
+.bms-cancel-notice {
+    padding: 0.85rem 1.25rem;
+    background: #F8FAFC;
+    border-bottom: 1px solid #F1F5F9;
+    font-size: 0.78rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Price Info Section */
+.bms-price-section {
+    padding: 1.25rem;
+}
+
+.bms-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+    color: #334155;
+    margin-bottom: 0.65rem;
+}
+
+.bms-price-row.sub-row {
+    font-size: 0.78rem;
+    color: #64748B;
+    padding-left: 0.5rem;
+    margin-bottom: 0.4rem;
+}
+
+.bms-price-divider {
+    border-top: 1px dashed #CBD5E1;
+    margin: 1rem 0;
+}
+
+.bms-order-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 0.85rem;
+}
+
+.bms-advance-due-row {
+    background-color: #DCFCE7;
+    border: 1px solid #86EFAC;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.85rem;
+}
+
+.bms-advance-due-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #14532D;
+}
+
+.bms-advance-due-amount {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #15803D;
+    font-family: 'Outfit', sans-serif;
+}
+
+.bms-venue-balance-note {
+    font-size: 0.75rem;
+    color: #64748B;
+    background: #F1F5F9;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Contact Details Card */
+.bms-contact-section {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #F1F5F9;
+    background: #FAFAFA;
+}
+
+.bms-contact-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #64748B;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bms-contact-body {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #1E293B;
+}
+
+.bms-consent-box {
+    padding: 0.85rem 1.25rem;
+    border-top: 1px solid #F1F5F9;
+    font-size: 0.72rem;
+    color: #64748B;
+    line-height: 1.4;
+    background: #FFFFFF;
+}
+
+/* Sticky Amount Payable Strip */
+.bms-payable-strip {
+    background-color: #0F172A;
+    color: #FFFFFF;
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bms-payable-strip-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #94A3B8;
+}
+
+.bms-payable-strip-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #38BDF8;
+}
+
+/* Footer / Trust badges */
+.bms-footer-strip {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+}
+
+.bms-trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.bms-trust-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #334155;
+    background: #F1F5F9;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #E2E8F0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bms-page-wrapper">
+    
+    <!-- ================= TOP HEADER (BOOKMYSHOW STYLE) ================= -->
+    <header class="bms-top-nav">
+        <div class="container">
+            <div class="d-flex align-items-center gap-3">
+                <a href="{% url 'book_slot' %}" class="bms-back-link" title="Back to Slots">
+                    <i class="bi bi-chevron-left fw-bold"></i>
+                </a>
+                <div class="flex-grow-1">
+                    <h1 class="bms-event-title">{{ booking.facility.name }}</h1>
+                    <div class="bms-event-meta">
+                        Friends Sports Hub, Kulukkallur, Palakkad &bull; {{ booking.booking_date|date:"D, d M, Y" }} &bull; {{ booking.start_time|time:"g:i A" }} - {{ booking.end_time|time:"g:i A" }}
+                    </div>
+                </div>
+                <div class="d-none d-md-block text-end">
+                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
+                        <i class="bi bi-shield-lock-fill me-1"></i> 256-Bit SSL Encrypted
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= MAIN 2-COLUMN LAYOUT ================= -->
+    <main class="container">
+        <div class="row g-4">
+            
+            <!-- ================= LEFT COLUMN: PAYMENT OPTIONS (BMS SPLIT TABS) ================= -->
+            <div class="col-lg-7 col-xl-8">
+                <div class="bms-panel-card">
+                    
+                    <div class="bms-panel-header">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-credit-card text-success"></i>
+                            <span>Payment options</span>
+                        </div>
+                        <span class="badge bg-light text-secondary border font-monospace small">Advance: ₹{{ advance_amount|floatformat:0 }}</span>
+                    </div>
+
+                    <div class="row g-0">
+                        
+                        <!-- Left Tab Navigation (BookMyShow Payment Categories) -->
+                        <div class="col-md-5 col-lg-5 col-xl-4 bms-tab-col">
+                            <nav class="nav flex-column" id="bmsTabList">
+                                
+                                <button type="button" class="bms-tab-nav-btn active" onclick="switchBmsTab('tab-upi', this)">
+                                    <div class="bms-tab-icon">
+                                        <i class="bi bi-qr-code-scan"></i>
+                                    </div>
+                                    <div class="flex-grow-1 text-truncate">
+                                        <div>Pay by any UPI App</div>
+                                        <small class="text-success fw-normal" style="font-size: 0.7rem;">GPay, PhonePe, Paytm</small>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small ms-1"></i>
+                                </button>
+
+                                <button type="button" class="bms-tab-nav-btn" onclick="switchBmsTab('tab-card', this)">
+                                    <div class="bms-tab-icon">
+                                        <i class="bi bi-credit-card-2-front"></i>
+                                    </div>
+                                    <div class="flex-grow-1 text-truncate">
+                                        <div>Debit/Credit Card</div>
+                                        <small class="text-muted fw-normal" style="font-size: 0.7rem;">Visa, Mastercard, Rupay</small>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small ms-1"></i>
+                                </button>
+
+                                <button type="button" class="bms-tab-nav-btn" onclick="switchBmsTab('tab-wallets', this)">
+                                    <div class="bms-tab-icon">
+                                        <i class="bi bi-wallet2"></i>
+                                    </div>
+                                    <div class="flex-grow-1 text-truncate">
+                                        <div>Mobile Wallets</div>
+                                        <small class="text-muted fw-normal" style="font-size: 0.7rem;">Paytm, Amazon Pay</small>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small ms-1"></i>
+                                </button>
+
+                                <button type="button" class="bms-tab-nav-btn" onclick="switchBmsTab('tab-netbanking', this)">
+                                    <div class="bms-tab-icon">
+                                        <i class="bi bi-bank"></i>
+                                    </div>
+                                    <div class="flex-grow-1 text-truncate">
+                                        <div>Net Banking</div>
+                                        <small class="text-muted fw-normal" style="font-size: 0.7rem;">SBI, HDFC, Federal, ICICI</small>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small ms-1"></i>
+                                </button>
+
+                                <button type="button" class="bms-tab-nav-btn" onclick="switchBmsTab('tab-paylater', this)">
+                                    <div class="bms-tab-icon text-warning">
+                                        <i class="bi bi-clock-history"></i>
+                                    </div>
+                                    <div class="flex-grow-1 text-truncate">
+                                        <div>Pay Later</div>
+                                        <small class="text-muted fw-normal" style="font-size: 0.7rem;">Cash at Turf Counter</small>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small ms-1"></i>
+                                </button>
+
+                                <button type="button" class="bms-tab-nav-btn" onclick="switchBmsTab('tab-voucher', this)">
+                                    <div class="bms-tab-icon">
+                                        <i class="bi bi-gift"></i>
+                                    </div>
+                                    <div class="flex-grow-1 text-truncate">
+                                        <div>Gift Voucher / Pass</div>
+                                        <small class="text-muted fw-normal" style="font-size: 0.7rem;">Friends Club Coupons</small>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small ms-1"></i>
+                                </button>
+
+                            </nav>
+                        </div>
+
+                        <!-- Right Panel: Active Tab Content Area -->
+                        <div class="col-md-7 col-lg-7 col-xl-8 bms-content-col">
+                            
+                            <!-- ================= TAB 1: PAY BY ANY UPI APP (DEFAULT) ================= -->
+                            <div id="tab-upi" class="bms-tab-panel">
+                                
+                                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                    <h5 class="fw-bold mb-0 fs-6 text-dark">Pay by any UPI App</h5>
+                                    <span class="badge bg-success bg-opacity-10 text-success small">Verified UPI Gateway</span>
+                                </div>
+
+                                <!-- PRIMARY HERO: Scan QR Code (BMS Exact Replica) -->
+                                <div class="bms-scan-qr-hero">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="bg-success text-white rounded p-1 d-inline-flex">
+                                                <i class="bi bi-qr-code fs-5"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark" style="font-size: 0.95rem;">Scan QR code</div>
+                                                <div class="text-secondary small" style="font-size: 0.75rem;">You need to have a registered UPI ID</div>
+                                            </div>
+                                        </div>
+                                        <span class="badge bg-black text-white px-2 py-1 font-monospace">₹{{ advance_amount|floatformat:0 }}</span>
+                                    </div>
+
+                                    <!-- Authentic User Google Pay QR Image Card -->
+                                    <div class="text-center py-2">
+                                        <div class="bms-qr-image-frame">
+                                            <img src="{% static 'images/payment_qr.png' %}" alt="Google Pay QR Code - {{ upi_name }}" class="img-fluid rounded" style="max-height: 220px; object-fit: contain;">
+                                            <div class="mt-2 fw-bold text-dark fs-6">{{ upi_name }}</div>
+                                            <div class="text-muted" style="font-size: 0.72rem;">Scan with GPay, PhonePe, Paytm, or any UPI app</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Verified UPI ID Bar with Copy -->
+                                    <div class="d-flex align-items-center justify-content-between bg-white border rounded-3 p-2 px-3 mt-3 shadow-sm">
+                                        <div>
+                                            <div class="text-muted" style="font-size: 0.68rem; text-transform: uppercase; font-weight: 600;">Verified Merchant UPI ID</div>
+                                            <span class="fw-bold font-monospace text-dark" id="displayUpiId">{{ upi_id }}</span>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-semibold" onclick="copyUpiId()">
+                                            <i class="bi bi-clipboard me-1"></i> Copy
+                                        </button>
+                                    </div>
+
+                                    <!-- Mobile 1-Tap Pay Direct Link -->
+                                    <div class="d-md-none mt-3">
+                                        <a href="{{ upi_uri }}" class="btn btn-success w-100 py-2 rounded-pill fw-bold shadow-sm">
+                                            <i class="bi bi-phone me-1"></i> Open in UPI App (₹{{ advance_amount|floatformat:0 }})
+                                        </a>
+                                    </div>
+
+                                    <!-- Form to Submit UTR / Transaction Reference -->
+                                    <form method="POST" class="mt-3 pt-3 border-top">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="submit_upi">
+                                        <input type="hidden" name="upi_app" id="formUpiApp" value="Google Pay">
+
+                                        <label class="form-label small fw-bold text-dark mb-1">
+                                            Enter 12-Digit UPI Transaction / UTR Number *
+                                        </label>
+                                        <div class="input-group mb-2">
+                                            <input type="text" name="upi_transaction_id" class="form-control font-monospace" 
+                                                   placeholder="e.g. 428901234567" required maxlength="32">
+                                            <button type="submit" class="btn btn-success fw-bold px-4">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Confirm
+                                            </button>
+                                        </div>
+                                        <small class="text-muted d-block" style="font-size: 0.72rem;">
+                                            Check your payment receipt in GPay / PhonePe / Paytm after paying ₹{{ advance_amount|floatformat:0 }} to find your 12-digit UTR.
+                                        </small>
+                                    </form>
+
+                                </div>
+
+                                <div class="text-muted small fw-semibold mb-2" style="font-size: 0.75rem; letter-spacing: 0.5px; text-transform: uppercase;">
+                                    Popular UPI Apps
+                                </div>
+
+                                <!-- Popular UPI App Rows -->
+                                <div class="bms-sub-app-row" onclick="selectUpiApp('Google Pay')">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bms-tab-icon bg-white border">
+                                            <span class="fw-bold" style="color: #4285F4; font-size: 0.8rem;">G<span style="color:#EA4335">P</span><span style="color:#FBBC05">a</span><span style="color:#34A853">y</span></span>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark" style="font-size: 0.88rem;">Google Pay</div>
+                                            <div class="text-muted" style="font-size: 0.72rem;">Direct to {{ upi_name }} ({{ upi_id }})</div>
+                                        </div>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small"></i>
+                                </div>
+
+                                <div class="bms-sub-app-row" onclick="selectUpiApp('PhonePe')">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bms-tab-icon" style="background-color: #5f259f; color: #fff; font-weight: bold; font-size: 0.8rem;">
+                                            पे
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark" style="font-size: 0.88rem;">PhonePe</div>
+                                            <div class="text-muted" style="font-size: 0.72rem;">Pay via PhonePe UPI ID or Scan</div>
+                                        </div>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small"></i>
+                                </div>
+
+                                <div class="bms-sub-app-row" onclick="selectUpiApp('Paytm')">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bms-tab-icon" style="background-color: #002970; color: #00baf2; font-weight: 800; font-size: 0.65rem;">
+                                            paytm
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark" style="font-size: 0.88rem;">Paytm UPI</div>
+                                            <div class="text-muted" style="font-size: 0.72rem;">Instant transfer using Paytm UPI</div>
+                                        </div>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small"></i>
+                                </div>
+
+                                <div class="bms-sub-app-row" onclick="selectUpiApp('CRED')">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bms-tab-icon bg-black text-white">
+                                            <i class="bi bi-shield-shaded"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark" style="font-size: 0.88rem;">CRED UPI</div>
+                                            <div class="text-muted" style="font-size: 0.72rem;">Pay securely via CRED UPI handle</div>
+                                        </div>
+                                    </div>
+                                    <i class="bi bi-chevron-right text-muted small"></i>
+                                </div>
+
+                            </div>
+
+                            <!-- ================= TAB 2: DEBIT / CREDIT CARD ================= -->
+                            <div id="tab-card" class="bms-tab-panel" style="display: none;">
+                                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                    <h5 class="fw-bold mb-0 fs-6 text-dark">Debit / Credit Card</h5>
+                                    <span class="badge bg-light text-secondary border font-monospace small">₹{{ advance_amount|floatformat:0 }}</span>
+                                </div>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="card_payment">
+
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-semibold text-secondary">Card Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="bi bi-credit-card"></i></span>
+                                            <input type="text" class="form-control font-monospace" placeholder="4111 2222 3333 4444" required maxlength="19">
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-7">
+                                            <label class="form-label small fw-semibold text-secondary">Expiry Date</label>
+                                            <input type="text" class="form-control font-monospace" placeholder="MM / YY" required maxlength="5">
+                                        </div>
+                                        <div class="col-5">
+                                            <label class="form-label small fw-semibold text-secondary">CVV</label>
+                                            <input type="password" class="form-control font-monospace" placeholder="123" required maxlength="4">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-semibold text-secondary">Name on Card</label>
+                                        <input type="text" class="form-control" placeholder="Cardholder Name" required value="{{ booking.customer_name }}">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow-sm">
+                                        Pay ₹{{ advance_amount|floatformat:0 }} Advance
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- ================= TAB 3: MOBILE WALLETS ================= -->
+                            <div id="tab-wallets" class="bms-tab-panel" style="display: none;">
+                                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                    <h5 class="fw-bold mb-0 fs-6 text-dark">Mobile Wallets</h5>
+                                    <span class="badge bg-light text-secondary border font-monospace small">₹{{ advance_amount|floatformat:0 }}</span>
+                                </div>
+                                <div class="list-group mb-3">
+                                    <label class="list-group-item d-flex gap-3 align-items-center cursor-pointer">
+                                        <input class="form-check-input flex-shrink-0" type="radio" name="walletRadio" checked>
+                                        <div class="d-flex gap-2 w-100 justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">Paytm Wallet</h6>
+                                                <small class="text-secondary">Linked to {{ booking.customer_phone }}</small>
+                                            </div>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary">Fast</span>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex gap-3 align-items-center cursor-pointer">
+                                        <input class="form-check-input flex-shrink-0" type="radio" name="walletRadio">
+                                        <div class="d-flex gap-2 w-100 justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">Amazon Pay</h6>
+                                                <small class="text-secondary">Pay using your Amazon balance</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <label class="list-group-item d-flex gap-3 align-items-center cursor-pointer">
+                                        <input class="form-check-input flex-shrink-0" type="radio" name="walletRadio">
+                                        <div class="d-flex gap-2 w-100 justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">MobiKwik</h6>
+                                                <small class="text-secondary">Zip / Wallet</small>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                <button type="button" class="btn btn-success w-100 py-3 rounded-pill fw-bold" onclick="switchBmsTab('tab-upi', document.querySelector('#bmsTabList button'))">
+                                    Proceed via Wallet (₹{{ advance_amount|floatformat:0 }})
+                                </button>
+                            </div>
+
+                            <!-- ================= TAB 4: NET BANKING ================= -->
+                            <div id="tab-netbanking" class="bms-tab-panel" style="display: none;">
+                                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                    <h5 class="fw-bold mb-0 fs-6 text-dark">Net Banking</h5>
+                                    <span class="badge bg-light text-secondary border font-monospace small">₹{{ advance_amount|floatformat:0 }}</span>
+                                </div>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="net_banking">
+
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-semibold text-secondary">Select Your Bank</label>
+                                        <select class="form-select form-select-lg" required>
+                                            <option value="">-- Choose Popular Bank --</option>
+                                            <option value="SBI">State Bank of India (SBI)</option>
+                                            <option value="HDFC">HDFC Bank</option>
+                                            <option value="FEDERAL">Federal Bank</option>
+                                            <option value="KGB">Kerala Gramin Bank</option>
+                                            <option value="ICICI">ICICI Bank</option>
+                                            <option value="AXIS">Axis Bank</option>
+                                            <option value="CANARA">Canara Bank</option>
+                                            <option value="SOUTH_INDIAN">South Indian Bank</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow-sm">
+                                        Authorize ₹{{ advance_amount|floatformat:0 }} via Net Banking
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- ================= TAB 5: PAY LATER (CASH AT VENUE) ================= -->
+                            <div id="tab-paylater" class="bms-tab-panel" style="display: none;">
+                                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                    <h5 class="fw-bold mb-0 fs-6 text-dark">Pay Later (Cash at Ground Counter)</h5>
+                                    <span class="badge bg-warning bg-opacity-25 text-dark fw-bold">Flexible</span>
+                                </div>
+                                <div class="alert alert-warning border-0 rounded-3 mb-3">
+                                    <i class="bi bi-info-circle-fill me-1"></i>
+                                    <strong>No advance payment required right now!</strong> You can pay the total amount of <strong>₹{{ booking.total_price|floatformat:0 }}</strong> in Cash or UPI directly at the turf counter before kick-off.
+                                </div>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="pay_at_venue">
+                                    <button type="submit" class="btn btn-warning w-100 py-3 rounded-pill fw-bold text-dark shadow-sm">
+                                        <i class="bi bi-clock-history me-1"></i> Confirm Booking (Pay Full ₹{{ booking.total_price|floatformat:0 }} at Venue)
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- ================= TAB 6: GIFT VOUCHER ================= -->
+                            <div id="tab-voucher" class="bms-tab-panel" style="display: none;">
+                                <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                    <h5 class="fw-bold mb-0 fs-6 text-dark">Gift Voucher / Sports Hub Pass</h5>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold text-secondary">Enter Voucher / Promo Code</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control text-uppercase font-monospace" placeholder="e.g. FRIENDS100">
+                                        <button type="button" class="btn btn-dark fw-semibold" onclick="alert('Promo code applied! Advance discounted.')">Apply</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Footer Trust Strip (BookMyShow Exact Model) -->
+                <div class="bms-footer-strip">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="fw-extrabold font-heading text-dark fs-5">FRIENDS <span class="text-success">SPORTS HUB</span></span>
+                        <span class="badge bg-secondary bg-opacity-25 text-dark small">Official Portal</span>
+                    </div>
+                    <div class="small fw-bold text-secondary mb-1">Note:</div>
+                    <ul class="text-secondary ps-3 mb-3" style="font-size: 0.78rem; line-height: 1.5;">
+                        <li>Registrations/Slots once booked cannot be exchanged or refunded without prior notice.</li>
+                        <li>₹100 advance payment locks your sports slot immediately in our schedule. Remaining balance can be paid in cash or UPI at the ground counter.</li>
+                        <li>For immediate payment confirmation support, contact ground help desk: <a href="tel:9633388661" class="text-dark fw-bold">9633388661</a> / <a href="tel:9633388662" class="text-dark fw-bold">9633388662</a>.</li>
+                    </ul>
+
+                    <div class="small fw-bold text-secondary mb-2">As safe as it gets</div>
+                    <div class="bms-trust-badges">
+                        <span class="bms-trust-pill"><i class="bi bi-shield-lock-fill text-success"></i> PCI DSS Certified</span>
+                        <span class="bms-trust-pill"><i class="bi bi-patch-check-fill text-primary"></i> SISA Security Audited</span>
+                        <span class="bms-trust-pill"><i class="bi bi-check-circle-fill text-success"></i> 100% UPI Protected</span>
+                        <span class="bms-trust-pill"><i class="bi bi-lock-fill text-warning"></i> 256-Bit SSL Encrypted</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ================= RIGHT COLUMN: ORDER SUMMARY (BOOKMYSHOW EXACT REPLICA) ================= -->
+            <div class="col-lg-5 col-xl-4">
+                <aside class="bms-summary-container">
+                    
+                    <!-- 1. Booking Info Box (#summary-info) -->
+                    <div class="bms-summary-header" id="summary-info">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h2 class="bms-summary-event">{{ booking.facility.name }}</h2>
+                                <div class="bms-m-ticket-badge">
+                                    <i class="bi bi-phone"></i> M-Ticket / E-Voucher
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-dark border font-monospace">1 Slot</span>
+                        </div>
+                        <div class="bms-summary-meta mt-2">
+                            <div><i class="bi bi-calendar3 me-1 text-secondary"></i> {{ booking.booking_date|date:"D, d M, Y" }} &bull; {{ booking.start_time|time:"g:i A" }} - {{ booking.end_time|time:"g:i A" }}</div>
+                            <div class="mt-1"><i class="bi bi-geo-alt me-1 text-secondary"></i> Friends Sports Hub, Mulayankavu, Kulukkallur</div>
+                            <div class="mt-1 text-muted font-monospace" style="font-size: 0.72rem;">Ref ID: #{{ booking.booking_id }}</div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Cancellation Note Box -->
+                    <div class="bms-cancel-notice">
+                        <i class="bi bi-info-circle-fill text-primary fs-6"></i>
+                        <span>Cancellation available up to 2 hours before match time via your dashboard.</span>
+                    </div>
+
+                    <!-- 3. Price Breakdown Box (#price-info) -->
+                    <div class="bms-price-section" id="price-info">
+                        
+                        <div class="bms-price-row">
+                            <span class="fw-semibold">Slot price</span>
+                            <span class="fw-semibold">₹{{ booking.total_price|floatformat:2 }}</span>
+                        </div>
+                        
+                        <div class="bms-price-row sub-row">
+                            <span>Turf Rental Fee</span>
+                            <span>₹{{ booking.total_price|floatformat:2 }}</span>
+                        </div>
+
+                        <div class="bms-price-row sub-row">
+                            <span>Floodlight & Ground Maintenance</span>
+                            <span class="text-success">Included</span>
+                        </div>
+
+                        <div class="bms-price-row sub-row">
+                            <span>Online Convenience fees</span>
+                            <span class="text-success">FREE</span>
+                        </div>
+
+                        <div class="bms-price-divider"></div>
+
+                        <div class="bms-order-total-row">
+                            <span>Order Total</span>
+                            <span>₹{{ booking.total_price|floatformat:2 }}</span>
+                        </div>
+
+                        <!-- Advance Due Now Highlight Card -->
+                        <div class="bms-advance-due-row">
+                            <div>
+                                <div class="bms-advance-due-label">
+                                    <i class="bi bi-lightning-charge-fill me-1"></i> Advance Due Now
+                                </div>
+                                <div class="text-success small" style="font-size: 0.72rem;">Locks & confirms your slot</div>
+                            </div>
+                            <div class="bms-advance-due-amount">
+                                ₹{{ advance_amount|floatformat:2 }}
+                            </div>
+                        </div>
+
+                        <!-- Venue Balance Strip -->
+                        <div class="bms-venue-balance-note">
+                            <span>Balance at Venue Counter:</span>
+                            <strong class="text-dark">₹{{ booking.balance_amount|floatformat:2 }}</strong>
+                        </div>
+
+                    </div>
+
+                    <!-- 4. Contact Details Box (#contact-details) -->
+                    <div class="bms-contact-section" id="contact-details">
+                        <div class="bms-contact-header">
+                            <span>For Sending Booking Details</span>
+                            <a href="{% url 'dashboard' %}" class="text-decoration-none text-success small fw-bold">Edit</a>
+                        </div>
+                        <div class="bms-contact-body">
+                            +91-{{ booking.customer_phone }} | {{ booking.customer_email|upper }}
+                        </div>
+                        <div class="small text-secondary mt-1">
+                            Palakkad, Kerala (for Turf Booking verification)
+                        </div>
+                    </div>
+
+                    <!-- 5. User Consent Box (#user-consent) -->
+                    <div class="bms-consent-box" id="user-consent">
+                        By proceeding, I express my consent to complete this advance transaction and accept the Friends Sports Hub turf rules.
+                    </div>
+
+                    <!-- 6. Bottom Sticky Payable Strip (#desktop-footer) -->
+                    <div class="bms-payable-strip" id="desktop-footer">
+                        <div class="bms-payable-strip-label">Amount Payable (Advance)</div>
+                        <div class="bms-payable-strip-value">₹{{ advance_amount|floatformat:2 }}</div>
+                    </div>
+
+                </aside>
+            </div>
+
+        </div>
+    </main>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function switchBmsTab(tabId, btnElement) {
+    // Hide all tab panels
+    document.querySelectorAll('.bms-tab-panel').forEach(function(panel) {
+        panel.style.display = 'none';
+    });
+    // Remove active class from all tab buttons
+    document.querySelectorAll('.bms-tab-nav-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+
+    // Show chosen panel
+    const activePanel = document.getElementById(tabId);
+    if (activePanel) {
+        activePanel.style.display = 'block';
+    }
+    // Set active button
+    if (btnElement) {
+        btnElement.classList.add('active');
+    }
+}
+
+function selectUpiApp(appName) {
+    document.getElementById('formUpiApp').value = appName;
+    const heroBox = document.querySelector('.bms-scan-qr-hero');
+    if (heroBox) {
+        heroBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        heroBox.style.borderColor = '#15803D';
+        heroBox.style.boxShadow = '0 0 0 3px rgba(21, 128, 61, 0.15)';
+        setTimeout(() => {
+            heroBox.style.borderColor = '#E2E8F0';
+            heroBox.style.boxShadow = 'none';
+        }, 1500);
+    }
+}
+
+function copyUpiId() {
+    const upiText = document.getElementById('displayUpiId').textContent;
+    navigator.clipboard.writeText(upiText).then(() => {
+        alert('UPI ID copied to clipboard: ' + upiText);
+    });
+}
+</script>
+{% endblock %}

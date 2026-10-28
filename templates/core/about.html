@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us | Friends Sports Hub Mulayankavu, Kulukkallur{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-black border-bottom border-secondary border-opacity-25">
+    <div class="container text-center">
+        <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">About Friends Sports Hub</span>
+        <h1 class="display-5 fw-extrabold text-white mb-2 font-heading">Our Passion for Sports & Community</h1>
+        <p class="text-secondary mx-auto" style="max-width: 650px;">
+            Located in Mulayankavu, Kulukkallur, Palakkad &mdash; built to bring athletes, sports enthusiasts, and families together.
+        </p>
+    </div>
+</section>
+
+<!-- Content Section -->
+<section class="py-5" style="background-color: #070d09;">
+    <div class="container py-4">
+        <div class="row align-items-center g-5 mb-5">
+            <div class="col-lg-6">
+                <span class="badge bg-success bg-opacity-25 text-success mb-2 px-3 py-1 rounded-pill">Kulukkallur, Palakkad</span>
+                <h2 class="display-6 fw-bold text-white mb-3">A Modern Sports Destination for Every Player</h2>
+                <p class="text-secondary mb-3">
+                    <strong>Friends Sports Hub Mulayankavu</strong> was created to deliver an unparalleled sporting experience in the Palakkad district. Whether you are playing late-night football under tournament-grade LED floodlights or training for weekend cricket, our synthetic grass pitch offers optimum bounce and reduced injury risk.
+                </p>
+                <p class="text-secondary mb-4">
+                    In addition to our full-size enclosed turf, we feature a covered, hygienically maintained swimming pool with dedicated change cabins, plus a lively outdoor amusement park for children.
+                </p>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6">
+                        <div class="p-3 bg-dark rounded-3 border border-secondary border-opacity-25">
+                            <h5 class="text-success fw-bold mb-1">FIFA Grade Turf</h5>
+                            <small class="text-secondary">All-weather synthetic grass for smooth passing and ball control.</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-3 bg-dark rounded-3 border border-secondary border-opacity-25">
+                            <h5 class="text-success fw-bold mb-1">High Mast Lights</h5>
+                            <small class="text-secondary">Bright shadow-free illumination for night-time football & cricket.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <a href="{% url 'book_slot' %}" class="btn btn-success px-4 py-2 rounded-pill fw-bold">
+                        <i class="bi bi-calendar-check me-1"></i> Book a Slot
+                    </a>
+                    <a href="tel:{{ phone_primary }}" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                        <i class="bi bi-telephone me-1"></i> Contact Us
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="position-relative">
+                    <img src="{% static 'images/turf_hero.jpg' %}" alt="Friends Sports Hub match under floodlights" class="img-fluid rounded-4 shadow-lg border border-secondary border-opacity-25 w-100" style="max-height: 480px; object-fit: cover;">
+                    <div class="position-absolute bottom-0 start-0 m-4 p-3 bg-black bg-opacity-90 rounded-3 border border-success border-opacity-50">
+                        <div class="text-success fw-bold small">Direct Inquiries</div>
+                        <div class="text-white fw-bold">+91 9633388661 / 9633388662</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Venue Guidelines & Amenities -->
+        <div class="card glass-panel p-4 p-md-5">
+            <h3 class="text-white fw-bold mb-4 text-center">Hub Features & Amenities</h3>
+            <div class="row g-4 text-center text-md-start">
+                <div class="col-md-4">
+                    <div class="d-flex gap-3">
+                        <div class="badge bg-success p-3 rounded-circle fs-4 text-white"><i class="bi bi-trophy"></i></div>
+                        <div>
+                            <h5 class="text-white fw-bold mb-1">Tournaments & Leagues</h5>
+                            <p class="text-secondary small mb-0">Full support for corporate leagues, local tournaments, and friendly club fixtures with scoring space.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="d-flex gap-3">
+                        <div class="badge bg-success p-3 rounded-circle fs-4 text-white"><i class="bi bi-shield-check"></i></div>
+                        <div>
+                            <h5 class="text-white fw-bold mb-1">Safety & Cleanliness</h5>
+                            <p class="text-secondary small mb-0">High perimeter netting, sanitized dressing rooms, first aid kit, and pure drinking water on premises.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="d-flex gap-3">
+                        <div class="badge bg-success p-3 rounded-circle fs-4 text-white"><i class="bi bi-p-circle"></i></div>
+                        <div>
+                            <h5 class="text-white fw-bold mb-1">Free Parking</h5>
+                            <p class="text-secondary small mb-0">Spacious parking zone right beside the venue for both four-wheelers and motorcycles.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

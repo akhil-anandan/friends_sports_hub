@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact & Location | Friends Sports Hub Mulayankavu, Kulukkallur{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-black border-bottom border-secondary border-opacity-25">
+    <div class="container text-center">
+        <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">Get in Touch</span>
+        <h1 class="display-5 fw-extrabold text-white mb-2 font-heading">Contact Friends Sports Hub</h1>
+        <p class="text-secondary mx-auto" style="max-width: 650px;">
+            Reach out for turf bookings, tournament reservations, swimming batch timings, or location guidance.
+        </p>
+    </div>
+</section>
+
+<!-- Contact Info & Form -->
+<section class="py-5" style="background-color: #070d09;">
+    <div class="container py-3">
+        <div class="row g-5">
+            <!-- Left Column: Contact Cards -->
+            <div class="col-lg-5">
+                <h3 class="text-white fw-bold mb-4">Direct Contact Numbers</h3>
+                
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="card sports-card p-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="badge bg-success p-3 rounded-circle fs-4 text-white">
+                                <i class="bi bi-telephone-fill"></i>
+                            </div>
+                            <div>
+                                <div class="text-secondary small">Owner Helpline</div>
+                                <a href="tel:6238006820" class="text-white fw-bold fs-5 text-decoration-none hover-white">
+                                    +91 6238006820
+                                </a>
+                                <small class="text-success d-block">Available 6:00 AM - 11:00 PM</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card sports-card p-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="badge bg-success p-3 rounded-circle fs-4 text-white">
+                                <i class="bi bi-whatsapp"></i>
+                            </div>
+                            <div>
+                                <div class="text-secondary small">WhatsApp Booking Support</div>
+                                <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20want%20to%20inquire%20about%20booking." target="_blank" rel="noopener" class="text-success fw-bold fs-5 text-decoration-none">
+                                    Chat on WhatsApp (6238006820)
+                                </a>
+                                <small class="text-secondary d-block">Instant response for slot inquiries</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card sports-card p-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="badge bg-success p-3 rounded-circle fs-4 text-white">
+                                <i class="bi bi-geo-alt-fill"></i>
+                            </div>
+                            <div>
+                                <div class="text-secondary small">Venue Address</div>
+                                <div class="text-white fw-bold">Kulukkallur, Palakkad</div>
+                                <small class="text-secondary">Mulayankavu, Kerala, India</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="{{ google_maps_url }}" target="_blank" rel="noopener" class="btn btn-outline-success w-100 py-3 rounded-pill fw-bold">
+                        <i class="bi bi-pin-map-fill me-2"></i> View Exact Google Maps Location
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Column: Inquiry Message Form -->
+            <div class="col-lg-7">
+                <div class="card glass-panel p-4 p-md-5 shadow-lg">
+                    <h4 class="text-white fw-bold mb-2">Send an Inquiry Message</h4>
+                    <p class="text-secondary small mb-4">Have questions about ground availability, bulk bookings, or special events? Leave your message below.</p>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-secondary small fw-semibold">Your Name *</label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-secondary small fw-semibold">Your Phone Number *</label>
+                                {{ form.phone }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-secondary small fw-semibold">Email Address (Optional)</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-secondary small fw-semibold">Subject / Purpose *</label>
+                                {{ form.subject }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-secondary small fw-semibold">Your Message *</label>
+                                {{ form.message }}
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow">
+                                    <i class="bi bi-send-fill me-1"></i> Send Inquiry Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
