@@ -33,7 +33,7 @@ class Command(BaseCommand):
         staff_profile.is_approved = True
         staff_profile.save()
 
-        self.stdout.write(self.style.SUCCESS("✅ Admin account configured: ID 'Admin'"))
+        self.stdout.write(self.style.SUCCESS("[OK] Admin account configured: ID 'Admin'"))
 
         # 3. Default Facilities
         facilities_data = [
@@ -91,11 +91,11 @@ class Command(BaseCommand):
         ]
 
         for item in facilities_data:
-            fac, created = Facility.objects.get_or_create(slug=item['slug'])
-            for key, val in item.items():
-                setattr(fac, key, val)
-            fac.save()
+            item_copy = dict(item)
+            slug = item_copy.pop('slug')
+            fac, created = Facility.objects.update_or_create(slug=slug, defaults=item_copy)
             status_text = "created" if created else "updated"
             self.stdout.write(f"Facility '{fac.name}' {status_text}.")
 
-        self.stdout.write(self.style.SUCCESS("🚀 Production bootstrap completed successfully!"))
+        self.stdout.write(self.style.SUCCESS("[SUCCESS] Production bootstrap completed successfully!"))
+
