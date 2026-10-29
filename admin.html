@@ -1,323 +1,1221 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Owner & Admin Portal | Friends Sports Hub</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="static/css/style.css" rel="stylesheet">
-  <style>
-    body { background: #0a0f0d; color: #fff; }
-    .admin-wrap { max-width: 960px; margin: 0 auto; padding: 24px 16px 80px; }
-    .portal-card { background: #0e1712; border: 1px solid #1e2e22; border-radius: 18px; padding: 20px; margin-bottom: 20px; }
-    .stat-box { background: #131e16; border: 1px solid #1e2e22; border-radius: 14px; padding: 16px; text-align: center; }
-    .stat-val { font-size: 1.8rem; font-weight: 800; color: #22c55e; }
-    .stat-lbl { font-size: 0.75rem; color: #8aab92; text-transform: uppercase; font-weight: 700; }
-    .field-label { font-size: 0.75rem; font-weight: 700; color: #8aab92; text-transform: uppercase; margin-bottom: 5px; }
-    .form-control, .form-select { background: #121c15; border: 1px solid #1e2e22; color: #fff; border-radius: 10px; }
-    .form-control:focus, .form-select:focus { background: #152219; border-color: #22c55e; color: #fff; box-shadow: none; }
-    .btn-lock { background: #16a34a; color: #fff; font-weight: 700; border-radius: 12px; padding: 12px; border: none; width: 100%; }
-    .btn-lock:hover { background: #15803d; color: #fff; }
-    .voucher-preview { background: #131e16; border: 1.5px solid #22c55e; border-radius: 16px; padding: 20px; margin-top: 20px; }
-    .btn-wa-send { background: #25D366; color: #fff; font-weight: 800; border-radius: 12px; padding: 12px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border: none; }
-    .btn-wa-send:hover { background: #1ebe5d; color: #fff; }
-    .btn-wa-owner { background: #141f17; border: 1px solid #1e2e22; color: #8aab92; font-weight: 700; border-radius: 10px; padding: 8px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; }
-    .btn-wa-owner:hover { border-color: #22c55e; color: #22c55e; }
-    .table-dark-custom { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.85rem; }
-    .table-dark-custom th { background: #131e16; color: #8aab92; padding: 12px; font-weight: 700; border-bottom: 1px solid #1e2e22; }
-    .table-dark-custom td { padding: 12px; border-bottom: 1px solid #141f17; vertical-align: middle; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner & Staff Operations Portal | Friends Sports Hub</title>
+    
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="Book online time slots for football/cricket turf, swimming pool, and children's park at Friends Sports Hub Mulayankavu, Kulukkallur, Palakkad, Kerala. Call / WhatsApp: 6238006820.">
+    <meta name="keywords" content="Friends Sports Hub, Mulayankavu Turf, Kulukkallur turf booking, Palakkad sports club, football turf booking, swimming pool booking, Kerala turf">
+
+    <!-- Google Fonts: Outfit (Headings) & Plus Jakarta Sans (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="static/css/style.css">
+    
 </head>
-<body>
+<body class="bg-dark text-light min-vh-100 d-flex flex-column">
 
-  <!-- Top Navbar -->
-  <nav class="navbar navbar-dark bg-black border-bottom border-secondary border-opacity-25 sticky-top py-2">
-    <div class="container-fluid px-3">
-      <a class="navbar-brand fw-extrabold text-white d-flex align-items-center gap-2" href="index.html">
-        <i class="bi bi-shield-shaded text-success fs-4"></i>
-        <span>FRIENDS SPORTS HUB</span>
-      </a>
-      <div class="d-flex align-items-center gap-2">
-        <a href="index.html" class="btn btn-sm btn-outline-light rounded-pill px-3">
-          <i class="bi bi-eye me-1"></i> Public View
-        </a>
-        <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="logoutAdmin()">
-          <i class="bi bi-box-arrow-right me-1"></i> Logout
-        </button>
-      </div>
-    </div>
-  </nav>
-
-  <div class="admin-wrap">
-    <!-- Header -->
-    <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
-      <div>
-        <h2 class="h4 fw-bold text-white mb-0"><i class="bi bi-speedometer2 text-success me-2"></i>Owner & Staff Portal</h2>
-        <small class="text-secondary">Friends Sports Hub Mulayankavu · Helpline: 6238006820</small>
-      </div>
-      <span class="badge bg-success bg-opacity-25 text-success border border-success rounded-pill px-3 py-2">
-        <i class="bi bi-shield-check me-1"></i> Authenticated as Admin
-      </span>
+    <!-- Top Info Bar -->
+    <div class="top-bar py-1 px-3 border-bottom border-success border-opacity-10 small">
+        <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-3">
+                <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="text-secondary text-decoration-none hover-white">
+                    <i class="bi bi-geo-alt-fill text-success me-1"></i> Kulukkallur, Palakkad, Kerala
+                </a>
+                <span class="text-secondary d-none d-md-inline">|</span>
+                <span class="text-secondary d-none d-md-inline">
+                    <i class="bi bi-telephone-fill text-success me-1"></i>
+                    <a href="tel:6238006820" class="text-light text-decoration-none">6238006820</a>
+                </span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20would%20like%20to%20inquire%20about%20booking%20a%20slot." target="_blank" rel="noopener" class="badge bg-success text-white text-decoration-none px-2 py-1">
+                    <i class="bi bi-whatsapp me-1"></i> WhatsApp Booking
+                </a>
+            </div>
+        </div>
     </div>
 
-    <!-- Stats -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-4">
-        <div class="stat-box">
-          <div class="stat-val" id="statTotalBookings">0</div>
-          <div class="stat-lbl">Total Locked Slots</div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="stat-box">
-          <div class="stat-val" id="statTodayBookings">0</div>
-          <div class="stat-lbl">Today's Matches</div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="stat-box">
-          <div class="stat-val" id="statRevenue">₹0</div>
-          <div class="stat-lbl">Expected Revenue</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Walk-in Booking Form -->
-    <div class="portal-card">
-      <h3 class="h6 fw-bold text-white mb-3"><i class="bi bi-plus-circle-fill text-success me-2"></i>Quick Walk-in / Phone Call Booking</h3>
-      <form id="walkinForm" onsubmit="handleWalkinBooking(event)">
-        <div class="row g-3">
-          <div class="col-md-4">
-            <label class="field-label">Facility</label>
-            <select class="form-select" id="walkinFacility" required>
-              <option value="Football & Cricket Turf">Football & Cricket Turf (₹900/hr)</option>
-              <option value="Swimming Pool">Swimming Pool (₹150/hr)</option>
-              <option value="Children's Park">Children's Park (₹50/hr)</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label class="field-label">Date</label>
-            <input type="date" class="form-control" id="walkinDate" required>
-          </div>
-          <div class="col-md-4">
-            <label class="field-label">Time Slot</label>
-            <select class="form-select" id="walkinSlot" required>
-              <option value="06:00 – 07:00">06:00 AM – 07:00 AM</option>
-              <option value="07:00 – 08:00">07:00 AM – 08:00 AM</option>
-              <option value="08:00 – 09:00">08:00 AM – 09:00 AM</option>
-              <option value="09:00 – 10:00">09:00 AM – 10:00 AM</option>
-              <option value="16:00 – 17:00">04:00 PM – 05:00 PM</option>
-              <option value="17:00 – 18:00">05:00 PM – 06:00 PM</option>
-              <option value="18:00 – 19:00" selected>06:00 PM – 07:00 PM</option>
-              <option value="19:00 – 20:00">07:00 PM – 08:00 PM</option>
-              <option value="20:00 – 21:00">08:00 PM – 09:00 PM</option>
-              <option value="21:00 – 22:00">09:00 PM – 10:00 PM</option>
-              <option value="22:00 – 23:00">10:00 PM – 11:00 PM</option>
-            </select>
-          </div>
-
-          <div class="col-md-4">
-            <label class="field-label">Player / Contact Name *</label>
-            <input type="text" class="form-control" id="walkinName" placeholder="e.g. Rahul Kumar" required>
-          </div>
-          <div class="col-md-4">
-            <label class="field-label">Club / Team Name</label>
-            <input type="text" class="form-control" id="walkinClub" placeholder="e.g. Friends FC (optional)">
-          </div>
-          <div class="col-md-4">
-            <label class="field-label">Phone Number *</label>
-            <input type="tel" class="form-control" id="walkinPhone" placeholder="10-digit mobile" required>
-          </div>
-
-          <div class="col-12 mt-3">
-            <button type="submit" class="btn-lock">
-              <i class="bi bi-shield-check me-1"></i> Lock & Reserve Slot
+    <!-- Main Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top border-bottom border-success border-opacity-25 shadow-sm py-2">
+        <div class="container">
+            <a class="navbar-brand fw-extrabold d-flex align-items-center gap-2" href="index.html">
+                <div class="brand-logo-icon">
+                    <i class="bi bi-shield-shaded text-success fs-3"></i>
+                </div>
+                <div>
+                    <div class="brand-text lh-1">FRIENDS <span class="text-success">SPORTS HUB</span></div>
+                    <small class="text-secondary d-block tracking-wider" style="font-size: 0.65rem; letter-spacing: 2px;">MULAYANKAVU &bull; KULUKKALLUR</small>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-          </div>
-        </div>
-      </form>
 
-      <!-- Latest Voucher Display -->
-      <div id="voucherBox" style="display:none;" class="voucher-preview mt-4">
-        <div class="d-flex align-items-center justify-content-between mb-2">
-          <span class="badge bg-success rounded-pill px-3 py-1">Slot Reserved Successfully</span>
-          <small class="text-secondary" id="voucherRef"></small>
-        </div>
-        <h4 class="text-white fw-bold mb-1" id="voucherTitle"></h4>
-        <p class="text-success small fw-bold mb-3" id="voucherMeta"></p>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 " href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 " href="index.html#about">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 " href="facilities.html">Facilities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 " href="pricing.html">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 " href="contact.html">Contact</a>
+                    </li>
+                </ul>
 
-        <div class="row g-2 mb-3">
-          <div class="col-md-6">
-            <a href="#" target="_blank" id="btnCustomerWa" class="btn-wa-send">
-              <i class="bi bi-whatsapp fs-5"></i> Send WhatsApp to Customer
-            </a>
-          </div>
-          <div class="col-md-6">
-            <a href="#" target="_blank" id="btnOwnerWa" class="btn-wa-owner">
-              <i class="bi bi-shield-check"></i> Copy to Owner (6238006820)
-            </a>
-          </div>
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <a href="book.html" class="btn btn-success fw-bold px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar2-check-fill"></i> Book a Slot
+                    </a>
+
+                    
+                        <div class="dropdown">
+                            <button class="btn btn-outline-light dropdown-toggle rounded-pill px-3 py-2 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-shield-lock-fill me-1 text-success"></i> Admin
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow-lg">
+                                <li><a class="dropdown-item fw-bold text-success" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
+                                <li><a class="dropdown-item" href="walk-in.html"><i class="bi bi-plus-circle-fill me-2 text-success"></i> Direct Booking</a></li>
+                                <li><a class="dropdown-item" href="reports.html"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="alert('Friends Sports Hub Owner Portal Active')"><i class="bi bi-gear-fill me-2 text-warning"></i> Advanced Settings</a></li>
+                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><a class="dropdown-item text-danger" href="#" onclick="logoutAdmin()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+                            </ul>
+                        </div>
+
+                    
+                </div>
+            </div>
         </div>
-      </div>
+    </nav>
+
+    <!-- Global Flash Messages -->
+    <div class="container mt-3">
+        
     </div>
 
-    <!-- Bookings Table -->
-    <div class="portal-card">
-      <h3 class="h6 fw-bold text-white mb-3"><i class="bi bi-calendar2-check-fill text-success me-2"></i>System Reserved Slots</h3>
-      <div class="table-responsive">
-        <table class="table-dark-custom">
-          <thead>
-            <tr>
-              <th>REF ID</th>
-              <th>FACILITY</th>
-              <th>DATE & TIME</th>
-              <th>PLAYER / CLUB</th>
-              <th>PHONE</th>
-              <th>FEE</th>
-              <th>ACTION</th>
-            </tr>
-          </thead>
-          <tbody id="bookingsTableBody">
-            <tr><td colspan="7" class="text-center text-secondary py-4">No walk-in bookings recorded yet.</td></tr>
-          </tbody>
-        </table>
+    <!-- Main Content Block -->
+    <main class="flex-grow-1">
+        
+<div class="py-4" style="background-color: #070d09;">
+    <div class="container-fluid px-lg-5">
+        
+        <!-- Staff Top Navigation Bar -->
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 mb-4 shadow-sm">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold">
+                        <i class="bi bi-shield-lock-fill me-1"></i> 
+                        Owner / Director Portal
+                    </span>
+                    <span class="text-white fw-bold d-none d-sm-inline">Friends Sports Hub Mulayankavu</span>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="admin.html" class="btn btn-sm btn-success rounded-pill px-3 fw-bold">
+                        <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                    </a>
+                    <a href="walk-in.html" class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold">
+                        <i class="bi bi-plus-circle-fill me-1"></i> New Walk-in Booking
+                    </a>
+                    
+                        <a href="employees.html" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                            <i class="bi bi-people-fill me-1 text-warning"></i> Manage Staff
+                        </a>
+                        <a href="reports.html" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                            <i class="bi bi-graph-up-arrow me-1 text-info"></i> Revenue Reports
+                        </a>
+                    
+                    <a href="#" onclick="alert('Friends Sports Hub Owner Portal Active')" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-gear-fill me-1"></i> Django Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 mb-4 shadow">
+            <form method="GET" class="row g-2 align-items-center">
+                <div class="col-md-3">
+                    <label class="small text-secondary fw-semibold mb-1"><i class="bi bi-calendar3 me-1 text-success"></i> Match Date</label>
+                    <input type="date" name="date" class="form-control form-control-sm bg-dark text-white border-secondary" value="2026-10-29">
+                </div>
+                <div class="col-md-3">
+                    <label class="small text-secondary fw-semibold mb-1"><i class="bi bi-dribbble me-1 text-success"></i> Facility</label>
+                    <select name="facility" class="form-select form-select-sm bg-dark text-white border-secondary">
+                        <option value="">All Facilities</option>
+                        
+                            <option value="childrens-park" >Children&#x27;s Park</option>
+                        
+                            <option value="turf" >Football &amp; Cricket Turf</option>
+                        
+                            <option value="swimming-pool" >Swimming Pool</option>
+                        
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="small text-secondary fw-semibold mb-1"><i class="bi bi-search me-1 text-success"></i> Search Customer / Phone</label>
+                    <input type="text" name="q" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Search phone, name, or booking ref..." value="">
+                </div>
+                <div class="col-md-2 d-flex align-items-end pt-md-4">
+                    <button type="submit" class="btn btn-success btn-sm w-100 rounded-pill fw-bold">
+                        Filter Schedule
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- KPI Metrics Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="text-secondary small fw-semibold">Confirmed Matches</div>
+                    <div class="fs-2 fw-extrabold text-white mt-1">0</div>
+                    <small class="text-success"><i class="bi bi-calendar-check me-1"></i>Thu, 29 Oct</small>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="text-secondary small fw-semibold">Revenue Collected</div>
+                    <div class="fs-2 fw-extrabold text-success mt-1">₹0</div>
+                    <small class="text-light"><i class="bi bi-check2-circle text-success me-1"></i>Paid at counter/UPI</small>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="text-secondary small fw-semibold">Cash Pending at Venue</div>
+                    <div class="fs-2 fw-extrabold text-warning mt-1">₹0</div>
+                    <small class="text-secondary">To be collected upon arrival</small>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                    <div class="text-secondary small fw-semibold">Matches Completed</div>
+                    <div class="fs-2 fw-extrabold text-info mt-1">0</div>
+                    <small class="text-secondary">Cancelled: 0</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: Visual Match Timeline for Selected Facility -->
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 mb-5 shadow">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h5 class="text-white fw-bold mb-0">
+                        <i class="bi bi-clock-history text-success me-2"></i>
+                        Hourly Pitch Schedule: <span class="text-success">Football &amp; Cricket Turf</span>
+                    </h5>
+                    <small class="text-secondary">Timeline for Thursday, 29 October 2026 &bull; Open 6:00 AM to 11:00 PM</small>
+                </div>
+                <div>
+                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                        <i class="bi bi-plus-lg me-1"></i> Add Walk-in to This Pitch
+                    </a>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-black bg-opacity-50 opacity-75">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">06:00 AM - 07:00 AM</span>
+                                
+                                    <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3 text-secondary small text-center">
+                                    <i class="bi bi-clock"></i> Hour Passed
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-black bg-opacity-50 opacity-75">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">07:00 AM - 08:00 AM</span>
+                                
+                                    <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3 text-secondary small text-center">
+                                    <i class="bi bi-clock"></i> Hour Passed
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-black bg-opacity-50 opacity-75">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">08:00 AM - 09:00 AM</span>
+                                
+                                    <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3 text-secondary small text-center">
+                                    <i class="bi bi-clock"></i> Hour Passed
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-black bg-opacity-50 opacity-75">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">09:00 AM - 10:00 AM</span>
+                                
+                                    <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3 text-secondary small text-center">
+                                    <i class="bi bi-clock"></i> Hour Passed
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-black bg-opacity-50 opacity-75">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">10:00 AM - 11:00 AM</span>
+                                
+                                    <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3 text-secondary small text-center">
+                                    <i class="bi bi-clock"></i> Hour Passed
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-black bg-opacity-50 opacity-75">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">11:00 AM - 12:00 PM</span>
+                                
+                                    <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3 text-secondary small text-center">
+                                    <i class="bi bi-clock"></i> Hour Passed
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-black bg-opacity-50 opacity-75">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">12:00 PM - 01:00 PM</span>
+                                
+                                    <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3 text-secondary small text-center">
+                                    <i class="bi bi-clock"></i> Hour Passed
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">01:00 PM - 02:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=13:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">02:00 PM - 03:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=14:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">03:00 PM - 04:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=15:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">04:00 PM - 05:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=16:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">05:00 PM - 06:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=17:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">06:00 PM - 07:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=18:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">07:00 PM - 08:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=19:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">08:00 PM - 09:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=20:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">09:00 PM - 10:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=21:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+                    <div class="col">
+                        <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-white fs-6">10:00 PM - 11:00 PM</span>
+                                
+                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                
+                            </div>
+
+                            
+                                <div class="mt-auto pt-3">
+                                    <a href="/manage/walk-in/?facility_id=1&date=2026-10-29&start_time=22:00" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                        <i class="bi bi-plus-circle me-1"></i> Book Slot
+                                    </a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                
+            </div>
+        </div>
+
+        <!-- Section 2: Detailed Bookings Table -->
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 shadow">
+            <h5 class="text-white fw-bold mb-3 d-flex align-items-center justify-content-between">
+                <span>All Scheduled Reservations (0)</span>
+                <span class="small text-secondary">Thu, 29 Oct 2026</span>
+            </h5>
+
+            
+                <div class="text-center py-4 text-secondary">
+                    <i class="bi bi-inbox fs-2 mb-2 d-block"></i>
+                    No bookings found for the selected date or search filter.
+                </div>
+            
+        </div>
+
+    </div>
+</div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-custom bg-black text-secondary py-5 mt-auto border-top border-secondary border-opacity-25">
+        <div class="container">
+            <div class="row g-4 justify-content-between">
+                <div class="col-lg-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-shield-shaded text-success fs-3"></i>
+                        <span class="fs-4 fw-extrabold text-white">FRIENDS <span class="text-success">SPORTS HUB</span></span>
+                    </div>
+                    <p class="small text-secondary mb-3">
+                        Premier multi-sports venue in Kulukkallur, Palakkad. Featuring all-weather FIFA-grade turf for football and cricket, hygienic covered swimming pool, and dedicated children's play park.
+                    </p>
+                    <div class="d-flex gap-2">
+                        <a href="https://wa.me/916238006820" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success rounded-circle social-icon"><i class="bi bi-whatsapp"></i></a>
+                        <a href="tel:6238006820" class="btn btn-sm btn-outline-light rounded-circle social-icon"><i class="bi bi-telephone-fill"></i></a>
+                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-sm btn-outline-light rounded-circle social-icon"><i class="bi bi-geo-alt-fill"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        <li><a href="index.html" class="text-secondary text-decoration-none hover-white">Home</a></li>
+                        <li><a href="index.html#about" class="text-secondary text-decoration-none hover-white">About the Club</a></li>
+                        <li><a href="facilities.html" class="text-secondary text-decoration-none hover-white">Facilities & Turf</a></li>
+                        <li><a href="pricing.html" class="text-secondary text-decoration-none hover-white">Pricing & Slots</a></li>
+                        <li><a href="contact.html" class="text-secondary text-decoration-none hover-white">Contact & Location</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="text-white fw-bold mb-3">Facilities</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2">
+                        <li><span class="text-light">&bull; Football / Cricket Turf</span></li>
+                        <li><span class="text-light">&bull; Swimming Pool</span></li>
+                        <li><span class="text-light">&bull; Children's Park</span></li>
+                        <li><span class="text-light">&bull; Floodlight Night Matches</span></li>
+                        <li><span class="text-light">&bull; Tournament Bookings</span></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <h6 class="text-white fw-bold mb-3">Location & Booking Help</h6>
+                    <p class="small mb-1 text-light"><i class="bi bi-geo-alt-fill text-success me-2"></i>Kulukkallur, Palakkad, Kerala, India</p>
+                    <p class="small mb-2 text-secondary">Mulayankavu region</p>
+                    <p class="small mb-1 text-light">
+                        <i class="bi bi-telephone-fill text-success me-2"></i>
+                        <a href="tel:6238006820" class="text-light text-decoration-none fw-bold">+91 6238006820</a>
+                    </p>
+                    <div class="mt-3">
+                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success w-100">
+                            <i class="bi bi-map-fill me-1"></i> Open in Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="border-secondary border-opacity-25 my-4">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-secondary">
+                <p class="mb-2 mb-md-0">&copy; 2026 Friends Sports Hub Mulayankavu. All Rights Reserved.</p>
+                <p class="mb-0">Powered by Django &bull; Instant Slot Booking Engine</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/main.js?v=20261028"></script>
+    
+
+<!-- Quick Walk-in Modal -->
+<div class="modal fade" id="quickWalkinModal" tabindex="-1" aria-labelledby="quickWalkinModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-black border border-success border-opacity-40 text-light rounded-4 p-3 shadow-lg">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-white d-flex align-items-center gap-2" id="quickWalkinModalLabel">
+          <i class="bi bi-person-plus-fill text-success"></i> Direct Walk-in / Phone Booking
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-3">
+        <form id="modalWalkinForm" onsubmit="event.preventDefault(); submitQuickWalkin();">
+          <div class="mb-3">
+            <label class="form-label text-secondary small fw-semibold">Sport Facility *</label>
+            <select id="modalFacility" class="form-select bg-dark text-white border-secondary" required onchange="updateModalPrice()">
+              <option value="turf" data-name="Football & Cricket Turf" data-price="900">Football & Cricket Turf (₹900/hr)</option>
+              <option value="swimming-pool" data-name="Swimming Pool" data-price="150">Swimming Pool (₹150/hr)</option>
+              <option value="childrens-park" data-name="Children's Park" data-price="50">Children's Park (₹50/hr)</option>
+            </select>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label text-secondary small fw-semibold">Match Date *</label>
+              <input type="date" id="modalDate" class="form-control bg-dark text-white border-secondary" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-secondary small fw-semibold">Time Slot *</label>
+              <select id="modalSlot" class="form-select bg-dark text-white border-secondary" required>
+                <option value="06:00">06:00 AM - 07:00 AM</option>
+                <option value="07:00">07:00 AM - 08:00 AM</option>
+                <option value="08:00">08:00 AM - 09:00 AM</option>
+                <option value="09:00">09:00 AM - 10:00 AM</option>
+                <option value="10:00">10:00 AM - 11:00 AM</option>
+                <option value="11:00">11:00 AM - 12:00 PM</option>
+                <option value="14:00">02:00 PM - 03:00 PM</option>
+                <option value="15:00">03:00 PM - 04:00 PM</option>
+                <option value="16:00">04:00 PM - 05:00 PM</option>
+                <option value="17:00">05:00 PM - 06:00 PM</option>
+                <option value="18:00">06:00 PM - 07:00 PM</option>
+                <option value="19:00" selected>07:00 PM - 08:00 PM</option>
+                <option value="20:00">08:00 PM - 09:00 PM</option>
+                <option value="21:00">09:00 PM - 10:00 PM</option>
+                <option value="22:00">10:00 PM - 11:00 PM</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label text-secondary small fw-semibold">Customer Name *</label>
+              <input type="text" id="modalCustomerName" class="form-control bg-dark text-white border-secondary" placeholder="e.g. Ashiq" required>
+            </div>
+            <div class="col-6">
+              <label class="form-label text-secondary small fw-semibold">Customer Mobile (WhatsApp) *</label>
+              <input type="tel" id="modalCustomerPhone" class="form-control bg-dark text-white border-secondary" placeholder="10-digit number" required>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-4">
+              <label class="form-label text-secondary small fw-semibold">Total Fee (₹)</label>
+              <input type="number" id="modalTotalPrice" class="form-control bg-dark text-white border-secondary" value="900" required>
+            </div>
+            <div class="col-4">
+              <label class="form-label text-secondary small fw-semibold">Advance (₹)</label>
+              <input type="number" id="modalAdvance" class="form-control bg-dark text-white border-secondary" value="0" oninput="calculateModalBalance()">
+            </div>
+            <div class="col-4">
+              <label class="form-label text-secondary small fw-semibold">Payment Status</label>
+              <select id="modalPaymentStatus" class="form-select bg-dark text-white border-secondary">
+                <option value="PAID">Full Paid</option>
+                <option value="ADVANCE_PAID">Advance Paid</option>
+                <option value="UNPAID">Pay at Counter</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow">
+            <i class="bi bi-check-circle-fill me-1"></i> Confirm & Lock Slot
+          </button>
+        </form>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    // Authentication guard
-    if (sessionStorage.getItem('fsh_admin_logged_in') !== 'true') {
-      window.location.href = 'login.html';
-    }
+<script>
+// Authentication check
+if (sessionStorage.getItem('fsh_admin_logged_in') !== 'true') {
+  window.location.href = 'login.html';
+}
 
-    function logoutAdmin() {
-      sessionStorage.removeItem('fsh_admin_logged_in');
-      window.location.href = 'index.html';
-    }
+function logoutAdmin() {
+  sessionStorage.removeItem('fsh_admin_logged_in');
+  window.location.href = 'index.html';
+}
 
-    // Set today as default date
+// Slot definitions
+const TIME_SLOTS = [
+  { start: "06:00", end: "07:00", display: "06:00 AM - 07:00 AM" },
+  { start: "07:00", end: "08:00", display: "07:00 AM - 08:00 AM" },
+  { start: "08:00", end: "09:00", display: "08:00 AM - 09:00 AM" },
+  { start: "09:00", end: "10:00", display: "09:00 AM - 10:00 AM" },
+  { start: "10:00", end: "11:00", display: "10:00 AM - 11:00 AM" },
+  { start: "11:00", end: "12:00", display: "11:00 AM - 12:00 PM" },
+  { start: "12:00", end: "13:00", display: "12:00 PM - 01:00 PM" },
+  { start: "13:00", end: "14:00", display: "01:00 PM - 02:00 PM" },
+  { start: "14:00", end: "15:00", display: "02:00 PM - 03:00 PM" },
+  { start: "15:00", end: "16:00", display: "03:00 PM - 04:00 PM" },
+  { start: "16:00", end: "17:00", display: "04:00 PM - 05:00 PM" },
+  { start: "17:00", end: "18:00", display: "05:00 PM - 06:00 PM" },
+  { start: "18:00", end: "19:00", display: "06:00 PM - 07:00 PM" },
+  { start: "19:00", end: "20:00", display: "07:00 PM - 08:00 PM" },
+  { start: "20:00", end: "21:00", display: "08:00 PM - 09:00 PM" },
+  { start: "21:00", end: "22:00", display: "09:00 PM - 10:00 PM" },
+  { start: "22:00", end: "23:00", display: "10:00 PM - 11:00 PM" },
+];
+
+const FACILITY_NAMES = {
+  'turf': 'Football & Cricket Turf',
+  'swimming-pool': 'Covered Swimming Pool',
+  'childrens-park': "Children's Play Park"
+};
+
+const FACILITY_PRICES = {
+  'turf': 900,
+  'swimming-pool': 150,
+  'childrens-park': 50
+};
+
+// Seed initial bookings if none exist
+function getBookings() {
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+  } catch(e) { list = []; }
+
+  if (!list || list.length === 0) {
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('walkinDate').value = today;
-
-    function renderBookings() {
-      const bookings = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
-      const tbody = document.getElementById('bookingsTableBody');
-      const statTotal = document.getElementById('statTotalBookings');
-      const statToday = document.getElementById('statTodayBookings');
-      const statRev   = document.getElementById('statRevenue');
-
-      statTotal.textContent = bookings.length;
-      const todayCount = bookings.filter(b => b.date === today).length;
-      statToday.textContent = todayCount;
-      const totalRev = bookings.reduce((sum, b) => sum + (parseInt(b.price) || 900), 0);
-      statRev.textContent = '₹' + totalRev;
-
-      if (bookings.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-secondary py-4">No walk-in bookings recorded yet.</td></tr>';
-        return;
+    list = [
+      {
+        id: 'BKG-FSH-101',
+        customer_name: 'Mohammed Nihal',
+        customer_phone: '9847123456',
+        facility_slug: 'turf',
+        facility_name: 'Football & Cricket Turf',
+        date: today,
+        start_time: '19:00',
+        end_time: '20:00',
+        display_time: '07:00 PM - 08:00 PM',
+        total_price: 1000,
+        advance_amount: 1000,
+        balance_amount: 0,
+        payment_status: 'PAID',
+        status: 'CONFIRMED'
+      },
+      {
+        id: 'BKG-FSH-102',
+        customer_name: 'Salman Faris',
+        customer_phone: '9745987654',
+        facility_slug: 'turf',
+        facility_name: 'Football & Cricket Turf',
+        date: today,
+        start_time: '20:00',
+        end_time: '21:00',
+        display_time: '08:00 PM - 09:00 PM',
+        total_price: 1000,
+        advance_amount: 500,
+        balance_amount: 500,
+        payment_status: 'ADVANCE_PAID',
+        status: 'CONFIRMED'
       }
+    ];
+    localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+  }
+  return list;
+}
 
-      tbody.innerHTML = bookings.slice().reverse().map((b, idx) => `
-        <tr>
-          <td><span class="badge bg-dark border border-secondary text-secondary">${b.id || 'FSH'}</span></td>
-          <td><strong>${b.facility || 'Turf'}</strong></td>
-          <td>${b.date}<br><span class="text-success small">${b.slot || ''}</span></td>
-          <td><strong>${b.name}</strong>${b.club ? '<br><small class="text-secondary">' + b.club + '</small>' : ''}</td>
-          <td><a href="tel:${b.phone}" class="text-white text-decoration-none">${b.phone}</a></td>
-          <td class="text-warning fw-bold">₹${b.price || '900'}</td>
-          <td>
-            <button class="btn btn-sm btn-outline-danger" onclick="cancelSlot(${bookings.length - 1 - idx})">
-              <i class="bi bi-trash"></i> Free Slot
-            </button>
-          </td>
-        </tr>
-      `).join('');
-    }
+function saveBookings(list) {
+  localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+}
 
-    function cancelSlot(index) {
-      if (!confirm('Free up this slot and make it vacant again?')) return;
-      const bookings = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
-      bookings.splice(index, 1);
-      localStorage.setItem('fsh_locked_slots', JSON.stringify(bookings));
-      renderBookings();
-    }
+// Render Dashboard
+document.addEventListener('DOMContentLoaded', function() {
+  // Wire up filter controls
+  const dateInput = document.querySelector('input[name="date"]');
+  if (dateInput) {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
+  }
 
-    function handleWalkinBooking(e) {
+  const filterForm = document.querySelector('form');
+  if (filterForm) {
+    filterForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      const fac   = document.getElementById('walkinFacility').value;
-      const date  = document.getElementById('walkinDate').value;
-      const slot  = document.getElementById('walkinSlot').value;
-      const name  = document.getElementById('walkinName').value.trim();
-      const club  = document.getElementById('walkinClub').value.trim();
-      const phone = document.getElementById('walkinPhone').value.trim();
-      const price = fac.includes('150') ? '150' : (fac.includes('50') ? '50' : '900');
+      renderDashboard();
+    });
+  }
 
-      const id = 'FSH-' + Date.now().toString(36).toUpperCase();
-      const booking = {
-        id: id,
-        facility: fac.split(' (')[0],
-        date: date,
-        slot: slot,
-        start: slot.split(' – ')[0],
-        name: name,
-        club: club,
-        phone: phone,
-        price: price,
-        time: new Date().toLocaleString()
-      };
+  // Intercept "New Walk-in Booking" and "Add Walk-in" buttons
+  document.querySelectorAll('a[href*="walk-in"]').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      openQuickWalkinModal();
+    });
+  });
 
-      const existing = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
-      existing.push(booking);
-      localStorage.setItem('fsh_locked_slots', JSON.stringify(existing));
+  renderDashboard();
+});
 
-      // Display voucher box
-      const msgLines = [
-        '🏆 *FRIENDS SPORTS HUB MULAYANKAVU*',
-        '✅ *Booking Confirmed!*',
-        '',
-        '📋 *Ref ID:* ' + id,
-        '👤 *Name:* ' + name,
-        club ? ('👥 *Club/Team:* ' + club) : '',
-        '🏟️ *Facility:* ' + booking.facility,
-        '📅 *Date:* ' + date,
-        '⏰ *Time:* ' + slot,
-        '💰 *Fee:* ₹' + price + ' (Pay at Venue)',
-        '',
-        '📍 *Location:* Kulukkallur, Mulayankavu, Palakkad',
-        '📞 *Helpline:* 6238006820',
-        '',
-        '⚠️ *Instructions:*',
-        '• Please report 10 minutes before slot time.',
-        '• Turf shoes or sports sneakers only (no metal studs).',
-        '',
-        'See you on the pitch! ⚽'
-      ].filter(Boolean).join('\n');
+function renderDashboard() {
+  const allBookings = getBookings();
+  const dateInput = document.querySelector('input[name="date"]');
+  const facilitySelect = document.querySelector('select[name="facility"]');
+  const searchInput = document.querySelector('input[name="q"]');
 
-      let cleanCustPhone = phone.replace(/\D/g, '');
-      if (cleanCustPhone.length === 11 && cleanCustPhone.startsWith('0')) cleanCustPhone = cleanCustPhone.substring(1);
-      if (cleanCustPhone.length === 10) cleanCustPhone = '91' + cleanCustPhone;
+  const selectedDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+  const selectedFacility = (facilitySelect && facilitySelect.value) ? facilitySelect.value : 'turf';
+  const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
-      const custUrl = 'https://api.whatsapp.com/send?phone=' + cleanCustPhone + '&text=' + encodeURIComponent(msgLines);
-      const ownerUrl = 'https://api.whatsapp.com/send?phone=916238006820&text=' + encodeURIComponent(msgLines);
+  // 1. Filter bookings
+  let dayBookings = allBookings.filter(b => b.date === selectedDate);
+  if (selectedFacility) {
+    dayBookings = dayBookings.filter(b => b.facility_slug === selectedFacility);
+  }
+  if (query) {
+    dayBookings = dayBookings.filter(b => 
+      (b.customer_name && b.customer_name.toLowerCase().includes(query)) ||
+      (b.customer_phone && b.customer_phone.includes(query)) ||
+      (b.id && b.id.toLowerCase().includes(query))
+    );
+  }
 
-      document.getElementById('voucherTitle').textContent = booking.facility + ' · ' + slot;
-      document.getElementById('voucherMeta').textContent = name + (club ? ' (' + club + ')' : '') + ' · ' + phone + ' · ₹' + price;
-      document.getElementById('voucherRef').textContent = 'Ref: ' + id;
-      document.getElementById('btnCustomerWa').href = custUrl;
-      document.getElementById('btnOwnerWa').href = ownerUrl;
-      document.getElementById('voucherBox').style.display = 'block';
+  // 2. Update KPI Metrics
+  const confirmed = dayBookings.filter(b => b.status === 'CONFIRMED');
+  const completed = dayBookings.filter(b => b.status === 'COMPLETED');
+  const cancelled = dayBookings.filter(b => b.status === 'CANCELLED');
 
-      renderBookings();
+  let revenuePaid = 0;
+  let revenuePending = 0;
+  confirmed.forEach(b => {
+    revenuePaid += (b.payment_status === 'PAID') ? Number(b.total_price) : Number(b.advance_amount || 0);
+    revenuePending += Number(b.balance_amount || 0);
+  });
 
-      // Automatically launch WhatsApp with customer confirmation
-      setTimeout(function() {
-        window.open(custUrl, '_blank');
-      }, 700);
+  // KPI elements
+  const kpiCols = document.querySelectorAll('.row.g-3.mb-4 .fs-2');
+  if (kpiCols.length >= 4) {
+    kpiCols[0].textContent = confirmed.length;
+    kpiCols[1].textContent = '₹' + revenuePaid.toFixed(0);
+    kpiCols[2].textContent = '₹' + revenuePending.toFixed(0);
+    kpiCols[3].textContent = completed.length;
+  }
+
+  // Update timeline header
+  const facilityHeadingSpan = document.querySelector('h5.text-white.fw-bold.mb-0 span.text-success');
+  if (facilityHeadingSpan) {
+    facilityHeadingSpan.textContent = FACILITY_NAMES[selectedFacility] || 'Football & Cricket Turf';
+  }
+
+  const timelineSmall = document.querySelector('h5.text-white.fw-bold.mb-0 + small.text-secondary');
+  if (timelineSmall) {
+    timelineSmall.innerHTML = `Timeline for ${selectedDate} &bull; Open 6:00 AM to 11:00 PM`;
+  }
+
+  // 3. Render Hourly Pitch Schedule
+  const scheduleRow = document.querySelector('.row.row-cols-1.row-cols-md-2.row-cols-lg-3.row-cols-xl-4.g-3');
+  if (scheduleRow) {
+    scheduleRow.innerHTML = '';
+    TIME_SLOTS.forEach(slot => {
+      const booking = dayBookings.find(b => b.start_time === slot.start && b.status !== 'CANCELLED');
+      const col = document.createElement('div');
+      col.className = 'col';
+
+      if (booking) {
+        const isPaid = booking.payment_status === 'PAID';
+        const badgeClass = isPaid ? 'bg-success' : 'bg-warning text-dark';
+        const badgeText = isPaid ? 'PAID' : 'ADVANCE PAID';
+
+        col.innerHTML = `
+          <div class="card h-100 rounded-3 p-3 border border-success bg-dark bg-opacity-75">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-bold text-white fs-6">${slot.display}</span>
+              <span class="badge ${badgeClass} small">${badgeText}</span>
+            </div>
+            <div class="mb-2">
+              <div class="text-light fw-bold text-truncate">${escapeHtml(booking.customer_name)}</div>
+              <div class="small text-secondary">
+                <i class="bi bi-telephone text-success me-1"></i>
+                <a href="tel:${booking.customer_phone}" class="text-secondary text-decoration-none">${booking.customer_phone}</a>
+              </div>
+              <div class="small text-success fw-bold mt-1">Fee: ₹${booking.total_price}</div>
+              ${booking.payment_status === 'ADVANCE_PAID' ? `
+                <div class="small text-info"><i class="bi bi-qr-code text-success me-1"></i>Adv: ₹${booking.advance_amount}</div>
+                <div class="small text-warning fw-bold">Bal to Collect: ₹${booking.balance_amount}</div>
+              ` : ''}
+            </div>
+            <div class="d-flex gap-1 mt-auto pt-2 border-top border-secondary border-opacity-25 flex-wrap">
+              ${booking.payment_status !== 'PAID' ? `
+                <button type="button" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="collectBalance('${booking.id}')">
+                  <i class="bi bi-cash-coin"></i> Collect Bal ₹${booking.balance_amount}
+                </button>
+              ` : ''}
+              <button type="button" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="markCompleted('${booking.id}')">
+                <i class="bi bi-check-all"></i> Complete
+              </button>
+              <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="cancelBooking('${booking.id}')">
+                Cancel
+              </button>
+              <button type="button" class="btn btn-xs btn-outline-success rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="sendWhatsAppVoucher('${booking.id}')">
+                <i class="bi bi-whatsapp"></i> Voucher
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        col.innerHTML = `
+          <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-bold text-white fs-6">${slot.display}</span>
+              <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+            </div>
+            <div class="mt-auto pt-3">
+              <button type="button" class="btn btn-outline-success btn-sm w-100 rounded-pill" onclick="openQuickWalkinModal('${selectedFacility}', '${selectedDate}', '${slot.start}')">
+                <i class="bi bi-plus-circle me-1"></i> Book Slot
+              </button>
+            </div>
+          </div>
+        `;
+      }
+      scheduleRow.appendChild(col);
+    });
+  }
+
+  // 4. Render Section 2: Detailed Bookings Table
+  const section2Card = document.querySelectorAll('.card.bg-black.border.border-secondary.border-opacity-25.rounded-4.p-4.shadow')[1];
+  if (section2Card) {
+    if (dayBookings.length === 0) {
+      section2Card.innerHTML = `
+        <h5 class="text-white fw-bold mb-3 d-flex align-items-center justify-content-between">
+          <span>All Scheduled Reservations (0)</span>
+          <span class="small text-secondary">${selectedDate}</span>
+        </h5>
+        <div class="text-center py-4 text-secondary">
+          <i class="bi bi-inbox fs-2 mb-2 d-block"></i>
+          No bookings found for the selected date or search filter.
+        </div>
+      `;
+    } else {
+      let rowsHtml = '';
+      dayBookings.forEach(b => {
+        const isPaid = b.payment_status === 'PAID';
+        const payBadgeClass = isPaid ? 'bg-success' : (b.payment_status === 'ADVANCE_PAID' ? 'bg-info text-dark' : 'bg-warning text-dark');
+        const statusBadgeClass = b.status === 'CONFIRMED' ? 'bg-primary' : (b.status === 'COMPLETED' ? 'bg-info text-dark' : 'bg-danger');
+
+        rowsHtml += `
+          <tr>
+            <td class="font-monospace small text-success fw-bold">${b.id}</td>
+            <td>
+              <div class="fw-bold text-white">${escapeHtml(b.customer_name)}</div>
+              <div class="small text-secondary"><i class="bi bi-telephone text-success me-1"></i>${b.customer_phone}</div>
+            </td>
+            <td class="text-light">${escapeHtml(b.facility_name || FACILITY_NAMES[b.facility_slug])}</td>
+            <td>
+              <div class="text-warning fw-semibold">${b.display_time || b.start_time}</div>
+              <small class="text-secondary">${b.date}</small>
+            </td>
+            <td>
+              <div class="fw-bold text-success">₹${b.total_price}</div>
+              ${b.payment_status === 'ADVANCE_PAID' ? `
+                <div class="small text-info">Adv: ₹${b.advance_amount}</div>
+                <div class="small text-warning fw-bold">Bal: ₹${b.balance_amount}</div>
+              ` : ''}
+            </td>
+            <td><span class="badge ${payBadgeClass}">${b.payment_status.replace('_', ' ')}</span></td>
+            <td><span class="badge ${statusBadgeClass}">${b.status}</span></td>
+            <td class="text-end">
+              <div class="d-inline-flex gap-1">
+                ${b.payment_status !== 'PAID' ? `
+                  <button type="button" class="btn btn-sm btn-success rounded-pill px-2" title="Collect Balance" onclick="collectBalance('${b.id}')">
+                    <i class="bi bi-cash-stack"></i> Collect ₹${b.balance_amount}
+                  </button>
+                ` : ''}
+                <button type="button" class="btn btn-sm btn-outline-info rounded-pill px-2" title="Mark Completed" onclick="markCompleted('${b.id}')">
+                  <i class="bi bi-check2"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
+                  <i class="bi bi-x-circle"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-2" title="WhatsApp Confirmation" onclick="sendWhatsAppVoucher('${b.id}')">
+                  <i class="bi bi-whatsapp"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      section2Card.innerHTML = `
+        <h5 class="text-white fw-bold mb-3 d-flex align-items-center justify-content-between">
+          <span>All Scheduled Reservations (${dayBookings.length})</span>
+          <span class="small text-secondary">${selectedDate}</span>
+        </h5>
+        <div class="table-responsive">
+          <table class="table table-dark table-hover mb-0 align-middle">
+            <thead class="border-secondary text-secondary small">
+              <tr>
+                <th>Ref ID</th>
+                <th>Player / Customer</th>
+                <th>Facility</th>
+                <th>Slot Timing</th>
+                <th>Fee</th>
+                <th>Payment</th>
+                <th>Match Status</th>
+                <th class="text-end">Quick Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+      `;
     }
+  }
+}
 
-    renderBookings();
-  </script>
+// Actions
+function collectBalance(id) {
+  const list = getBookings();
+  const b = list.find(item => item.id === id);
+  if (b) {
+    b.payment_status = 'PAID';
+    b.advance_amount = b.total_price;
+    b.balance_amount = 0;
+    saveBookings(list);
+    renderDashboard();
+    alert('Payment collected for ' + b.customer_name + '! Status marked as PAID.');
+  }
+}
+
+function markCompleted(id) {
+  const list = getBookings();
+  const b = list.find(item => item.id === id);
+  if (b) {
+    b.status = 'COMPLETED';
+    saveBookings(list);
+    renderDashboard();
+  }
+}
+
+function cancelBooking(id) {
+  if (!confirm('Are you sure you want to cancel this booking? The slot will become available.')) return;
+  let list = getBookings();
+  list = list.filter(item => item.id !== id);
+  saveBookings(list);
+  renderDashboard();
+}
+
+function sendWhatsAppVoucher(id) {
+  const list = getBookings();
+  const b = list.find(item => item.id === id);
+  if (!b) return;
+
+  const phone = (b.customer_phone || '').replace(/[^0-9]/g, '');
+  const cleanPhone = phone.length === 10 ? '91' + phone : phone;
+
+  const msg = 
+`🏆 *FRIENDS SPORTS HUB MULAYANKAVU*
+*Ground Booking Confirmation*
+---------------------------------
+Ref ID: ${b.id}
+Player: ${b.customer_name}
+Facility: ${b.facility_name || FACILITY_NAMES[b.facility_slug]}
+Date: ${b.date}
+Timing: ${b.display_time || b.start_time}
+Fee: ₹${b.total_price} (Status: ${b.payment_status})
+---------------------------------
+📍 Location: Kulukkallur, Palakkad, Kerala
+🗺️ Google Maps: https://maps.app.goo.gl/J1tQoft1vWQTDUio9
+📞 Helpline: 6238006820
+Thank you for choosing Friends Sports Hub!`;
+
+  window.open('https://wa.me/' + cleanPhone + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// Quick Walk-in Modal Handlers
+function openQuickWalkinModal(facility, date, time) {
+  if (facility) document.getElementById('modalFacility').value = facility;
+  if (date) document.getElementById('modalDate').value = date;
+  else document.getElementById('modalDate').value = new Date().toISOString().split('T')[0];
+  if (time) document.getElementById('modalSlot').value = time;
+  
+  updateModalPrice();
+  const modalEl = document.getElementById('quickWalkinModal');
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+  modal.show();
+}
+
+function updateModalPrice() {
+  const sel = document.getElementById('modalFacility');
+  const price = sel.options[sel.selectedIndex].getAttribute('data-price') || 900;
+  document.getElementById('modalTotalPrice').value = price;
+  calculateModalBalance();
+}
+
+function calculateModalBalance() {
+  const total = Number(document.getElementById('modalTotalPrice').value || 0);
+  const adv = Number(document.getElementById('modalAdvance').value || 0);
+  const statusSel = document.getElementById('modalPaymentStatus');
+  if (adv >= total && total > 0) {
+    statusSel.value = 'PAID';
+  } else if (adv > 0) {
+    statusSel.value = 'ADVANCE_PAID';
+  } else {
+    statusSel.value = 'UNPAID';
+  }
+}
+
+function submitQuickWalkin() {
+  const facSel = document.getElementById('modalFacility');
+  const facSlug = facSel.value;
+  const facName = facSel.options[facSel.selectedIndex].getAttribute('data-name');
+  const date = document.getElementById('modalDate').value;
+  const time = document.getElementById('modalSlot').value;
+  const name = document.getElementById('modalCustomerName').value.trim();
+  const phone = document.getElementById('modalCustomerPhone').value.trim();
+  const total = Number(document.getElementById('modalTotalPrice').value || 900);
+  const adv = Number(document.getElementById('modalAdvance').value || 0);
+  const status = document.getElementById('modalPaymentStatus').value;
+
+  const slotObj = TIME_SLOTS.find(s => s.start === time) || { start: time, end: time, display: time };
+
+  const newBooking = {
+    id: 'BKG-FSH-' + Math.floor(100 + Math.random() * 900),
+    customer_name: name,
+    customer_phone: phone,
+    facility_slug: facSlug,
+    facility_name: facName,
+    date: date,
+    start_time: slotObj.start,
+    end_time: slotObj.end,
+    display_time: slotObj.display,
+    total_price: total,
+    advance_amount: adv,
+    balance_amount: Math.max(0, total - adv),
+    payment_status: status,
+    status: 'CONFIRMED'
+  };
+
+  const list = getBookings();
+  list.unshift(newBooking);
+  saveBookings(list);
+
+  // Close modal
+  const modalEl = document.getElementById('quickWalkinModal');
+  const modal = bootstrap.Modal.getInstance(modalEl);
+  if (modal) modal.hide();
+
+  renderDashboard();
+
+  if (confirm('Booking locked successfully for ' + name + '! Would you like to send WhatsApp confirmation voucher to the customer now?')) {
+    sendWhatsAppVoucher(newBooking.id);
+  }
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  return String(text).replace(/[&<>"']/g, function(m) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+  });
+}
+</script>
 </body>
+
 </html>
