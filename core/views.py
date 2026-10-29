@@ -23,10 +23,14 @@ BUSINESS_CONTEXT = {
 
 def home(request):
     """
-    Main landing page: directly renders the mobile-friendly live slot availability
-    and instant booking UI, so visitors don't have to navigate to another page.
+    Main landing page: renders the rich homepage showcase with hero section,
+    featured facilities, quick slot check, and owner contact.
     """
-    return booking_view(request)
+    facilities = Facility.objects.filter(is_active=True)
+    return render(request, 'core/home.html', {
+        **BUSINESS_CONTEXT,
+        'facilities': facilities,
+    })
 
 
 def about(request):
