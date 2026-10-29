@@ -750,9 +750,9 @@
             <input type="hidden" name="facility" value="{{ selected_facility.slug }}">
           {% endif %}
           <i class="bi bi-calendar3"></i>
-          <input type="date" name="date" class="date-picker-input"
+          <input type="date" name="date" id="slotDatePicker" class="date-picker-input"
                  value="{{ date_str }}" min="{{ min_date }}" max="{{ max_date }}"
-                 onchange="document.getElementById('datePickerForm').submit()">
+                 onchange="if (window.handleDateChange) { window.handleDateChange(this.value); } else { document.getElementById('datePickerForm').submit(); }">
           <span class="small text-secondary d-none d-sm-inline">Tap to change date</span>
         </form>
 
@@ -913,14 +913,76 @@ function submitToWhatsApp() {
   const date  = document.getElementById('stateDate').value;
   const fac   = document.getElementById('stateFacilityName').value;
   const price = document.getElementById('statePrice').value;
+  const start = document.getElementById('stateStart').value;
 
   if (!name || !phone) {
     alert('Please enter your Name and Phone Number to book.');
     return;
   }
 
+  // Calculate end time
+  let end = '';
+  if (start && start.includes(':')) {
+    const parts = start.split(':');
+    end = (Number(parts[0]) + 1).toString().padStart(2, '0') + ':' + parts[1];
+  }
+
+  // Determine facility slug
+  let facSlug = 'turf';
+  if (window.currentFacilitySlug) {
+    facSlug = window.currentFacilitySlug;
+  } else if (fac.toLowerCase().includes('pool')) {
+    facSlug = 'swimming-pool';
+  } else if (fac.toLowerCase().includes('park') || fac.toLowerCase().includes('children')) {
+    facSlug = 'childrens-park';
+  }
+
+  const bookingId = 'BKG-FSH-' + Math.floor(100 + Math.random() * 900);
+
+  const newBooking = {
+    id: bookingId,
+    customer_name: name,
+    customer_phone: phone,
+    club_name: club || '',
+    facility_slug: facSlug,
+    facility_name: fac,
+    date: date,
+    start_time: start,
+    end_time: end,
+    display_time: slot,
+    total_price: Number(price) || 900,
+    advance_amount: 0,
+    balance_amount: Number(price) || 900,
+    payment_status: 'UNPAID',
+    status: 'CONFIRMED',
+    source: 'ONLINE_WHATSAPP',
+    created_at: new Date().toISOString()
+  };
+
+  // 1. Save to local storage
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+  } catch(e) { list = []; }
+  list.unshift(newBooking);
+  localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+  localStorage.setItem('fsh_data_initialized', 'true');
+
+  // 2. Push to cloud database if available
+  if (window.pushCloudBookings) {
+    window.pushCloudBookings(list);
+  }
+
+  // 3. Update DOM slots immediately
+  if (window.renderSlots) {
+    window.renderSlots(date);
+  } else if (window.syncBookingsToPage) {
+    window.syncBookingsToPage();
+  }
+
   const message = [
     '🏟️ *BOOKING REQUEST — Friends Sports Hub*',
+    'Ref ID: ' + bookingId,
     '',
     '📅 Date: ' + formatFriendlyDate(date),
     '⏰ Slot: ' + slot,
@@ -931,7 +993,7 @@ function submitToWhatsApp() {
     '🏆 Club/Team: ' + (club || '—'),
     '📞 Phone: ' + phone,
     '',
-    'Please confirm the slot. Thank you!'
+    'Please confirm my booking. Thank you!'
   ].join('\n');
 
   const url = 'https://api.whatsapp.com/send?phone=' + OWNER_WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
@@ -949,6 +1011,7 @@ function submitToWhatsApp() {
     link.remove();
   }
   closeBookingModal();
+  alert('Slot ' + slot + ' locked! Redirecting to WhatsApp to send booking details to owner (6238006820).');
 }
 
 function submitAdminBooking() {

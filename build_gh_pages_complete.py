@@ -1,7 +1,8 @@
 """
 Build complete static web application for GitHub Pages.
 Renders all Django templates, bundles static files, and adds client-side
-dynamic slot management, WhatsApp messaging, and the exact previous Owner Dashboard.
+dynamic slot management, universal cloud synchronization, WhatsApp messaging,
+and the exact previous Owner Dashboard.
 """
 import os
 import shutil
@@ -57,11 +58,11 @@ def clean_urls(html):
     html = re.sub(r'href="/manage/employees/"', 'href="employees.html"', html)
     html = re.sub(r'href="/logout/"', 'href="#" onclick="logoutAdmin()"', html)
     html = re.sub(r'href="/admin/"', 'href="admin.html"', html)
+    html = re.sub(r'href="/booking/[^"]*"', 'href="#" onclick="window.print(); return false;"', html)
     
     # Fix rel="noopener" on target="_blank"
     def fix_blank(m):
         tag = m.group(0)
-        # If href="#" remove target="_blank"
         if 'href="#"' in tag:
             tag = re.sub(r'\s*target=["\']_blank["\']', '', tag)
             return tag
@@ -251,12 +252,15 @@ function logoutAdmin() {
 contact_html = contact_html.replace('</body>', contact_script)
 contact_path.write_text(contact_html, encoding='utf-8')
 
-# 6. Enhance book.html with live facility switching, slot sync & lock support
+# 6. Enhance book.html with live facility switching, universal cloud sync & dynamic slot engine
 book_path = out_dir / 'book.html'
 book_html = book_path.read_text(encoding='utf-8')
 
 book_enhancement = """
 <script>
+// Universal Cloud Database API Endpoint (CORS enabled for GitHub Pages)
+const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
+
 const FACILITIES_DATA = {
   'turf': {
     name: 'Football & Cricket Turf',
@@ -299,12 +303,165 @@ const FACILITIES_DATA = {
   }
 };
 
+const ALL_TIME_SLOTS = [
+  { start: "06:00", end: "07:00" },
+  { start: "07:00", end: "08:00" },
+  { start: "08:00", end: "09:00" },
+  { start: "09:00", end: "10:00" },
+  { start: "10:00", end: "11:00" },
+  { start: "11:00", end: "12:00" },
+  { start: "12:00", end: "13:00" },
+  { start: "13:00", end: "14:00" },
+  { start: "14:00", end: "15:00" },
+  { start: "15:00", end: "16:00" },
+  { start: "16:00", end: "17:00" },
+  { start: "17:00", end: "18:00" },
+  { start: "18:00", end: "19:00" },
+  { start: "19:00", end: "20:00" },
+  { start: "20:00", end: "21:00" },
+  { start: "21:00", end: "22:00" },
+  { start: "22:00", end: "23:00" }
+];
+
 let currentFacilitySlug = 'turf';
+let currentSelectedDate = new Date().toISOString().split('T')[0];
+
+// Cloud Synchronization
+async function fetchCloudBookings() {
+  try {
+    const res = await fetch(FSH_CLOUD_API_URL + '?t=' + Date.now());
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json && json.data && json.data.json) {
+      const cloudList = JSON.parse(json.data.json);
+      if (Array.isArray(cloudList)) {
+        let localList = [];
+        try { localList = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]'); } catch(e){}
+
+        const map = new Map();
+        cloudList.forEach(b => { if (b && b.id) map.set(b.id, b); });
+        localList.forEach(b => {
+          if (b && b.id && !map.has(b.id)) {
+            map.set(b.id, b);
+          }
+        });
+
+        const merged = Array.from(map.values());
+        localStorage.setItem('fsh_locked_slots', JSON.stringify(merged));
+        localStorage.setItem('fsh_data_initialized', 'true');
+        return merged;
+      }
+    }
+  } catch(err) {
+    console.warn('Cloud sync offline, using local storage cache:', err);
+  }
+  return null;
+}
+
+async function pushCloudBookings(list) {
+  try {
+    const payload = {
+      name: 'Friends Sports Hub Master Live Store',
+      data: {
+        json: JSON.stringify(list)
+      }
+    };
+    await fetch(FSH_CLOUD_API_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    console.warn('Cloud sync push failed, saved locally:', err);
+  }
+}
+window.pushCloudBookings = pushCloudBookings;
+
+// Dynamic Slot Renderer
+function renderSlots(dateStr) {
+  if (!dateStr) dateStr = currentSelectedDate;
+  currentSelectedDate = dateStr;
+
+  const matrix = document.querySelector('.slots-matrix');
+  if (!matrix) return;
+
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+  } catch(e) { list = []; }
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const nowHour = new Date().getHours();
+  const facData = FACILITIES_DATA[currentFacilitySlug] || FACILITIES_DATA['turf'];
+
+  matrix.innerHTML = '';
+
+  ALL_TIME_SLOTS.forEach(slot => {
+    const isPast = (dateStr < todayStr) || (dateStr === todayStr && Number(slot.start.split(':')[0]) <= nowHour);
+    const lockedBooking = list.find(b => 
+      b.date === dateStr && 
+      (b.facility_slug === currentFacilitySlug || !b.facility_slug) && 
+      b.start_time.startsWith(slot.start) && 
+      b.status !== 'CANCELLED'
+    );
+
+    const slotBox = document.createElement('div');
+
+    if (lockedBooking) {
+      slotBox.className = 'slot-btn booked';
+      slotBox.title = 'Already booked by ' + (lockedBooking.customer_name || 'player');
+      slotBox.innerHTML = `
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill booked">✗ Booked</span>
+      `;
+    } else if (isPast) {
+      slotBox.className = 'slot-btn past';
+      slotBox.title = 'This slot time has already passed';
+      slotBox.innerHTML = `
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill">Past</span>
+      `;
+    } else {
+      slotBox.className = 'slot-btn vacant';
+      slotBox.title = 'Available for booking';
+      slotBox.innerHTML = `
+        <span class="tap-badge">TAP</span>
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill">✓ Vacant</span>
+      `;
+      slotBox.onclick = function() {
+        openBookingModal(slot.start, slot.end, '1', facData.name, dateStr, facData.rate);
+      };
+    }
+
+    matrix.appendChild(slotBox);
+  });
+}
+window.renderSlots = renderSlots;
+
+function handleDateChange(newDate) {
+  if (!newDate) return;
+  currentSelectedDate = newDate;
+
+  const url = new URL(window.location);
+  url.searchParams.set('date', newDate);
+  window.history.replaceState({}, '', url);
+
+  const dateInput = document.getElementById('slotDatePicker');
+  if (dateInput) dateInput.value = newDate;
+
+  renderSlots(newDate);
+}
+window.handleDateChange = handleDateChange;
 
 function switchFacility(slug, event) {
   if (event) event.preventDefault();
   if (!FACILITIES_DATA[slug]) slug = 'turf';
   currentFacilitySlug = slug;
+  window.currentFacilitySlug = slug;
 
   const data = FACILITIES_DATA[slug];
 
@@ -348,7 +505,7 @@ function switchFacility(slug, event) {
   const statePrice = document.getElementById('statePrice');
   if (statePrice) statePrice.value = data.rate;
 
-  syncBookingsToPage();
+  renderSlots(currentSelectedDate);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -393,38 +550,43 @@ document.addEventListener('DOMContentLoaded', function() {
     switchFacility(requestedFacility);
   }
 
-  syncBookingsToPage();
-});
-
-function syncBookingsToPage() {
-  try {
-    const list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
-    const dateInput = document.getElementById('slotDatePicker');
-    const selectedDate = dateInput ? dateInput.value : '';
-
-    document.querySelectorAll('.slot-btn').forEach(box => {
-      const timeEl = box.querySelector('.time-text');
-      if (!timeEl) return;
-      const start = timeEl.textContent.trim().split(' ')[0];
-      const isLocked = list.some(l => 
-        l.date === selectedDate && 
-        (l.facility_slug === currentFacilitySlug || !l.facility_slug) &&
-        l.start_time.startsWith(start) && 
-        l.status !== 'CANCELLED'
-      );
-      if (isLocked) {
-        box.classList.remove('vacant');
-        box.classList.add('booked');
-        box.removeAttribute('onclick');
-        const badge = box.querySelector('.slot-badge-pill');
-        if (badge) {
-          badge.className = 'slot-badge-pill booked';
-          badge.textContent = 'Booked';
-        }
-      }
+  const requestedDate = urlParams.get('date');
+  if (requestedDate) {
+    currentSelectedDate = requestedDate;
+  }
+  const dateInput = document.getElementById('slotDatePicker');
+  if (dateInput) {
+    dateInput.value = currentSelectedDate;
+    dateInput.min = new Date().toISOString().split('T')[0];
+    dateInput.addEventListener('change', function(e) {
+      e.preventDefault();
+      handleDateChange(this.value);
     });
-  } catch(e) {}
-}
+  }
+
+  const dateForm = document.getElementById('datePickerForm');
+  if (dateForm) {
+    dateForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const val = dateInput ? dateInput.value : currentSelectedDate;
+      handleDateChange(val);
+    });
+  }
+
+  // Initial render from local cache
+  renderSlots(currentSelectedDate);
+
+  // Background Cloud Sync
+  fetchCloudBookings().then(cloudData => {
+    if (cloudData) renderSlots(currentSelectedDate);
+  });
+
+  // Real-time polling every 8 seconds to update booked slots instantly from any other device
+  setInterval(async () => {
+    const cloudData = await fetchCloudBookings();
+    if (cloudData) renderSlots(currentSelectedDate);
+  }, 8000);
+});
 
 function logoutAdmin() {
   sessionStorage.removeItem('fsh_admin_logged_in');
@@ -435,7 +597,7 @@ function logoutAdmin() {
 """
 book_html = book_html.replace('</body>', book_enhancement)
 book_path.write_text(book_html, encoding='utf-8')
-print("book.html enhanced with dynamic facility switcher & slot synchronization")
+print("book.html enhanced with dynamic facility switcher, universal cloud sync & slot engine")
 
 # 7. Enhance admin.html (The Exact Previous Owner Dashboard with dynamic client-side live engine)
 admin_path = out_dir / 'admin.html'
@@ -449,7 +611,7 @@ admin_script = scope.get('admin_script', '')
 
 admin_html = admin_html.replace('</body>', admin_script)
 admin_path.write_text(admin_html, encoding='utf-8')
-print("admin.html enhanced with complete live Owner Dashboard engine")
+print("admin.html enhanced with complete live Owner Dashboard engine & cloud sync")
 
 # 8. Enhance walk-in.html
 walkin_path = out_dir / 'walk-in.html'
@@ -464,11 +626,27 @@ function logoutAdmin() {
   window.location.href = 'index.html';
 }
 
+const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
+
+async function pushCloudBookings(list) {
+  try {
+    const payload = {
+      name: 'Friends Sports Hub Master Live Store',
+      data: { json: JSON.stringify(list) }
+    };
+    await fetch(FSH_CLOUD_API_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {}
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.querySelector('form');
   if (!form) return;
 
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const facSel = document.querySelector('select[name="facility_id"]');
@@ -480,13 +658,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const phone = document.querySelector('input[name="customer_phone"]').value.trim();
     const price = Number(document.querySelector('input[name="total_price"]').value || 900);
     const adv = Number(document.querySelector('input[name="advance_amount"]').value || 0);
-    const payMode = document.querySelector('select[name="payment_mode"]').value;
 
     let payStatus = 'UNPAID';
     if (adv >= price && price > 0) payStatus = 'PAID';
     else if (adv > 0) payStatus = 'ADVANCE_PAID';
 
-    const slotDisplay = (time) ? time + ' - ' + (Number(time.split(':')[0]) + 1).toString().padStart(2, '0') + ':00' : 'Slot';
+    const endHour = (Number(time.split(':')[0]) + 1).toString().padStart(2, '0') + ':00';
+    const slotDisplay = (time) ? time + ' - ' + endHour : 'Slot';
 
     const newBooking = {
       id: 'BKG-FSH-' + Math.floor(100 + Math.random() * 900),
@@ -496,6 +674,7 @@ document.addEventListener('DOMContentLoaded', function() {
       facility_name: facName,
       date: date,
       start_time: time,
+      end_time: endHour,
       display_time: slotDisplay,
       total_price: price,
       advance_amount: adv,
@@ -511,6 +690,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     list.unshift(newBooking);
     localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+    await pushCloudBookings(list);
 
     alert('Booking locked successfully for ' + name + '! Redirecting to Owner Operations Dashboard.');
     window.location.href = 'admin.html';
@@ -521,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function() {
 """
 walkin_html = walkin_html.replace('</body>', walkin_script)
 walkin_path.write_text(walkin_html, encoding='utf-8')
-print("walk-in.html enhanced with local submission engine")
+print("walk-in.html enhanced with local & cloud submission engine")
 
 # 9. Enhance reports.html
 reports_path = out_dir / 'reports.html'

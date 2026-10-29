@@ -842,9 +842,9 @@
             <input type="hidden" name="facility" value="turf">
           
           <i class="bi bi-calendar3"></i>
-          <input type="date" name="date" class="date-picker-input"
+          <input type="date" name="date" id="slotDatePicker" class="date-picker-input"
                  value="2026-10-29" min="2026-10-29" max="2026-11-28"
-                 onchange="document.getElementById('datePickerForm').submit()">
+                 onchange="if (window.handleDateChange) { window.handleDateChange(this.value); } else { document.getElementById('datePickerForm').submit(); }">
           <span class="small text-secondary d-none d-sm-inline">Tap to change date</span>
         </form>
 
@@ -1188,14 +1188,76 @@ function submitToWhatsApp() {
   const date  = document.getElementById('stateDate').value;
   const fac   = document.getElementById('stateFacilityName').value;
   const price = document.getElementById('statePrice').value;
+  const start = document.getElementById('stateStart').value;
 
   if (!name || !phone) {
     alert('Please enter your Name and Phone Number to book.');
     return;
   }
 
+  // Calculate end time
+  let end = '';
+  if (start && start.includes(':')) {
+    const parts = start.split(':');
+    end = (Number(parts[0]) + 1).toString().padStart(2, '0') + ':' + parts[1];
+  }
+
+  // Determine facility slug
+  let facSlug = 'turf';
+  if (window.currentFacilitySlug) {
+    facSlug = window.currentFacilitySlug;
+  } else if (fac.toLowerCase().includes('pool')) {
+    facSlug = 'swimming-pool';
+  } else if (fac.toLowerCase().includes('park') || fac.toLowerCase().includes('children')) {
+    facSlug = 'childrens-park';
+  }
+
+  const bookingId = 'BKG-FSH-' + Math.floor(100 + Math.random() * 900);
+
+  const newBooking = {
+    id: bookingId,
+    customer_name: name,
+    customer_phone: phone,
+    club_name: club || '',
+    facility_slug: facSlug,
+    facility_name: fac,
+    date: date,
+    start_time: start,
+    end_time: end,
+    display_time: slot,
+    total_price: Number(price) || 900,
+    advance_amount: 0,
+    balance_amount: Number(price) || 900,
+    payment_status: 'UNPAID',
+    status: 'CONFIRMED',
+    source: 'ONLINE_WHATSAPP',
+    created_at: new Date().toISOString()
+  };
+
+  // 1. Save to local storage
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+  } catch(e) { list = []; }
+  list.unshift(newBooking);
+  localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+  localStorage.setItem('fsh_data_initialized', 'true');
+
+  // 2. Push to cloud database if available
+  if (window.pushCloudBookings) {
+    window.pushCloudBookings(list);
+  }
+
+  // 3. Update DOM slots immediately
+  if (window.renderSlots) {
+    window.renderSlots(date);
+  } else if (window.syncBookingsToPage) {
+    window.syncBookingsToPage();
+  }
+
   const message = [
     '🏟️ *BOOKING REQUEST — Friends Sports Hub*',
+    'Ref ID: ' + bookingId,
     '',
     '📅 Date: ' + formatFriendlyDate(date),
     '⏰ Slot: ' + slot,
@@ -1206,7 +1268,7 @@ function submitToWhatsApp() {
     '🏆 Club/Team: ' + (club || '—'),
     '📞 Phone: ' + phone,
     '',
-    'Please confirm the slot. Thank you!'
+    'Please confirm my booking. Thank you!'
   ].join('\n');
 
   const url = 'https://api.whatsapp.com/send?phone=' + OWNER_WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
@@ -1224,6 +1286,7 @@ function submitToWhatsApp() {
     link.remove();
   }
   closeBookingModal();
+  alert('Slot ' + slot + ' locked! Redirecting to WhatsApp to send booking details to owner (6238006820).');
 }
 
 function submitAdminBooking() {
@@ -1255,6 +1318,9 @@ function formatFriendlyDate(d) {
 
 
 <script>
+// Universal Cloud Database API Endpoint (CORS enabled for GitHub Pages)
+const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
+
 const FACILITIES_DATA = {
   'turf': {
     name: 'Football & Cricket Turf',
@@ -1297,12 +1363,165 @@ const FACILITIES_DATA = {
   }
 };
 
+const ALL_TIME_SLOTS = [
+  { start: "06:00", end: "07:00" },
+  { start: "07:00", end: "08:00" },
+  { start: "08:00", end: "09:00" },
+  { start: "09:00", end: "10:00" },
+  { start: "10:00", end: "11:00" },
+  { start: "11:00", end: "12:00" },
+  { start: "12:00", end: "13:00" },
+  { start: "13:00", end: "14:00" },
+  { start: "14:00", end: "15:00" },
+  { start: "15:00", end: "16:00" },
+  { start: "16:00", end: "17:00" },
+  { start: "17:00", end: "18:00" },
+  { start: "18:00", end: "19:00" },
+  { start: "19:00", end: "20:00" },
+  { start: "20:00", end: "21:00" },
+  { start: "21:00", end: "22:00" },
+  { start: "22:00", end: "23:00" }
+];
+
 let currentFacilitySlug = 'turf';
+let currentSelectedDate = new Date().toISOString().split('T')[0];
+
+// Cloud Synchronization
+async function fetchCloudBookings() {
+  try {
+    const res = await fetch(FSH_CLOUD_API_URL + '?t=' + Date.now());
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json && json.data && json.data.json) {
+      const cloudList = JSON.parse(json.data.json);
+      if (Array.isArray(cloudList)) {
+        let localList = [];
+        try { localList = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]'); } catch(e){}
+
+        const map = new Map();
+        cloudList.forEach(b => { if (b && b.id) map.set(b.id, b); });
+        localList.forEach(b => {
+          if (b && b.id && !map.has(b.id)) {
+            map.set(b.id, b);
+          }
+        });
+
+        const merged = Array.from(map.values());
+        localStorage.setItem('fsh_locked_slots', JSON.stringify(merged));
+        localStorage.setItem('fsh_data_initialized', 'true');
+        return merged;
+      }
+    }
+  } catch(err) {
+    console.warn('Cloud sync offline, using local storage cache:', err);
+  }
+  return null;
+}
+
+async function pushCloudBookings(list) {
+  try {
+    const payload = {
+      name: 'Friends Sports Hub Master Live Store',
+      data: {
+        json: JSON.stringify(list)
+      }
+    };
+    await fetch(FSH_CLOUD_API_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    console.warn('Cloud sync push failed, saved locally:', err);
+  }
+}
+window.pushCloudBookings = pushCloudBookings;
+
+// Dynamic Slot Renderer
+function renderSlots(dateStr) {
+  if (!dateStr) dateStr = currentSelectedDate;
+  currentSelectedDate = dateStr;
+
+  const matrix = document.querySelector('.slots-matrix');
+  if (!matrix) return;
+
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+  } catch(e) { list = []; }
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const nowHour = new Date().getHours();
+  const facData = FACILITIES_DATA[currentFacilitySlug] || FACILITIES_DATA['turf'];
+
+  matrix.innerHTML = '';
+
+  ALL_TIME_SLOTS.forEach(slot => {
+    const isPast = (dateStr < todayStr) || (dateStr === todayStr && Number(slot.start.split(':')[0]) <= nowHour);
+    const lockedBooking = list.find(b => 
+      b.date === dateStr && 
+      (b.facility_slug === currentFacilitySlug || !b.facility_slug) && 
+      b.start_time.startsWith(slot.start) && 
+      b.status !== 'CANCELLED'
+    );
+
+    const slotBox = document.createElement('div');
+
+    if (lockedBooking) {
+      slotBox.className = 'slot-btn booked';
+      slotBox.title = 'Already booked by ' + (lockedBooking.customer_name || 'player');
+      slotBox.innerHTML = `
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill booked">✗ Booked</span>
+      `;
+    } else if (isPast) {
+      slotBox.className = 'slot-btn past';
+      slotBox.title = 'This slot time has already passed';
+      slotBox.innerHTML = `
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill">Past</span>
+      `;
+    } else {
+      slotBox.className = 'slot-btn vacant';
+      slotBox.title = 'Available for booking';
+      slotBox.innerHTML = `
+        <span class="tap-badge">TAP</span>
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill">✓ Vacant</span>
+      `;
+      slotBox.onclick = function() {
+        openBookingModal(slot.start, slot.end, '1', facData.name, dateStr, facData.rate);
+      };
+    }
+
+    matrix.appendChild(slotBox);
+  });
+}
+window.renderSlots = renderSlots;
+
+function handleDateChange(newDate) {
+  if (!newDate) return;
+  currentSelectedDate = newDate;
+
+  const url = new URL(window.location);
+  url.searchParams.set('date', newDate);
+  window.history.replaceState({}, '', url);
+
+  const dateInput = document.getElementById('slotDatePicker');
+  if (dateInput) dateInput.value = newDate;
+
+  renderSlots(newDate);
+}
+window.handleDateChange = handleDateChange;
 
 function switchFacility(slug, event) {
   if (event) event.preventDefault();
   if (!FACILITIES_DATA[slug]) slug = 'turf';
   currentFacilitySlug = slug;
+  window.currentFacilitySlug = slug;
 
   const data = FACILITIES_DATA[slug];
 
@@ -1346,7 +1565,7 @@ function switchFacility(slug, event) {
   const statePrice = document.getElementById('statePrice');
   if (statePrice) statePrice.value = data.rate;
 
-  syncBookingsToPage();
+  renderSlots(currentSelectedDate);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1391,38 +1610,43 @@ document.addEventListener('DOMContentLoaded', function() {
     switchFacility(requestedFacility);
   }
 
-  syncBookingsToPage();
-});
-
-function syncBookingsToPage() {
-  try {
-    const list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
-    const dateInput = document.getElementById('slotDatePicker');
-    const selectedDate = dateInput ? dateInput.value : '';
-
-    document.querySelectorAll('.slot-btn').forEach(box => {
-      const timeEl = box.querySelector('.time-text');
-      if (!timeEl) return;
-      const start = timeEl.textContent.trim().split(' ')[0];
-      const isLocked = list.some(l => 
-        l.date === selectedDate && 
-        (l.facility_slug === currentFacilitySlug || !l.facility_slug) &&
-        l.start_time.startsWith(start) && 
-        l.status !== 'CANCELLED'
-      );
-      if (isLocked) {
-        box.classList.remove('vacant');
-        box.classList.add('booked');
-        box.removeAttribute('onclick');
-        const badge = box.querySelector('.slot-badge-pill');
-        if (badge) {
-          badge.className = 'slot-badge-pill booked';
-          badge.textContent = 'Booked';
-        }
-      }
+  const requestedDate = urlParams.get('date');
+  if (requestedDate) {
+    currentSelectedDate = requestedDate;
+  }
+  const dateInput = document.getElementById('slotDatePicker');
+  if (dateInput) {
+    dateInput.value = currentSelectedDate;
+    dateInput.min = new Date().toISOString().split('T')[0];
+    dateInput.addEventListener('change', function(e) {
+      e.preventDefault();
+      handleDateChange(this.value);
     });
-  } catch(e) {}
-}
+  }
+
+  const dateForm = document.getElementById('datePickerForm');
+  if (dateForm) {
+    dateForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const val = dateInput ? dateInput.value : currentSelectedDate;
+      handleDateChange(val);
+    });
+  }
+
+  // Initial render from local cache
+  renderSlots(currentSelectedDate);
+
+  // Background Cloud Sync
+  fetchCloudBookings().then(cloudData => {
+    if (cloudData) renderSlots(currentSelectedDate);
+  });
+
+  // Real-time polling every 8 seconds to update booked slots instantly from any other device
+  setInterval(async () => {
+    const cloudData = await fetchCloudBookings();
+    if (cloudData) renderSlots(currentSelectedDate);
+  }, 8000);
+});
 
 function logoutAdmin() {
   sessionStorage.removeItem('fsh_admin_logged_in');

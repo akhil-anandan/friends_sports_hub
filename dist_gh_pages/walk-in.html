@@ -139,7 +139,7 @@
             </div>
 
             <form method="POST">
-                <input type="hidden" name="csrfmiddlewaretoken" value="LsREaMGnCBnTuyUNp5R4jP8Dwx1fwC7M755vsdoChGrO7EUpf19cPsagShdJKPyX">
+                <input type="hidden" name="csrfmiddlewaretoken" value="aybICR5d2yhj8utY9WDquQbWuOHhfcym5eXk7voK0Akm1uY52rDBsaSYOXLzz6zi">
                 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
@@ -304,11 +304,27 @@ function logoutAdmin() {
   window.location.href = 'index.html';
 }
 
+const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
+
+async function pushCloudBookings(list) {
+  try {
+    const payload = {
+      name: 'Friends Sports Hub Master Live Store',
+      data: { json: JSON.stringify(list) }
+    };
+    await fetch(FSH_CLOUD_API_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {}
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.querySelector('form');
   if (!form) return;
 
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const facSel = document.querySelector('select[name="facility_id"]');
@@ -320,13 +336,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const phone = document.querySelector('input[name="customer_phone"]').value.trim();
     const price = Number(document.querySelector('input[name="total_price"]').value || 900);
     const adv = Number(document.querySelector('input[name="advance_amount"]').value || 0);
-    const payMode = document.querySelector('select[name="payment_mode"]').value;
 
     let payStatus = 'UNPAID';
     if (adv >= price && price > 0) payStatus = 'PAID';
     else if (adv > 0) payStatus = 'ADVANCE_PAID';
 
-    const slotDisplay = (time) ? time + ' - ' + (Number(time.split(':')[0]) + 1).toString().padStart(2, '0') + ':00' : 'Slot';
+    const endHour = (Number(time.split(':')[0]) + 1).toString().padStart(2, '0') + ':00';
+    const slotDisplay = (time) ? time + ' - ' + endHour : 'Slot';
 
     const newBooking = {
       id: 'BKG-FSH-' + Math.floor(100 + Math.random() * 900),
@@ -336,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
       facility_name: facName,
       date: date,
       start_time: time,
+      end_time: endHour,
       display_time: slotDisplay,
       total_price: price,
       advance_amount: adv,
@@ -351,6 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     list.unshift(newBooking);
     localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+    await pushCloudBookings(list);
 
     alert('Booking locked successfully for ' + name + '! Redirecting to Owner Operations Dashboard.');
     window.location.href = 'admin.html';
