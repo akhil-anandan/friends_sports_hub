@@ -40,6 +40,7 @@ def clean_urls(html):
     html = re.sub(r'action="/login/"', 'action="login.html"', html)
     
     # Booking routes
+    html = re.sub(r'href="/book/\?([^"]*)"', r'href="book.html?\1"', html)
     html = re.sub(r'href="/book/"', 'href="book.html"', html)
     html = re.sub(r'action="/book/"', 'action="book.html"', html)
     html = re.sub(r'href="/book/([^"/]+)/\?date=([^"\']+)"', r'href="book.html?facility=\1&date=\2"', html)
