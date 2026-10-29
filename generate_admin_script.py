@@ -581,3 +581,4 @@ function escapeHtml(text) {
 """
 
 print("Script template ready, length:", len(admin_script))
+

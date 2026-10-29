@@ -89,7 +89,7 @@
                     </a>
 
                     
-                        <a href="/login/" class="btn btn-outline-light rounded-pill px-3 py-2 fw-semibold">
+                        <a href="login.html" class="btn btn-outline-light rounded-pill px-3 py-2 fw-semibold">
                             <i class="bi bi-shield-lock text-success me-1"></i> Admin
                         </a>
                     
@@ -184,7 +184,7 @@
                     <p class="text-secondary small mb-4">Have questions about ground availability, bulk bookings, or special events? Leave your message below.</p>
 
                     <form method="POST">
-                        <input type="hidden" name="csrfmiddlewaretoken" value="z6hj7lfF8Jx7BMC5bMde2xIGWA1WDesNXd1bdT6KW8EuRZgsp8iSx0hPJz6dBtSg">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="JeECN0mcTrl9DwRMcdCvR2BTFZpLW99713yoo0vAb05Fy0JrsGn7lGTHkeTfSJs2">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label text-secondary small fw-semibold">Your Name *</label>
@@ -315,6 +315,33 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       `;
     }
+  }
+
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = (document.getElementById('id_name') || {}).value || '';
+      const phone = (document.getElementById('id_phone') || {}).value || '';
+      const email = (document.getElementById('id_email') || {}).value || '';
+      const subject = (document.getElementById('id_subject') || {}).value || '';
+      const msg = (document.getElementById('id_message') || {}).value || '';
+
+      const waMsg = 
+`🏆 *FRIENDS SPORTS HUB MULAYANKAVU*
+*Customer Inquiry*
+---------------------------------
+Name: ${name}
+Phone: ${phone}
+${email ? 'Email: ' + email + '\n' : ''}Subject: ${subject}
+Message: ${msg}
+---------------------------------
+Sent from website contact form`;
+
+      alert('Thank you, ' + name + '! Redirecting your inquiry directly to our official WhatsApp helpline.');
+      window.open('https://wa.me/916238006820?text=' + encodeURIComponent(waMsg), '_blank');
+      form.reset();
+    });
   }
 });
 function logoutAdmin() {
