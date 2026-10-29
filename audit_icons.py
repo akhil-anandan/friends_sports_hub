@@ -45,3 +45,4 @@ if missing_cdn:
     print(f"\nWARNING: Bootstrap Icons CDN missing in: {missing_cdn}")
 else:
     print("\nALL pages have Bootstrap Icons CDN linked!")
+

@@ -127,9 +127,15 @@
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="fw-bold text-white fs-6">{{ slot.display_time }}</span>
                                 {% if slot.booking %}
-                                    <span class="badge {% if slot.booking.payment_status == 'PAID' %}bg-success{% else %}bg-warning text-dark{% endif %} small">
-                                        {{ slot.booking.get_payment_status_display }}
-                                    </span>
+                                    {% if slot.booking.status == 'COMPLETED' %}
+                                        <span class="badge bg-info text-dark small"><i class="bi bi-check2-all"></i> COMPLETED</span>
+                                    {% elif slot.booking.status == 'CANCELLED' %}
+                                        <span class="badge bg-danger small">CANCELLED</span>
+                                    {% elif slot.booking.payment_status == 'PAID' %}
+                                        <span class="badge bg-success small">PAID</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark small">ADVANCE PAID</span>
+                                    {% endif %}
                                 {% elif slot.is_past %}
                                     <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
                                 {% else %}
@@ -190,6 +196,12 @@
                                         </form>
                                     {% endif %}
 
+                                    {% if slot.booking.status == 'COMPLETED' %}
+                                        <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.7rem;">
+                                            <i class="bi bi-check2"></i> Match Finished
+                                        </span>
+                                    {% endif %}
+
                                     <a href="{% url 'booking_detail' slot.booking.booking_id %}" target="_blank" class="btn btn-xs btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.7rem;">
                                         Receipt
                                     </a>
@@ -212,7 +224,7 @@
         </div>
 
         <!-- Section 2: Detailed Bookings Table -->
-        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 shadow">
+        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 shadow" id="reservationsSection">
             <h5 class="text-white fw-bold mb-3 d-flex align-items-center justify-content-between">
                 <span>All Scheduled Reservations ({{ bookings.count }})</span>
                 <span class="small text-secondary">{{ selected_date|date:"D, d M Y" }}</span>
@@ -284,6 +296,15 @@
                                                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
                                                     <button type="submit" class="btn btn-sm btn-outline-info rounded-pill px-2" title="Mark Completed">
                                                         <i class="bi bi-check2"></i>
+                                                    </button>
+                                                </form>
+
+                                                <form method="POST" action="{% url 'staff_update_booking_status' b.booking_id %}" class="d-inline" onsubmit="return confirm('Cancel reservation #{{ b.booking_id }}?');">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="action" value="cancel_booking">
+                                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Cancel Booking">
+                                                        <i class="bi bi-x-circle"></i>
                                                     </button>
                                                 </form>
                                             {% endif %}

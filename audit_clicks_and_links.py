@@ -85,3 +85,4 @@ print(f"Total Forms Checked: {total_forms}")
 print(f"\nIssues Found: {len(issues)}")
 for iss in issues:
     print(f"  [!] {iss}")
+

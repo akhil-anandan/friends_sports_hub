@@ -1,5 +1,5 @@
 """
-Generate the complete script for admin.html and walk-in.html
+Generate the complete script for admin.html with robust Complete, Cancel, and Collect actions
 """
 
 admin_script = """
@@ -19,7 +19,7 @@ admin_script = """
             <label class="form-label text-secondary small fw-semibold">Sport Facility *</label>
             <select id="modalFacility" class="form-select bg-dark text-white border-secondary" required onchange="updateModalPrice()">
               <option value="turf" data-name="Football & Cricket Turf" data-price="900">Football & Cricket Turf (₹900/hr)</option>
-              <option value="swimming-pool" data-name="Swimming Pool" data-price="150">Swimming Pool (₹150/hr)</option>
+              <option value="swimming-pool" data-name="Covered Swimming Pool" data-price="150">Swimming Pool (₹150/hr)</option>
               <option value="childrens-park" data-name="Children's Park" data-price="50">Children's Park (₹50/hr)</option>
             </select>
           </div>
@@ -38,6 +38,8 @@ admin_script = """
                 <option value="09:00">09:00 AM - 10:00 AM</option>
                 <option value="10:00">10:00 AM - 11:00 AM</option>
                 <option value="11:00">11:00 AM - 12:00 PM</option>
+                <option value="12:00">12:00 PM - 01:00 PM</option>
+                <option value="13:00">01:00 PM - 02:00 PM</option>
                 <option value="14:00">02:00 PM - 03:00 PM</option>
                 <option value="15:00">03:00 PM - 04:00 PM</option>
                 <option value="16:00">04:00 PM - 05:00 PM</option>
@@ -125,23 +127,18 @@ const TIME_SLOTS = [
 const FACILITY_NAMES = {
   'turf': 'Football & Cricket Turf',
   'swimming-pool': 'Covered Swimming Pool',
-  'childrens-park': "Children's Play Park"
+  'childrens-park': "Children's Park"
 };
 
-const FACILITY_PRICES = {
-  'turf': 900,
-  'swimming-pool': 150,
-  'childrens-park': 50
-};
-
-// Seed initial bookings if none exist
+// Seed initial bookings only once
 function getBookings() {
+  const isInit = localStorage.getItem('fsh_data_initialized') === 'true';
   let list = [];
   try {
     list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
   } catch(e) { list = []; }
 
-  if (!list || list.length === 0) {
+  if (!isInit) {
     const today = new Date().toISOString().split('T')[0];
     list = [
       {
@@ -178,6 +175,7 @@ function getBookings() {
       }
     ];
     localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+    localStorage.setItem('fsh_data_initialized', 'true');
   }
   return list;
 }
@@ -190,7 +188,7 @@ function saveBookings(list) {
 document.addEventListener('DOMContentLoaded', function() {
   // Wire up filter controls
   const dateInput = document.querySelector('input[name="date"]');
-  if (dateInput) {
+  if (dateInput && !dateInput.value) {
     const today = new Date().toISOString().split('T')[0];
     dateInput.value = today;
   }
@@ -227,7 +225,7 @@ function renderDashboard() {
   // 1. Filter bookings
   let dayBookings = allBookings.filter(b => b.date === selectedDate);
   if (selectedFacility) {
-    dayBookings = dayBookings.filter(b => b.facility_slug === selectedFacility);
+    dayBookings = dayBookings.filter(b => b.facility_slug === selectedFacility || !b.facility_slug);
   }
   if (query) {
     dayBookings = dayBookings.filter(b => 
@@ -244,9 +242,13 @@ function renderDashboard() {
 
   let revenuePaid = 0;
   let revenuePending = 0;
-  confirmed.forEach(b => {
-    revenuePaid += (b.payment_status === 'PAID') ? Number(b.total_price) : Number(b.advance_amount || 0);
-    revenuePending += Number(b.balance_amount || 0);
+  dayBookings.forEach(b => {
+    if (b.status !== 'CANCELLED') {
+      revenuePaid += (b.payment_status === 'PAID') ? Number(b.total_price) : Number(b.advance_amount || 0);
+      if (b.status === 'CONFIRMED') {
+        revenuePending += Number(b.balance_amount || 0);
+      }
+    }
   });
 
   // KPI elements
@@ -256,6 +258,10 @@ function renderDashboard() {
     kpiCols[1].textContent = '₹' + revenuePaid.toFixed(0);
     kpiCols[2].textContent = '₹' + revenuePending.toFixed(0);
     kpiCols[3].textContent = completed.length;
+  }
+  const cancelledLabel = document.querySelector('.row.g-3.mb-4 .col-6.col-lg-3:last-child small');
+  if (cancelledLabel) {
+    cancelledLabel.textContent = 'Cancelled: ' + cancelled.length;
   }
 
   // Update timeline header
@@ -269,22 +275,32 @@ function renderDashboard() {
     timelineSmall.innerHTML = `Timeline for ${selectedDate} &bull; Open 6:00 AM to 11:00 PM`;
   }
 
-  // 3. Render Hourly Pitch Schedule
+  // 3. Render Hourly Pitch Schedule (Section 1)
   const scheduleRow = document.querySelector('.row.row-cols-1.row-cols-md-2.row-cols-lg-3.row-cols-xl-4.g-3');
   if (scheduleRow) {
     scheduleRow.innerHTML = '';
     TIME_SLOTS.forEach(slot => {
+      // Find active (non-cancelled) booking
       const booking = dayBookings.find(b => b.start_time === slot.start && b.status !== 'CANCELLED');
       const col = document.createElement('div');
       col.className = 'col';
 
       if (booking) {
-        const isPaid = booking.payment_status === 'PAID';
-        const badgeClass = isPaid ? 'bg-success' : 'bg-warning text-dark';
-        const badgeText = isPaid ? 'PAID' : 'ADVANCE PAID';
+        let badgeClass = 'bg-primary';
+        let badgeText = 'CONFIRMED';
+        if (booking.status === 'COMPLETED') {
+          badgeClass = 'bg-info text-dark';
+          badgeText = 'COMPLETED';
+        } else if (booking.payment_status === 'PAID') {
+          badgeClass = 'bg-success';
+          badgeText = 'PAID';
+        } else if (booking.payment_status === 'ADVANCE_PAID') {
+          badgeClass = 'bg-warning text-dark';
+          badgeText = 'ADVANCE PAID';
+        }
 
         col.innerHTML = `
-          <div class="card h-100 rounded-3 p-3 border border-success bg-dark bg-opacity-75">
+          <div class="card h-100 rounded-3 p-3 border ${booking.status === 'COMPLETED' ? 'border-info' : 'border-success'} bg-dark bg-opacity-75">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <span class="fw-bold text-white fs-6">${slot.display}</span>
               <span class="badge ${badgeClass} small">${badgeText}</span>
@@ -296,23 +312,29 @@ function renderDashboard() {
                 <a href="tel:${booking.customer_phone}" class="text-secondary text-decoration-none">${booking.customer_phone}</a>
               </div>
               <div class="small text-success fw-bold mt-1">Fee: ₹${booking.total_price}</div>
-              ${booking.payment_status === 'ADVANCE_PAID' ? `
+              ${booking.payment_status === 'ADVANCE_PAID' && booking.status === 'CONFIRMED' ? `
                 <div class="small text-info"><i class="bi bi-qr-code text-success me-1"></i>Adv: ₹${booking.advance_amount}</div>
-                <div class="small text-warning fw-bold">Bal to Collect: ₹${booking.balance_amount}</div>
+                <div class="small text-warning fw-bold">Bal: ₹${booking.balance_amount}</div>
               ` : ''}
             </div>
             <div class="d-flex gap-1 mt-auto pt-2 border-top border-secondary border-opacity-25 flex-wrap">
-              ${booking.payment_status !== 'PAID' ? `
-                <button type="button" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="collectBalance('${booking.id}')">
-                  <i class="bi bi-cash-coin"></i> Collect Bal ₹${booking.balance_amount}
+              ${booking.status === 'CONFIRMED' ? `
+                ${booking.payment_status !== 'PAID' ? `
+                  <button type="button" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="collectBalance('${booking.id}')">
+                    <i class="bi bi-cash-coin"></i> Collect Bal ₹${booking.balance_amount}
+                  </button>
+                ` : ''}
+                <button type="button" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="markCompleted('${booking.id}')">
+                  <i class="bi bi-check-all"></i> Complete
                 </button>
-              ` : ''}
-              <button type="button" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="markCompleted('${booking.id}')">
-                <i class="bi bi-check-all"></i> Complete
-              </button>
-              <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="cancelBooking('${booking.id}')">
-                Cancel
-              </button>
+                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="cancelBooking('${booking.id}')">
+                  Cancel
+                </button>
+              ` : `
+                <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.7rem;">
+                  <i class="bi bi-check2"></i> Match Finished
+                </span>
+              `}
               <button type="button" class="btn btn-xs btn-outline-success rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="sendWhatsAppVoucher('${booking.id}')">
                 <i class="bi bi-whatsapp"></i> Voucher
               </button>
@@ -339,7 +361,8 @@ function renderDashboard() {
   }
 
   // 4. Render Section 2: Detailed Bookings Table
-  const section2Card = document.querySelectorAll('.card.bg-black.border.border-secondary.border-opacity-25.rounded-4.p-4.shadow')[1];
+  const section2Card = document.getElementById('reservationsSection') || 
+                       document.querySelector('.card.bg-black.border.border-secondary.border-opacity-25.rounded-4.p-4.shadow');
   if (section2Card) {
     if (dayBookings.length === 0) {
       section2Card.innerHTML = `
@@ -373,7 +396,7 @@ function renderDashboard() {
             </td>
             <td>
               <div class="fw-bold text-success">₹${b.total_price}</div>
-              ${b.payment_status === 'ADVANCE_PAID' ? `
+              ${b.payment_status === 'ADVANCE_PAID' && b.status === 'CONFIRMED' ? `
                 <div class="small text-info">Adv: ₹${b.advance_amount}</div>
                 <div class="small text-warning fw-bold">Bal: ₹${b.balance_amount}</div>
               ` : ''}
@@ -382,17 +405,23 @@ function renderDashboard() {
             <td><span class="badge ${statusBadgeClass}">${b.status}</span></td>
             <td class="text-end">
               <div class="d-inline-flex gap-1">
-                ${b.payment_status !== 'PAID' ? `
-                  <button type="button" class="btn btn-sm btn-success rounded-pill px-2" title="Collect Balance" onclick="collectBalance('${b.id}')">
-                    <i class="bi bi-cash-stack"></i> Collect ₹${b.balance_amount}
+                ${b.status === 'CONFIRMED' ? `
+                  ${b.payment_status !== 'PAID' ? `
+                    <button type="button" class="btn btn-sm btn-success rounded-pill px-2" title="Collect Balance" onclick="collectBalance('${b.id}')">
+                      <i class="bi bi-cash-stack"></i> Collect ₹${b.balance_amount}
+                    </button>
+                  ` : ''}
+                  <button type="button" class="btn btn-sm btn-outline-info rounded-pill px-2" title="Mark Completed" onclick="markCompleted('${b.id}')">
+                    <i class="bi bi-check2"></i>
                   </button>
-                ` : ''}
-                <button type="button" class="btn btn-sm btn-outline-info rounded-pill px-2" title="Mark Completed" onclick="markCompleted('${b.id}')">
-                  <i class="bi bi-check2"></i>
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
-                  <i class="bi bi-x-circle"></i>
-                </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
+                    <i class="bi bi-x-circle"></i>
+                  </button>
+                ` : `
+                  <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.75rem;">
+                    ${b.status === 'COMPLETED' ? '<i class="bi bi-check2"></i> Finished' : '<i class="bi bi-x-circle"></i> Cancelled'}
+                  </span>
+                `}
                 <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-2" title="WhatsApp Confirmation" onclick="sendWhatsAppVoucher('${b.id}')">
                   <i class="bi bi-whatsapp"></i>
                 </button>
@@ -441,7 +470,7 @@ function collectBalance(id) {
     b.balance_amount = 0;
     saveBookings(list);
     renderDashboard();
-    alert('Payment collected for ' + b.customer_name + '! Status marked as PAID.');
+    alert('Payment collected for ' + b.customer_name + '! Status marked as PAID. (Balance cleared).');
   }
 }
 
@@ -452,15 +481,20 @@ function markCompleted(id) {
     b.status = 'COMPLETED';
     saveBookings(list);
     renderDashboard();
+    alert('Match #' + id + ' for ' + b.customer_name + ' marked as COMPLETED! ✅');
   }
 }
 
 function cancelBooking(id) {
-  if (!confirm('Are you sure you want to cancel this booking? The slot will become available.')) return;
-  let list = getBookings();
-  list = list.filter(item => item.id !== id);
-  saveBookings(list);
-  renderDashboard();
+  if (!confirm('Are you sure you want to cancel this booking? The slot will become available immediately.')) return;
+  const list = getBookings();
+  const b = list.find(item => item.id === id);
+  if (b) {
+    b.status = 'CANCELLED';
+    saveBookings(list);
+    renderDashboard();
+    alert('Booking #' + id + ' for ' + b.customer_name + ' has been CANCELLED and the slot is freed! ❌');
+  }
 }
 
 function sendWhatsAppVoucher(id) {
@@ -481,6 +515,7 @@ Facility: ${b.facility_name || FACILITY_NAMES[b.facility_slug]}
 Date: ${b.date}
 Timing: ${b.display_time || b.start_time}
 Fee: ₹${b.total_price} (Status: ${b.payment_status})
+Match Status: ${b.status}
 ---------------------------------
 📍 Location: Kulukkallur, Palakkad, Kerala
 🗺️ Google Maps: https://maps.app.goo.gl/J1tQoft1vWQTDUio9
@@ -579,6 +614,3 @@ function escapeHtml(text) {
 </script>
 </body>
 """
-
-print("Script template ready, length:", len(admin_script))
-
