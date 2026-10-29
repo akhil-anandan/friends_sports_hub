@@ -605,7 +605,7 @@
                                             
                                             
 
-                                            <a href="/booking/FSH-20261029-536D4A/" target="_blank" rel="noopener" class="btn btn-sm btn-outline-secondary rounded-pill px-2">
+                                            <a href="#" onclick="window.print(); return false;" class="btn btn-sm btn-outline-secondary rounded-pill px-2">
                                                 <i class="bi bi-printer"></i>
                                             </a>
                                         </div>
@@ -794,6 +794,9 @@ function logoutAdmin() {
   window.location.href = 'index.html';
 }
 
+// Universal Cloud Database API Endpoint (CORS enabled for GitHub Pages)
+const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
+
 // Slot definitions
 const TIME_SLOTS = [
   { start: "06:00", end: "07:00", display: "06:00 AM - 07:00 AM" },
@@ -821,21 +824,22 @@ const FACILITY_NAMES = {
   'childrens-park': "Children's Park"
 };
 
-// Seed initial bookings only once
+// Seed initial bookings only once if empty
 function getBookings() {
-  const isInit = localStorage.getItem('fsh_data_initialized') === 'true';
   let list = [];
   try {
     list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
   } catch(e) { list = []; }
 
-  if (!isInit) {
+  const isInit = localStorage.getItem('fsh_data_initialized') === 'true';
+  if (!isInit && list.length === 0) {
     const today = new Date().toISOString().split('T')[0];
     list = [
       {
         id: 'BKG-FSH-101',
         customer_name: 'Mohammed Nihal',
         customer_phone: '9847123456',
+        club_name: 'Friends FC',
         facility_slug: 'turf',
         facility_name: 'Football & Cricket Turf',
         date: today,
@@ -852,6 +856,7 @@ function getBookings() {
         id: 'BKG-FSH-102',
         customer_name: 'Salman Faris',
         customer_phone: '9745987654',
+        club_name: 'Kulukkallur Stars',
         facility_slug: 'turf',
         facility_name: 'Football & Cricket Turf',
         date: today,
@@ -873,6 +878,59 @@ function getBookings() {
 
 function saveBookings(list) {
   localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+  pushCloudBookings(list);
+}
+
+// Cloud Synchronization
+async function fetchCloudBookings() {
+  try {
+    const res = await fetch(FSH_CLOUD_API_URL + '?t=' + Date.now());
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json && json.data && json.data.json) {
+      const cloudList = JSON.parse(json.data.json);
+      if (Array.isArray(cloudList)) {
+        let localList = [];
+        try { localList = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]'); } catch(e){}
+
+        const map = new Map();
+        // Add cloud bookings
+        cloudList.forEach(b => { if (b && b.id) map.set(b.id, b); });
+        // Retain local bookings if newer or not yet synced
+        localList.forEach(b => {
+          if (b && b.id && !map.has(b.id)) {
+            map.set(b.id, b);
+          }
+        });
+
+        const merged = Array.from(map.values());
+        localStorage.setItem('fsh_locked_slots', JSON.stringify(merged));
+        localStorage.setItem('fsh_data_initialized', 'true');
+        return merged;
+      }
+    }
+  } catch(err) {
+    console.warn('Live Cloud Sync offline, running on local storage cache:', err);
+  }
+  return null;
+}
+
+async function pushCloudBookings(list) {
+  try {
+    const payload = {
+      name: 'Friends Sports Hub Master Live Store',
+      data: {
+        json: JSON.stringify(list)
+      }
+    };
+    await fetch(FSH_CLOUD_API_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    console.warn('Live Cloud Push failed, saved to local cache:', err);
+  }
 }
 
 // Render Dashboard
@@ -900,8 +958,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // Render cached data immediately
   renderDashboard();
+
+  // Then sync with cloud in background and re-render
+  fetchCloudBookings().then(cloudData => {
+    if (cloudData) renderDashboard();
+  });
+
+  // Periodic real-time poll every 10 seconds to catch new customer WhatsApp bookings
+  setInterval(async () => {
+    const synced = await fetchCloudBookings();
+    if (synced) renderDashboard();
+  }, 10000);
 });
+
+async function syncAndRefreshDashboard() {
+  const btn = document.getElementById('btnManualRefresh');
+  if (btn) btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Syncing...';
+  await fetchCloudBookings();
+  renderDashboard();
+  if (btn) btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Refresh';
+}
 
 function renderDashboard() {
   const allBookings = getBookings();
@@ -963,7 +1041,7 @@ function renderDashboard() {
 
   const timelineSmall = document.querySelector('h5.text-white.fw-bold.mb-0 + small.text-secondary');
   if (timelineSmall) {
-    timelineSmall.innerHTML = `Timeline for ${selectedDate} &bull; Open 6:00 AM to 11:00 PM`;
+    timelineSmall.innerHTML = `Timeline for ${selectedDate} &bull; Open 6:00 AM to 11:00 PM <span class="badge bg-success bg-opacity-25 text-success ms-2"><i class="bi bi-broadcast me-1"></i> Live Cloud Synced</span>`;
   }
 
   // 3. Render Hourly Pitch Schedule (Section 1)
@@ -991,7 +1069,7 @@ function renderDashboard() {
         }
 
         col.innerHTML = `
-          <div class="card h-100 rounded-3 p-3 border ${booking.status === 'COMPLETED' ? 'border-info' : 'border-success'} bg-dark bg-opacity-75">
+          <div class="card h-100 rounded-3 p-3 border ${booking.status === 'COMPLETED' ? 'border-info' : 'border-success'} bg-dark bg-opacity-75 shadow-sm">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <span class="fw-bold text-white fs-6">${slot.display}</span>
               <span class="badge ${badgeClass} small">${badgeText}</span>
@@ -1011,22 +1089,22 @@ function renderDashboard() {
             <div class="d-flex gap-1 mt-auto pt-2 border-top border-secondary border-opacity-25 flex-wrap">
               ${booking.status === 'CONFIRMED' ? `
                 ${booking.payment_status !== 'PAID' ? `
-                  <button type="button" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="collectBalance('${booking.id}')">
-                    <i class="bi bi-cash-coin"></i> Collect Bal ₹${booking.balance_amount}
+                  <button type="button" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="collectBalance('${booking.id}')">
+                    <i class="bi bi-cash-coin"></i> Collect ₹${booking.balance_amount}
                   </button>
                 ` : ''}
-                <button type="button" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="markCompleted('${booking.id}')">
+                <button type="button" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="markCompleted('${booking.id}')">
                   <i class="bi bi-check-all"></i> Complete
                 </button>
-                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="cancelBooking('${booking.id}')">
+                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="cancelBooking('${booking.id}')">
                   Cancel
                 </button>
               ` : `
-                <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.7rem;">
+                <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.75rem;">
                   <i class="bi bi-check2"></i> Match Finished
                 </span>
               `}
-              <button type="button" class="btn btn-xs btn-outline-success rounded-pill px-2 py-1" style="font-size: 0.7rem;" onclick="sendWhatsAppVoucher('${booking.id}')">
+              <button type="button" class="btn btn-xs btn-outline-success rounded-pill px-2 py-1 ms-auto" style="font-size: 0.75rem;" onclick="sendWhatsAppVoucher('${booking.id}')" title="Send WhatsApp Voucher">
                 <i class="bi bi-whatsapp"></i> Voucher
               </button>
             </div>
@@ -1051,16 +1129,21 @@ function renderDashboard() {
     });
   }
 
-  // 4. Render Section 2: Detailed Bookings Table
+  // 4. Render Section 2: Detailed Bookings Table (Desktop Table + Mobile Cards)
   const section2Card = document.getElementById('reservationsSection') || 
                        document.querySelector('.card.bg-black.border.border-secondary.border-opacity-25.rounded-4.p-4.shadow');
   if (section2Card) {
     if (dayBookings.length === 0) {
       section2Card.innerHTML = `
-        <h5 class="text-white fw-bold mb-3 d-flex align-items-center justify-content-between">
-          <span>All Scheduled Reservations (0)</span>
-          <span class="small text-secondary">${selectedDate}</span>
-        </h5>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="text-white fw-bold mb-0">All Scheduled Reservations (0)</h5>
+          <div class="d-flex align-items-center gap-2">
+            <span class="small text-secondary">${selectedDate}</span>
+            <button id="btnManualRefresh" class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="syncAndRefreshDashboard()">
+              <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+            </button>
+          </div>
+        </div>
         <div class="text-center py-4 text-secondary">
           <i class="bi bi-inbox fs-2 mb-2 d-block"></i>
           No bookings found for the selected date or search filter.
@@ -1068,17 +1151,20 @@ function renderDashboard() {
       `;
     } else {
       let rowsHtml = '';
+      let cardsHtml = '';
+
       dayBookings.forEach(b => {
         const isPaid = b.payment_status === 'PAID';
         const payBadgeClass = isPaid ? 'bg-success' : (b.payment_status === 'ADVANCE_PAID' ? 'bg-info text-dark' : 'bg-warning text-dark');
         const statusBadgeClass = b.status === 'CONFIRMED' ? 'bg-primary' : (b.status === 'COMPLETED' ? 'bg-info text-dark' : 'bg-danger');
 
+        // Desktop Table Row
         rowsHtml += `
           <tr>
             <td class="font-monospace small text-success fw-bold">${b.id}</td>
             <td>
               <div class="fw-bold text-white">${escapeHtml(b.customer_name)}</div>
-              <div class="small text-secondary"><i class="bi bi-telephone text-success me-1"></i>${b.customer_phone}</div>
+              <div class="small text-secondary"><i class="bi bi-telephone text-success me-1"></i><a href="tel:${b.customer_phone}" class="text-secondary text-decoration-none">${b.customer_phone}</a></div>
             </td>
             <td class="text-light">${escapeHtml(b.facility_name || FACILITY_NAMES[b.facility_slug])}</td>
             <td>
@@ -1095,39 +1181,103 @@ function renderDashboard() {
             <td><span class="badge ${payBadgeClass}">${b.payment_status.replace('_', ' ')}</span></td>
             <td><span class="badge ${statusBadgeClass}">${b.status}</span></td>
             <td class="text-end">
-              <div class="d-inline-flex gap-1">
+              <div class="d-inline-flex gap-1 flex-wrap justify-content-end">
                 ${b.status === 'CONFIRMED' ? `
                   ${b.payment_status !== 'PAID' ? `
-                    <button type="button" class="btn btn-sm btn-success rounded-pill px-2" title="Collect Balance" onclick="collectBalance('${b.id}')">
+                    <button type="button" class="btn btn-sm btn-success rounded-pill px-2 py-1" title="Collect Balance" onclick="collectBalance('${b.id}')">
                       <i class="bi bi-cash-stack"></i> Collect ₹${b.balance_amount}
                     </button>
                   ` : ''}
-                  <button type="button" class="btn btn-sm btn-outline-info rounded-pill px-2" title="Mark Completed" onclick="markCompleted('${b.id}')">
-                    <i class="bi bi-check2"></i>
+                  <button type="button" class="btn btn-sm btn-outline-info rounded-pill px-2 py-1" title="Mark Completed" onclick="markCompleted('${b.id}')">
+                    <i class="bi bi-check2"></i> Complete
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
-                    <i class="bi bi-x-circle"></i>
+                  <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
+                    <i class="bi bi-x-circle"></i> Cancel
                   </button>
                 ` : `
                   <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.75rem;">
                     ${b.status === 'COMPLETED' ? '<i class="bi bi-check2"></i> Finished' : '<i class="bi bi-x-circle"></i> Cancelled'}
                   </span>
                 `}
-                <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-2" title="WhatsApp Confirmation" onclick="sendWhatsAppVoucher('${b.id}')">
+                <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1" title="WhatsApp Confirmation" onclick="sendWhatsAppVoucher('${b.id}')">
                   <i class="bi bi-whatsapp"></i>
                 </button>
               </div>
             </td>
           </tr>
         `;
+
+        // Mobile Responsive Card
+        cardsHtml += `
+          <div class="card bg-dark border border-secondary border-opacity-30 rounded-3 p-3 mb-3 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="font-monospace small text-success fw-bold">${b.id}</span>
+              <div class="d-flex gap-1">
+                <span class="badge ${payBadgeClass} small">${b.payment_status.replace('_', ' ')}</span>
+                <span class="badge ${statusBadgeClass} small">${b.status}</span>
+              </div>
+            </div>
+            <div class="row g-2 mb-2">
+              <div class="col-7">
+                <div class="fw-bold text-white fs-6">${escapeHtml(b.customer_name)}</div>
+                <div class="small text-secondary">
+                  <i class="bi bi-telephone text-success me-1"></i>
+                  <a href="tel:${b.customer_phone}" class="text-light text-decoration-none">${b.customer_phone}</a>
+                </div>
+              </div>
+              <div class="col-5 text-end">
+                <div class="fw-bold text-success fs-6">₹${b.total_price}</div>
+                ${b.payment_status === 'ADVANCE_PAID' ? `<div class="small text-warning">Bal: ₹${b.balance_amount}</div>` : ''}
+              </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center text-secondary small py-1 border-top border-secondary border-opacity-25 mb-2">
+              <span><i class="bi bi-geo-alt me-1 text-success"></i>${escapeHtml(b.facility_name || FACILITY_NAMES[b.facility_slug])}</span>
+              <span class="text-warning fw-semibold"><i class="bi bi-clock me-1"></i>${b.display_time || b.start_time}</span>
+            </div>
+            <div class="d-flex gap-1 flex-wrap pt-1">
+              ${b.status === 'CONFIRMED' ? `
+                ${b.payment_status !== 'PAID' ? `
+                  <button type="button" class="btn btn-sm btn-success rounded-pill px-3 flex-grow-1" onclick="collectBalance('${b.id}')">
+                    <i class="bi bi-cash-stack me-1"></i> Collect ₹${b.balance_amount}
+                  </button>
+                ` : ''}
+                <button type="button" class="btn btn-sm btn-outline-info rounded-pill px-3 flex-grow-1" onclick="markCompleted('${b.id}')">
+                  <i class="bi bi-check2 me-1"></i> Complete
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 flex-grow-1" onclick="cancelBooking('${b.id}')">
+                  <i class="bi bi-x-circle me-1"></i> Cancel
+                </button>
+              ` : `
+                <span class="badge bg-secondary bg-opacity-50 text-light py-2 px-3 w-100 text-center">
+                  ${b.status === 'COMPLETED' ? '<i class="bi bi-check2 me-1"></i> Match Finished' : '<i class="bi bi-x-circle me-1"></i> Reservation Cancelled'}
+                </span>
+              `}
+              <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="sendWhatsAppVoucher('${b.id}')">
+                <i class="bi bi-whatsapp"></i> Voucher
+              </button>
+            </div>
+          </div>
+        `;
       });
 
       section2Card.innerHTML = `
-        <h5 class="text-white fw-bold mb-3 d-flex align-items-center justify-content-between">
-          <span>All Scheduled Reservations (${dayBookings.length})</span>
-          <span class="small text-secondary">${selectedDate}</span>
-        </h5>
-        <div class="table-responsive">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <h5 class="text-white fw-bold mb-0">All Scheduled Reservations (${dayBookings.length})</h5>
+          <div class="d-flex align-items-center gap-2">
+            <span class="small text-secondary">${selectedDate}</span>
+            <button id="btnManualRefresh" class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="syncAndRefreshDashboard()">
+              <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Card View (< 768px) -->
+        <div class="d-md-none">
+          ${cardsHtml}
+        </div>
+
+        <!-- Desktop Table View (>= 768px) -->
+        <div class="table-responsive d-none d-md-block">
           <table class="table table-dark table-hover mb-0 align-middle">
             <thead class="border-secondary text-secondary small">
               <tr>
@@ -1161,7 +1311,7 @@ function collectBalance(id) {
     b.balance_amount = 0;
     saveBookings(list);
     renderDashboard();
-    alert('Payment collected for ' + b.customer_name + '! Status marked as PAID. (Balance cleared).');
+    alert('Payment collected for ' + b.customer_name + '! Status marked as PAID.');
   }
 }
 
@@ -1177,14 +1327,14 @@ function markCompleted(id) {
 }
 
 function cancelBooking(id) {
-  if (!confirm('Are you sure you want to cancel this booking? The slot will become available immediately.')) return;
+  if (!confirm('Are you sure you want to cancel booking #' + id + '? The slot will be freed immediately.')) return;
   const list = getBookings();
   const b = list.find(item => item.id === id);
   if (b) {
     b.status = 'CANCELLED';
     saveBookings(list);
     renderDashboard();
-    alert('Booking #' + id + ' for ' + b.customer_name + ' has been CANCELLED and the slot is freed! ❌');
+    alert('Booking #' + id + ' for ' + b.customer_name + ' has been CANCELLED and slot is opened for booking! ❌');
   }
 }
 
@@ -1270,7 +1420,7 @@ function submitQuickWalkin() {
     facility_slug: facSlug,
     facility_name: facName,
     date: date,
-    start_time: slotObj.start,
+    start_time: time,
     end_time: slotObj.end,
     display_time: slotObj.display,
     total_price: total,
@@ -1284,25 +1434,20 @@ function submitQuickWalkin() {
   list.unshift(newBooking);
   saveBookings(list);
 
-  // Close modal
   const modalEl = document.getElementById('quickWalkinModal');
   const modal = bootstrap.Modal.getInstance(modalEl);
   if (modal) modal.hide();
 
   renderDashboard();
-
-  if (confirm('Booking locked successfully for ' + name + '! Would you like to send WhatsApp confirmation voucher to the customer now?')) {
-    sendWhatsAppVoucher(newBooking.id);
-  }
+  alert('Slot ' + slotObj.display + ' locked for ' + name + '! Saved to system and synced to cloud.');
 }
 
 function escapeHtml(text) {
   if (!text) return '';
-  return String(text).replace(/[&<>"']/g, function(m) {
-    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-  });
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 </script>
-</body>
 
 </html>
