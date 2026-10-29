@@ -688,7 +688,7 @@
                     </a>
 
                     
-                        <a href="/login/" class="btn btn-outline-light rounded-pill px-3 py-2 fw-semibold">
+                        <a href="login.html" class="btn btn-outline-light rounded-pill px-3 py-2 fw-semibold">
                             <i class="bi bi-shield-lock text-success me-1"></i> Admin
                         </a>
                     
@@ -722,7 +722,7 @@
     <!-- Facility Switcher Tabs -->
     <div class="facility-tabs-wrap">
       
-        <a href="/book/childrens-park/?date=2026-10-29"
+        <a href="book.html?facility=childrens-park&date=2026-10-29"
            class="facility-tab-pill ">
           
             <i class="bi bi-balloon"></i>
@@ -730,7 +730,7 @@
           Children&#x27;s Park
         </a>
       
-        <a href="/book/turf/?date=2026-10-29"
+        <a href="book.html?facility=turf&date=2026-10-29"
            class="facility-tab-pill active">
           
             <i class="bi bi-dribbble"></i>
@@ -738,7 +738,7 @@
           Football &amp; Cricket Turf
         </a>
       
-        <a href="/book/swimming-pool/?date=2026-10-29"
+        <a href="book.html?facility=swimming-pool&date=2026-10-29"
            class="facility-tab-pill ">
           
             <i class="bi bi-water"></i>
@@ -805,13 +805,13 @@
               <i class="bi bi-telephone-fill text-success"></i> Call Owner
             </a>
             <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20inquire%20about%20Football%20%26%20Cricket%20Turf."
-               target="_blank" class="btn-quick-wa">
+               target="_blank" rel="noopener" class="btn-quick-wa">
               <i class="bi bi-whatsapp"></i> WhatsApp
             </a>
           </div>
 
           <div class="text-center mt-2">
-            <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" class="small text-secondary text-decoration-none">
+            <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="small text-secondary text-decoration-none">
               <i class="bi bi-geo-alt-fill text-success me-1"></i> Open Location in Google Maps ›
             </a>
           </div>
@@ -1076,7 +1076,7 @@
     <i class="bi bi-telephone-fill text-success"></i> Call Owner
   </a>
   <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20inquire%20about%20booking."
-     target="_blank" class="btn-dock-wa">
+     target="_blank" rel="noopener" class="btn-dock-wa">
     <i class="bi bi-whatsapp"></i> WhatsApp Owner
   </a>
 </div>
@@ -1257,6 +1257,100 @@ function formatFriendlyDate(d) {
 
 
 <script>
+const FACILITIES_DATA = {
+  'turf': {
+    name: 'Football & Cricket Turf',
+    tag: 'Sports Turf (Football / Cricket)',
+    rate: 900,
+    photo: 'static/images/turf_hero.jpg',
+    sub: 'Mulayankavu, Kulukkallur, Palakkad · 5s & 7s All-Weather Turf with Floodlights',
+    features: [
+      { icon: 'bi-check-circle-fill text-success', title: 'FIFA Standard 50mm Grass', desc: 'Shock absorbing turf' },
+      { icon: 'bi-lightning-charge-fill text-warning', title: 'High-Power LED Floodlights', desc: 'Crystal-clear night play' },
+      { icon: 'bi-shield-check text-success', title: 'Full Perimeter Netting', desc: 'High ball containment' },
+      { icon: 'bi-clock-fill text-info', title: 'Open 6:00 AM – 11:00 PM', desc: 'Flexible hourly slots' }
+    ]
+  },
+  'swimming-pool': {
+    name: 'Covered Swimming Pool',
+    tag: 'Covered Swimming Pool',
+    rate: 150,
+    photo: 'static/images/hub_banner.jpg',
+    sub: 'Mulayankavu, Kulukkallur, Palakkad · Hygienic Temperature-Maintained Pool',
+    features: [
+      { icon: 'bi-check-circle-fill text-success', title: 'Full Roof Covered', desc: 'All-weather swimming' },
+      { icon: 'bi-water text-info', title: 'Daily Chlorinated & Filtered', desc: 'Highest hygiene standard' },
+      { icon: 'bi-shield-check text-success', title: 'Separate Changing Rooms', desc: 'Clean showers & lockers' },
+      { icon: 'bi-clock-fill text-info', title: 'Open 6:00 AM – 8:00 PM', desc: 'Hourly lap swimming' }
+    ]
+  },
+  'childrens-park': {
+    name: "Children's Park",
+    tag: "Children's Play Park",
+    rate: 50,
+    photo: 'static/images/hub_banner.jpg',
+    sub: 'Mulayankavu, Kulukkallur, Palakkad · Safe Recreational Play Zone for Kids',
+    features: [
+      { icon: 'bi-check-circle-fill text-success', title: 'Kid-Safe Playground Equipment', desc: 'Swings, slides & climbing frames' },
+      { icon: 'bi-shield-check text-success', title: 'Soft Grass Turf Protection', desc: 'Cushioned ground surface' },
+      { icon: 'bi-people-fill text-warning', title: 'Shaded Seating for Parents', desc: 'Comfortable benches' },
+      { icon: 'bi-clock-fill text-info', title: 'Open 9:00 AM – 8:00 PM', desc: 'Family & kids entry' }
+    ]
+  }
+};
+
+let currentFacilitySlug = 'turf';
+
+function switchFacility(slug, event) {
+  if (event) event.preventDefault();
+  if (!FACILITIES_DATA[slug]) slug = 'turf';
+  currentFacilitySlug = slug;
+
+  const data = FACILITIES_DATA[slug];
+
+  // Update URL without page reload
+  const url = new URL(window.location);
+  url.searchParams.set('facility', slug);
+  window.history.replaceState({}, '', url);
+
+  // Update tabs active state
+  document.querySelectorAll('.facility-tab-pill').forEach(pill => {
+    const href = pill.getAttribute('href') || '';
+    if (href.includes(slug)) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+
+  // Update Showcase
+  const titleEl = document.querySelector('.turf-title');
+  if (titleEl) titleEl.textContent = data.name;
+
+  const rateAmountEl = document.querySelector('.turf-rate-tag .amount');
+  if (rateAmountEl) rateAmountEl.textContent = '₹' + data.rate;
+
+  const overlayTagEl = document.querySelector('.turf-overlay-tag');
+  if (overlayTagEl) overlayTagEl.innerHTML = '<i class="bi bi-stars me-1"></i> ' + data.tag;
+
+  const photoEl = document.querySelector('.turf-photo-box img');
+  if (photoEl) {
+    photoEl.src = data.photo;
+    photoEl.alt = data.name;
+  }
+
+  const subEl = document.querySelector('.turf-sub');
+  if (subEl) subEl.textContent = data.sub;
+
+  // Update modal state hidden fields
+  const stateFac = document.getElementById('stateFacilityName');
+  if (stateFac) stateFac.value = data.name;
+  const statePrice = document.getElementById('statePrice');
+  if (statePrice) statePrice.value = data.rate;
+
+  syncBookingsToPage();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const isAdmin = sessionStorage.getItem('fsh_admin_logged_in') === 'true';
   if (isAdmin) {
@@ -1279,6 +1373,26 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
     }
   }
+
+  // Intercept facility tab clicks
+  document.querySelectorAll('.facility-tab-pill').forEach(pill => {
+    pill.addEventListener('click', function(e) {
+      e.preventDefault();
+      const href = this.getAttribute('href') || '';
+      let slug = 'turf';
+      if (href.includes('pool')) slug = 'swimming-pool';
+      else if (href.includes('park') || href.includes('children')) slug = 'childrens-park';
+      switchFacility(slug, e);
+    });
+  });
+
+  // Check URL params on load
+  const urlParams = new URLSearchParams(window.location.search);
+  const requestedFacility = urlParams.get('facility');
+  if (requestedFacility && FACILITIES_DATA[requestedFacility]) {
+    switchFacility(requestedFacility);
+  }
+
   syncBookingsToPage();
 });
 
@@ -1288,18 +1402,23 @@ function syncBookingsToPage() {
     const dateInput = document.getElementById('slotDatePicker');
     const selectedDate = dateInput ? dateInput.value : '';
 
-    document.querySelectorAll('.slot-box').forEach(box => {
-      const timeEl = box.querySelector('.slot-time');
+    document.querySelectorAll('.slot-btn').forEach(box => {
+      const timeEl = box.querySelector('.time-text');
       if (!timeEl) return;
       const start = timeEl.textContent.trim().split(' ')[0];
-      const isLocked = list.some(l => l.date === selectedDate && l.start_time === start && l.status !== 'CANCELLED');
+      const isLocked = list.some(l => 
+        l.date === selectedDate && 
+        (l.facility_slug === currentFacilitySlug || !l.facility_slug) &&
+        l.start_time.startsWith(start) && 
+        l.status !== 'CANCELLED'
+      );
       if (isLocked) {
         box.classList.remove('vacant');
         box.classList.add('booked');
         box.removeAttribute('onclick');
-        const badge = box.querySelector('.slot-status-badge');
+        const badge = box.querySelector('.slot-badge-pill');
         if (badge) {
-          badge.className = 'slot-status-badge booked';
+          badge.className = 'slot-badge-pill booked';
           badge.textContent = 'Booked';
         }
       }
