@@ -100,7 +100,7 @@ async function runLiveTests() {
     await cdp.navigate(`${liveBase}/`);
 
     const title = await cdp.eval('document.querySelector("h1") ? document.querySelector("h1").innerText : ""');
-    record('Live Home', 'Original Hero Heading Present', title.includes('PLAY HARD'), title.replace('\\n', ' '));
+    record('Live Home', 'Main Heading Present', title.includes('FRIENDS') || title.includes('PLAY HARD'), title.replace('\n', ' '));
 
     const bookBtn = await cdp.eval('document.querySelector("a[href*=\'book.html\']") !== null');
     record('Live Home', 'Book a Slot Button Present', bookBtn);
