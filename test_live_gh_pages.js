@@ -99,18 +99,16 @@ async function runLiveTests() {
     await cdp.setViewport(1920, 1080, false);
     await cdp.navigate(`${liveBase}/`);
 
-    const title = await cdp.eval('document.querySelector("h1") ? document.querySelector("h1").innerText : ""');
-    record('Live Home', 'Main Heading Present', title.includes('FRIENDS') || title.includes('PLAY HARD'), title.replace('\n', ' '));
+    const hasAbout = await cdp.eval('document.body.innerText.includes("About Friends Sports Hub")');
+    record('Live Home', 'About Football Turf Section Present', hasAbout);
 
-    const bookBtn = await cdp.eval('document.querySelector("a[href*=\'book.html\']") !== null');
-    record('Live Home', 'Book a Slot Button Present', bookBtn);
+    const hasLocation = await cdp.eval('document.body.innerText.includes("Mulayankavu, Kulukkallur, Palakkad")');
+    record('Live Home', 'Location Information Present', hasLocation);
 
-    // 2. Live Book Page & Facility Switching
-    await cdp.navigate(`${liveBase}/book.html`);
-    const tabsCount = await cdp.eval('document.querySelectorAll(".facility-tab-pill").length');
-    record('Live Book Page', 'Facility Tabs Rendered', tabsCount === 3, `${tabsCount} tabs`);
+    const availableSlots = await cdp.eval('document.getElementById("availableSlotsBadge") ? document.getElementById("availableSlotsBadge").innerText.trim() : null');
+    record('Live Home', 'Number of Available Slots Displayed', availableSlots !== null, `${availableSlots} slots`);
 
-    // Test clicking vacant slot
+    // Test clicking vacant slot directly on home page
     const slotClicked = await cdp.eval(`
       (() => {
         const slot = document.querySelector('.slot-btn.vacant');
@@ -123,7 +121,12 @@ async function runLiveTests() {
     `);
     await new Promise(r => setTimeout(r, 400));
     const modalOpened = await cdp.eval('document.querySelector(".booking-modal-box") ? document.querySelector(".booking-modal-box").classList.contains("open") : false');
-    record('Live Book Page', 'Slot Click Opens Modal Popup', modalOpened);
+    record('Live Home', 'Slot Click Opens Modal Popup on Front Page', modalOpened);
+
+    // 2. Live Book Page & Facility Switching
+    await cdp.navigate(`${liveBase}/book.html`);
+    const tabsCount = await cdp.eval('document.querySelectorAll(".facility-tab-pill").length');
+    record('Live Book Page', 'Facility Tabs Rendered', tabsCount === 3, `${tabsCount} tabs`);
 
     // 3. Live Login & Owner Dashboard
     await cdp.navigate(`${liveBase}/login.html`);

@@ -55,12 +55,12 @@ class ChromeCDP {
 
   async navigate(url) {
     await this.send('Page.navigate', { url });
-    await new Promise(r => setTimeout(r, 700));
+    await new Promise(r => setTimeout(r, 800));
   }
 }
 
 async function runBookingLifecycleTest() {
-  console.log('--- STARTING COMPREHENSIVE BOOKING & RESPONSIVENESS E2E TEST ---');
+  console.log('--- STARTING FRONT PAGE TURF & AVAILABLE SLOTS E2E TEST ---');
 
   const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
   const chromeProc = spawn(chromePath, [
@@ -78,15 +78,15 @@ async function runBookingLifecycleTest() {
   await cdp.send('Page.enable');
   await cdp.send('Runtime.enable');
 
-  const bookUrl = 'file:///' + path.resolve('dist_gh_pages/book.html').replace(/\\/g, '/');
+  const indexUrl = 'file:///' + path.resolve('dist_gh_pages/index.html').replace(/\\/g, '/');
   const adminUrl = 'file:///' + path.resolve('dist_gh_pages/admin.html').replace(/\\/g, '/');
   const loginUrl = 'file:///' + path.resolve('dist_gh_pages/login.html').replace(/\\/g, '/');
 
   try {
     // -------------------------------------------------------------
-    // TEST 1: MOBILE VIEWPORT & RESPONSIVENESS ON book.html
+    // TEST 1: FRONT PAGE (HOME PAGE) DETAILS & MOBILE RESPONSIVENESS
     // -------------------------------------------------------------
-    console.log('\n[Test 1] Testing Mobile Viewport (375x667) on book.html...');
+    console.log('\n[Test 1] Testing Mobile Viewport (375x667) on Front Page (index.html)...');
     await cdp.send('Emulation.setDeviceMetricsOverride', {
       width: 375,
       height: 667,
@@ -94,17 +94,35 @@ async function runBookingLifecycleTest() {
       mobile: true
     });
 
-    await cdp.navigate(bookUrl);
-    await new Promise(r => setTimeout(r, 800));
+    await cdp.navigate(indexUrl);
+    await new Promise(r => setTimeout(r, 1000));
 
     const overflow = await cdp.eval(`document.documentElement.scrollWidth > window.innerWidth`);
     console.log(`  Horizontal overflow on mobile (375px): ${overflow ? 'FAIL (Overflow detected)' : 'PASS (Clean fit)'}`);
-    if (overflow) throw new Error('Horizontal scroll overflow on book.html');
+    if (overflow) throw new Error('Horizontal scroll overflow on index.html');
+
+    // Verify About section exists on front page
+    const hasAbout = await cdp.eval(`document.body.innerText.includes('About Friends Sports Hub')`);
+    console.log(`  'About Friends Sports Hub' section present on front page: ${hasAbout}`);
+    if (!hasAbout) throw new Error('About section not found on front page!');
+
+    // Verify Location info exists on front page
+    const hasLocation = await cdp.eval(`document.body.innerText.includes('Mulayankavu, Kulukkallur, Palakkad')`);
+    console.log(`  Location information present on front page: ${hasLocation}`);
+    if (!hasLocation) throw new Error('Location info not found on front page!');
+
+    // Verify Available Slots Badge exists on front page
+    const availableBadge = await cdp.eval(`(() => {
+      const b = document.getElementById('availableSlotsBadge');
+      return b ? b.textContent.trim() : null;
+    })()`);
+    console.log(`  Number of available slots badge on front page: "${availableBadge} Slots Available"`);
+    if (!availableBadge) throw new Error('Available slots badge not found on front page!');
 
     // -------------------------------------------------------------
-    // TEST 2: CUSTOMER SELECTS AND LOCKS A SLOT
+    // TEST 2: CUSTOMER SELECTS AND LOCKS A SLOT ON FRONT PAGE
     // -------------------------------------------------------------
-    console.log('\n[Test 2] Customer books a slot on book.html...');
+    console.log('\n[Test 2] Customer books a slot directly on front page (index.html)...');
     
     // Find vacant slot for 21:00 or 18:00
     const clickedTime = await cdp.eval(`(() => {
@@ -143,7 +161,7 @@ async function runBookingLifecycleTest() {
     await cdp.eval(`document.querySelector('.btn-submit-wa').click()`);
     await new Promise(r => setTimeout(r, 1000));
 
-    // Verify slot in book.html is now BOOKED!
+    // Verify slot in index.html is now BOOKED!
     const slotState = await cdp.eval(`((bookedTime) => {
       const slots = Array.from(document.querySelectorAll('.slot-btn'));
       const target = slots.find(s => s.querySelector('.time-text') && s.querySelector('.time-text').textContent.trim() === bookedTime);
@@ -239,10 +257,10 @@ async function runBookingLifecycleTest() {
     if (!isCancelled) throw new Error('cancelBooking failed to cancel booking');
 
     // -------------------------------------------------------------
-    // TEST 6: CUSTOMER RETURNS TO BOOK.HTML - SLOT IS FREED!
+    // TEST 6: CUSTOMER RETURNS TO FRONT PAGE - SLOT IS FREED!
     // -------------------------------------------------------------
-    console.log('\n[Test 6] Customer returns to book.html: verifies slot is now FREED...');
-    await cdp.navigate(bookUrl);
+    console.log('\n[Test 6] Customer returns to front page (index.html): verifies slot is now FREED...');
+    await cdp.navigate(indexUrl);
     await new Promise(r => setTimeout(r, 1000));
 
     const isSlotFreed = await cdp.eval(`((bookedTime) => {
@@ -251,7 +269,7 @@ async function runBookingLifecycleTest() {
       return target && target.classList.contains('vacant');
     })('${clickedTime}')`);
 
-    console.log(`  Slot ${clickedTime} is now back to VACANT: ${isSlotFreed}`);
+    console.log(`  Slot ${clickedTime} is now back to VACANT on front page: ${isSlotFreed}`);
     if (!isSlotFreed) throw new Error(`Slot ${clickedTime} did not free up after cancellation!`);
 
     console.log('\n=============================================================');

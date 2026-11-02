@@ -23,14 +23,10 @@ BUSINESS_CONTEXT = {
 
 def home(request):
     """
-    Main landing page: renders the rich homepage showcase with hero section,
-    featured facilities, quick slot check, and owner contact.
+    Main landing page: directly renders the simple football turf showcase,
+    About details, location information, and live available slots right on the front page.
     """
-    facilities = Facility.objects.filter(is_active=True)
-    return render(request, 'core/home.html', {
-        **BUSINESS_CONTEXT,
-        'facilities': facilities,
-    })
+    return booking_view(request)
 
 
 def about(request):

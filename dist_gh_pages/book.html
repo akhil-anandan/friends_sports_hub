@@ -722,7 +722,7 @@
     <!-- Facility Switcher Tabs -->
     <div class="facility-tabs-wrap">
       
-        <a href="book.html?facility=childrens-park&date=2026-10-29"
+        <a href="book.html?facility=childrens-park&date=2026-11-02"
            class="facility-tab-pill ">
           
             <i class="bi bi-balloon"></i>
@@ -730,7 +730,7 @@
           Children&#x27;s Park
         </a>
       
-        <a href="book.html?facility=turf&date=2026-10-29"
+        <a href="book.html?facility=turf&date=2026-11-02"
            class="facility-tab-pill active">
           
             <i class="bi bi-dribbble"></i>
@@ -738,7 +738,7 @@
           Football &amp; Cricket Turf
         </a>
       
-        <a href="book.html?facility=swimming-pool&date=2026-10-29"
+        <a href="book.html?facility=swimming-pool&date=2026-11-02"
            class="facility-tab-pill ">
           
             <i class="bi bi-water"></i>
@@ -774,10 +774,26 @@
         </div>
 
         <div class="turf-info-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 rounded-pill px-3 py-1 small fw-bold">
+              <i class="bi bi-dribbble me-1"></i> Football & Sports Arena
+            </span>
+            <span class="badge bg-secondary bg-opacity-25 text-light small">
+              <i class="bi bi-geo-alt-fill text-success me-1"></i> Mulayankavu, Palakkad
+            </span>
+          </div>
+
           <h2 class="turf-title">Football &amp; Cricket Turf</h2>
-          <p class="turf-sub">
-            FIFA standard high-density artificial turf with professional LED floodlights for 5s/7s football and cricket.
-          </p>
+
+          <!-- About Turf Section -->
+          <div class="about-turf-section mb-3 p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
+            <h6 class="text-white fw-bold mb-1 small d-flex align-items-center gap-1">
+              <i class="bi bi-info-circle-fill text-success"></i> About Friends Sports Hub
+            </h6>
+            <p class="turf-sub mb-0 text-secondary" style="font-size: 0.88rem; line-height: 1.45;">
+              FIFA standard high-density artificial turf with professional LED floodlights for 5s/7s football and cricket.
+            </p>
+          </div>
 
           <!-- Highlights Grid -->
           <div class="turf-features-grid">
@@ -797,6 +813,17 @@
             • Report 10 mins before slot time.<br>
             • Turf boots or rubber studs only (metal studs strictly prohibited).<br>
             • Operating daily from 6:00 AM to 11:00 PM.
+          </div>
+
+          <!-- Location Information Box -->
+          <div class="location-info-section mb-3 p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
+            <div class="d-flex align-items-start gap-2">
+              <i class="bi bi-geo-alt-fill text-success fs-5 mt-1"></i>
+              <div>
+                <div class="text-white fw-bold small">Location & Access:</div>
+                <div class="text-secondary small">Mulayankavu, Kulukkallur, Palakkad District, Kerala &bull; 6:00 AM – 11:00 PM Daily</div>
+              </div>
+            </div>
           </div>
 
           <!-- Direct Contact & Map Actions -->
@@ -826,10 +853,15 @@
 
         <!-- Header -->
         <div class="engine-header">
-          <h3 class="engine-title">
-            <i class="bi bi-calendar2-week text-success"></i>
-            Live Slot Schedule
-          </h3>
+          <div>
+            <h3 class="engine-title mb-1">
+              <i class="bi bi-calendar2-week text-success"></i>
+              Live Slot Schedule
+            </h3>
+            <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill fw-bold">
+              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">6</span> Slots Available
+            </span>
+          </div>
           <div class="engine-date-label">
             <i class="bi bi-clock-history me-1"></i>
             60 Min Slots
@@ -843,14 +875,14 @@
           
           <i class="bi bi-calendar3"></i>
           <input type="date" name="date" id="slotDatePicker" class="date-picker-input"
-                 value="2026-10-29" min="2026-10-29" max="2026-11-28"
+                 value="2026-11-02" min="2026-11-02" max="2026-12-02"
                  onchange="if (window.handleDateChange) { window.handleDateChange(this.value); } else { document.getElementById('datePickerForm').submit(); }">
           <span class="small text-secondary d-none d-sm-inline">Tap to change date</span>
         </form>
 
         <!-- Status Legend -->
         <div class="slot-legend-strip">
-          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (Tap to Book)</div>
+          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">6</span> Available)</div>
           <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
           <div class="legend-item"><span class="legend-dot past"></span> Past</div>
         </div>
@@ -932,28 +964,24 @@
             
           
             
-              <div class="slot-btn vacant"
-                   onclick="openBookingModal('15:00', '16:00', '1', 'Football \u0026 Cricket Turf', '2026-10-29', '900')">
-                <span class="tap-badge">TAP</span>
+              <div class="slot-btn past" title="This slot time has already passed">
                 <div class="time-text">15:00</div>
                 <div class="duration-text">– 16:00</div>
-                <span class="slot-badge-pill">✓ Vacant</span>
+                <span class="slot-badge-pill">Past</span>
               </div>
             
           
             
-              <div class="slot-btn vacant"
-                   onclick="openBookingModal('16:00', '17:00', '1', 'Football \u0026 Cricket Turf', '2026-10-29', '900')">
-                <span class="tap-badge">TAP</span>
+              <div class="slot-btn past" title="This slot time has already passed">
                 <div class="time-text">16:00</div>
                 <div class="duration-text">– 17:00</div>
-                <span class="slot-badge-pill">✓ Vacant</span>
+                <span class="slot-badge-pill">Past</span>
               </div>
             
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('17:00', '18:00', '1', 'Football \u0026 Cricket Turf', '2026-10-29', '900')">
+                   onclick="openBookingModal('17:00', '18:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">17:00</div>
                 <div class="duration-text">– 18:00</div>
@@ -963,7 +991,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('18:00', '19:00', '1', 'Football \u0026 Cricket Turf', '2026-10-29', '900')">
+                   onclick="openBookingModal('18:00', '19:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">18:00</div>
                 <div class="duration-text">– 19:00</div>
@@ -973,7 +1001,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('19:00', '20:00', '1', 'Football \u0026 Cricket Turf', '2026-10-29', '900')">
+                   onclick="openBookingModal('19:00', '20:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">19:00</div>
                 <div class="duration-text">– 20:00</div>
@@ -983,7 +1011,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('20:00', '21:00', '1', 'Football \u0026 Cricket Turf', '2026-10-29', '900')">
+                   onclick="openBookingModal('20:00', '21:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">20:00</div>
                 <div class="duration-text">– 21:00</div>
@@ -993,7 +1021,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('21:00', '22:00', '1', 'Football \u0026 Cricket Turf', '2026-10-29', '900')">
+                   onclick="openBookingModal('21:00', '22:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">21:00</div>
                 <div class="duration-text">– 22:00</div>
@@ -1003,7 +1031,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('22:00', '23:00', '1', 'Football \u0026 Cricket Turf', '2026-10-29', '900')">
+                   onclick="openBookingModal('22:00', '23:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">22:00</div>
                 <div class="duration-text">– 23:00</div>
@@ -1497,6 +1525,13 @@ function renderSlots(dateStr) {
 
     matrix.appendChild(slotBox);
   });
+
+  // Dynamically update available slots count badge and legend
+  const vacantCount = matrix.querySelectorAll('.slot-btn.vacant').length;
+  const badge = document.getElementById('availableSlotsBadge');
+  if (badge) badge.textContent = vacantCount;
+  const legendCount = document.getElementById('legendVacantCount');
+  if (legendCount) legendCount.textContent = vacantCount;
 }
 window.renderSlots = renderSlots;
 

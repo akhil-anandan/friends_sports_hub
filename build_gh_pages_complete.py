@@ -181,7 +181,7 @@ function logoutAdmin() {
 </body>
 """
 
-for fn in ['index.html', 'facilities.html', 'pricing.html']:
+for fn in ['facilities.html', 'pricing.html']:
     p = out_dir / fn
     if p.exists():
         content = p.read_text(encoding='utf-8')
@@ -440,6 +440,13 @@ function renderSlots(dateStr) {
 
     matrix.appendChild(slotBox);
   });
+
+  // Dynamically update available slots count badge and legend
+  const vacantCount = matrix.querySelectorAll('.slot-btn.vacant').length;
+  const badge = document.getElementById('availableSlotsBadge');
+  if (badge) badge.textContent = vacantCount;
+  const legendCount = document.getElementById('legendVacantCount');
+  if (legendCount) legendCount.textContent = vacantCount;
 }
 window.renderSlots = renderSlots;
 
@@ -596,9 +603,13 @@ function logoutAdmin() {
 </script>
 </body>
 """
-book_html = book_html.replace('</body>', book_enhancement)
-book_path.write_text(book_html, encoding='utf-8')
-print("book.html enhanced with dynamic facility switcher, universal cloud sync & slot engine")
+for fn in ['index.html', 'book.html']:
+    target_p = out_dir / fn
+    if target_p.exists():
+        t_html = target_p.read_text(encoding='utf-8')
+        t_html = t_html.replace('</body>', book_enhancement)
+        target_p.write_text(t_html, encoding='utf-8')
+        print(f"{fn} enhanced with dynamic facility switcher, universal cloud sync & slot engine")
 
 # 7. Enhance admin.html (The Exact Previous Owner Dashboard with dynamic client-side live engine)
 admin_path = out_dir / 'admin.html'

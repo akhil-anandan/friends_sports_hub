@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friends Sports Hub Mulayankavu | Turf, Pool & Kids Park Booking</title>
+    <title>Football &amp; Cricket Turf | Friends Sports Hub Mulayankavu</title>
     
     <!-- Meta tags for SEO -->
     <meta name="description" content="Book online time slots for football/cricket turf, swimming pool, and children's park at Friends Sports Hub Mulayankavu, Kulukkallur, Palakkad, Kerala. Call / WhatsApp: 6238006820.">
@@ -23,6 +23,605 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="static/css/style.css">
     
+<style>
+  :root {
+    --hub-bg: #070d09;
+    --hub-card-bg: #0e1712;
+    --hub-card-border: #1e2e22;
+    --hub-accent: #16a34a;
+    --hub-accent-bright: #22c55e;
+    --hub-text-muted: #8aab92;
+    --hub-text-subtle: #4d6854;
+  }
+
+  body {
+    background-color: var(--hub-bg);
+    color: #e5e7eb;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ── Responsive Container ── */
+  .hub-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 18px 16px 80px;
+  }
+
+  /* ── Facility Pill Tabs ── */
+  .facility-tabs-wrap {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .facility-tabs-wrap::-webkit-scrollbar { display: none; }
+
+  .facility-tab-pill {
+    flex-shrink: 0;
+    background: #111a14;
+    border: 1.5px solid var(--hub-card-border);
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--hub-text-muted);
+    text-decoration: none;
+    transition: all .15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .facility-tab-pill:hover {
+    border-color: var(--hub-accent);
+    color: #fff;
+  }
+  .facility-tab-pill.active {
+    background: var(--hub-accent);
+    border-color: var(--hub-accent);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+  }
+
+  /* ── Turf Info Card (Left Column on Desktop) ── */
+  .turf-showcase-card {
+    background: var(--hub-card-bg);
+    border: 1px solid var(--hub-card-border);
+    border-radius: 20px;
+    overflow: hidden;
+    position: sticky;
+    top: 80px;
+  }
+
+  .turf-photo-box {
+    position: relative;
+    height: 220px;
+    background: #000;
+    overflow: hidden;
+  }
+  .turf-photo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.88;
+    transition: transform .3s ease;
+  }
+  .turf-photo-box:hover img { transform: scale(1.03); }
+
+  .turf-overlay-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(14, 23, 18, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--hub-accent-bright);
+  }
+
+  .turf-rate-tag {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(8px);
+    border: 1px solid #22c55e;
+    border-radius: 12px;
+    padding: 6px 14px;
+    text-align: right;
+  }
+  .turf-rate-tag .amount {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #22c55e;
+    line-height: 1;
+  }
+  .turf-rate-tag .unit {
+    font-size: 0.65rem;
+    color: #9ca3af;
+    text-transform: uppercase;
+  }
+
+  .turf-info-body {
+    padding: 20px;
+  }
+  .turf-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .turf-sub {
+    font-size: 0.8rem;
+    color: var(--hub-text-muted);
+    margin-bottom: 16px;
+  }
+
+  /* ── Turf Highlights Pill Grid ── */
+  .turf-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .feature-item {
+    background: #121c15;
+    border: 1px solid var(--hub-card-border);
+    border-radius: 12px;
+    padding: 9px 11px;
+    font-size: 0.75rem;
+    color: #d1d5db;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .feature-item i {
+    color: var(--hub-accent-bright);
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Ground Rules & Info Banner ── */
+  .ground-rules-box {
+    background: #101913;
+    border-left: 3px solid var(--hub-accent-bright);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    font-size: 0.74rem;
+    color: var(--hub-text-muted);
+    line-height: 1.5;
+  }
+  .ground-rules-box strong { color: #fff; }
+
+  /* ── Contact Callout in Left Column ── */
+  .turf-contact-strip {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-quick-call {
+    flex: 1;
+    background: #141f17;
+    border: 1.5px solid var(--hub-card-border);
+    border-radius: 12px;
+    padding: 10px;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all .15s;
+  }
+  .btn-quick-call:hover { border-color: #22c55e; color: #fff; }
+
+  .btn-quick-wa {
+    flex: 1.2;
+    background: #16a34a;
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background .15s;
+  }
+  .btn-quick-wa:hover { background: #15803d; color: #fff; }
+
+  /* ── Booking Engine Card (Right Column) ── */
+  .booking-engine-card {
+    background: var(--hub-card-bg);
+    border: 1px solid var(--hub-card-border);
+    border-radius: 20px;
+    padding: 22px;
+  }
+
+  .engine-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap-2;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--hub-card-border);
+  }
+  .engine-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .engine-date-label {
+    font-size: 0.8rem;
+    color: var(--hub-accent-bright);
+    font-weight: 700;
+  }
+
+  /* ── Date Bar ── */
+  .date-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    background: #121c15;
+    border: 1.5px solid var(--hub-card-border);
+    border-radius: 14px;
+    padding: 6px 12px;
+  }
+  .date-picker-wrap i {
+    color: var(--hub-accent-bright);
+    font-size: 1.1rem;
+  }
+  .date-picker-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    outline: none;
+    padding: 6px 0;
+  }
+
+  /* ── Status Legend ── */
+  .slot-legend-strip {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.74rem;
+    color: var(--hub-text-muted);
+    margin-bottom: 16px;
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .legend-dot.vacant { background: #22c55e; }
+  .legend-dot.booked { background: #ef4444; }
+  .legend-dot.past   { background: #4b5563; }
+
+  /* ── Responsive Slots Grid ── */
+  .slots-matrix {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  @media (min-width: 576px) {
+    .slots-matrix { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 992px) {
+    .slots-matrix { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1200px) {
+    .slots-matrix { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .slot-btn {
+    border-radius: 14px;
+    padding: 13px 10px;
+    border: 1.5px solid transparent;
+    text-align: center;
+    position: relative;
+    transition: all .15s ease;
+    user-select: none;
+  }
+
+  .slot-btn.vacant {
+    background: #0d1f12;
+    border-color: #16a34a;
+    cursor: pointer;
+  }
+  .slot-btn.vacant:hover {
+    background: #112817;
+    border-color: #22c55e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.22);
+  }
+  .slot-btn.vacant:active { transform: scale(0.97); }
+
+  .slot-btn.booked {
+    background: #1a0e0e;
+    border-color: #3b1717;
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .slot-btn.past {
+    background: #111412;
+    border-color: #1f2421;
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  .slot-btn .time-text {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .slot-btn .duration-text {
+    font-size: 0.68rem;
+    color: var(--hub-text-muted);
+    margin-top: 3px;
+  }
+
+  .slot-badge-pill {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border-radius: 999px;
+    padding: 2px 8px;
+    margin-top: 6px;
+  }
+  .slot-btn.vacant .slot-badge-pill {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.4);
+  }
+  .slot-btn.booked .slot-badge-pill {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+  }
+  .slot-btn.past .slot-badge-pill {
+    background: rgba(107, 114, 128, 0.15);
+    color: #9ca3af;
+    border: 1px solid rgba(107, 114, 128, 0.3);
+  }
+
+  .tap-badge {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 0.58rem;
+    font-weight: 800;
+    color: #22c55e;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+  }
+
+  /* ── Booking Bottom Sheet / Modal ── */
+  .booking-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 998;
+  }
+  .booking-overlay.show { display: block; }
+
+  .booking-modal-box {
+    position: fixed;
+    z-index: 999;
+    background: #0e1712;
+    border: 1.5px solid var(--hub-accent-bright);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85);
+    box-sizing: border-box;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #1e2e22 transparent;
+  }
+
+  /* Desktop & Tablet: Centered directly in middle of viewport */
+  @media (min-width: 768px) {
+    .booking-modal-box {
+      top: 50%;
+      left: 50%;
+      right: auto;
+      bottom: auto;
+      width: 92%;
+      max-width: 480px;
+      max-height: 88vh;
+      border-radius: 20px;
+      padding: 22px 24px;
+      transform: translate(-50%, -46%) scale(0.96);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+    }
+    .booking-modal-box.open {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-drag-handle { display: none; }
+  }
+
+  /* Mobile: Clean Bottom Sheet */
+  @media (max-width: 767px) {
+    .booking-modal-box {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: auto;
+      width: 100%;
+      max-height: 85vh;
+      border-radius: 22px 22px 0 0;
+      padding: 16px 18px 26px;
+      transform: translateY(115%);
+      transition: transform 0.28s cubic-bezier(0.32, 1, 0.23, 1);
+    }
+    .booking-modal-box.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-drag-handle {
+      width: 42px;
+      height: 4px;
+      background: #1e2e22;
+      border-radius: 99px;
+      margin: 0 auto 12px;
+    }
+  }
+
+  .modal-header-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .modal-title-text {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+  }
+  .modal-close-x {
+    background: #141f17;
+    border: 1px solid var(--hub-card-border);
+    color: #8aab92;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .modal-slot-meta {
+    font-size: 0.82rem;
+    color: var(--hub-accent-bright);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .field-group { margin-bottom: 10px; }
+  .field-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--hub-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .field-input {
+    width: 100%;
+    background: #121c15;
+    border: 1.5px solid var(--hub-card-border);
+    border-radius: 12px;
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color .15s;
+  }
+  .field-input:focus { border-color: var(--hub-accent-bright); }
+  .field-input::placeholder { color: #374c3e; }
+
+  .btn-submit-wa {
+    width: 100%;
+    background: #16a34a;
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    padding: 12px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background .15s;
+    letter-spacing: 0.2px;
+  }
+  .btn-submit-wa:hover, .btn-submit-wa:active { background: #15803d; }
+
+  .btn-admin-direct {
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid #3b82f6;
+    border-radius: 14px;
+    color: #93c5fd;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 10px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .btn-admin-direct:hover { background: rgba(59, 130, 246, 0.12); }
+
+  /* ── Mobile Sticky Call Bar (phones only) ── */
+  .mobile-call-dock {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 15, 13, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--hub-card-border);
+    padding: 10px 16px 14px;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+  }
+  @media (min-width: 992px) {
+    .mobile-call-dock { display: none; }
+  }
+  .mobile-call-dock a {
+    flex: 1;
+    border-radius: 12px;
+    padding: 11px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .mobile-call-dock .btn-dock-call { background: #141f17; border: 1.5px solid var(--hub-card-border); color: #fff; }
+  .mobile-call-dock .btn-dock-wa   { background: #16a34a; color: #fff; }
+</style>
+
 </head>
 <body class="bg-dark text-light min-vh-100 d-flex flex-column">
 
@@ -106,286 +705,404 @@
     <!-- Main Content Block -->
     <main class="flex-grow-1">
         
-<div class="py-4 py-lg-5" style="background-color: #070d09;">
-    <div class="container">
+<div class="hub-container">
 
-        <!-- ===================== MINIMAL HERO BAR ===================== -->
-        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 mb-4 shadow-sm">
-            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-                <div>
-                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-success bg-opacity-20 border border-success border-opacity-40 text-success mb-2">
-                        <i class="bi bi-geo-alt-fill text-success small"></i>
-                        <span class="small fw-semibold">Kulukkallur, Palakkad &bull; Mulayankavu</span>
-                    </div>
-                    <h1 class="h2 fw-extrabold text-white mb-1">
-                        FRIENDS <span class="text-success">SPORTS HUB</span>
-                    </h1>
-                    <p class="text-secondary small mb-0" style="max-width: 600px;">
-                        Premier sports destination featuring FIFA-standard artificial grass turf, covered swimming pool, and children's amusement park.
-                    </p>
-                </div>
-
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="book.html" class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2">
-                        <i class="bi bi-calendar2-check-fill"></i> Check Available Slots
-                    </a>
-                    <a href="tel:+916238006820" class="btn btn-outline-light rounded-pill px-3 py-2 d-flex align-items-center gap-2">
-                        <i class="bi bi-telephone-fill text-success"></i> Call: 6238006820
-                    </a>
-                    <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20inquire%20about%20booking%20a%20slot."
-                       target="_blank" rel="noopener" class="btn rounded-pill px-3 py-2 fw-semibold d-flex align-items-center gap-2"
-                       style="background:#25D366; color:#fff; border:none;">
-                        <i class="bi bi-whatsapp fs-5"></i> WhatsApp
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===================== MAIN TWO-COLUMN SECTION ===================== -->
-        <div class="row g-4 mb-5">
-            
-            <!-- LEFT: Small Football Turf Showcase (Like on book.html) -->
-            <div class="col-lg-5">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow-lg h-100 d-flex flex-column">
-                    <!-- Photo Header -->
-                    <div class="position-relative" style="height: 220px; overflow: hidden;">
-                        <img src="static/images/turf_hero.jpg" alt="Football & Cricket Turf" class="w-100 h-100" style="object-fit: cover;">
-                        <div class="position-absolute top-0 start-0 m-3">
-                            <span class="badge bg-black bg-opacity-75 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill small fw-bold">
-                                <i class="bi bi-stars me-1"></i> FIFA Standard 50mm Grass
-                            </span>
-                        </div>
-                        <div class="position-absolute bottom-0 end-0 m-3">
-                            <span class="badge bg-success text-white px-3 py-2 rounded-pill fw-bold shadow">
-                                ₹900 <small class="text-white-50">/ 60 min slot</small>
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Details Body -->
-                    <div class="p-4 d-flex flex-column flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div>
-                                <h4 class="text-white fw-bold mb-1">Football & Cricket Turf</h4>
-                                <small class="text-secondary d-block">
-                                    <i class="bi bi-geo-alt-fill text-success me-1"></i> Mulayankavu, Kulukkallur, Palakkad
-                                </small>
-                            </div>
-                            <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-40 px-2 py-1 rounded small">
-                                5s & 7s Ready
-                            </span>
-                        </div>
-
-                        <p class="text-secondary small mb-3">
-                            All-weather shock-absorbing synthetic turf with high-power LED floodlights for seamless day and night matches.
-                        </p>
-
-                        <!-- Feature highlights -->
-                        <div class="row g-2 mb-4">
-                            <div class="col-6">
-                                <div class="p-2 bg-dark rounded-3 border border-secondary border-opacity-25 small text-light">
-                                    <i class="bi bi-check-circle-fill text-success me-1"></i> 50mm FIFA Grass
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 bg-dark rounded-3 border border-secondary border-opacity-25 small text-light">
-                                    <i class="bi bi-lightning-charge-fill text-warning me-1"></i> Pro LED Floodlights
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 bg-dark rounded-3 border border-secondary border-opacity-25 small text-light">
-                                    <i class="bi bi-shield-check text-success me-1"></i> Full Ball Netting
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 bg-dark rounded-3 border border-secondary border-opacity-25 small text-light">
-                                    <i class="bi bi-clock-fill text-info me-1"></i> 6:00 AM – 11:00 PM
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Action Button -->
-                        <div class="mt-auto pt-2">
-                            <a href="book.html?facility=turf" class="btn btn-success w-100 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
-                                <i class="bi bi-calendar-plus"></i> View & Book Turf Slots
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHT: Ground Guidelines & Discussion ("small discussion") -->
-            <div class="col-lg-7">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 shadow-lg h-100 d-flex flex-column justify-content-between">
-                    <div>
-                        <!-- Header -->
-                        <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-25">
-                            <h4 class="text-white fw-bold mb-0 d-flex align-items-center gap-2">
-                                <i class="bi bi-chat-quote-fill text-success"></i> Facility Overview & Discussion
-                            </h4>
-                            <span class="badge bg-secondary bg-opacity-25 text-light small">Ground Info</span>
-                        </div>
-
-                        <!-- Hub Introduction -->
-                        <p class="text-secondary small leading-relaxed mb-3">
-                            Welcome to <strong class="text-white">Friends Sports Hub Mulayankavu</strong>, Kulukkallur's premier sporting complex in Palakkad District, Kerala. Designed specifically for community clubs, football enthusiasts, and family recreation, our complex brings together top-tier athletic infrastructure with comfortable amenities.
-                        </p>
-
-                        <!-- Ground Guidelines Discussion Box -->
-                        <div class="p-3 bg-dark rounded-3 border border-success border-opacity-30 mb-3">
-                            <h6 class="text-success fw-bold mb-2 d-flex align-items-center gap-2">
-                                <i class="bi bi-shield-exclamation text-warning"></i> Ground Guidelines & Match Etiquette
-                            </h6>
-                            <ul class="list-unstyled text-light small mb-0 d-flex flex-column gap-2">
-                                <li class="d-flex align-items-start gap-2">
-                                    <i class="bi bi-check2 text-success mt-1"></i>
-                                    <div><strong>Footwear:</strong> Only turf shoes or rubber molded studs are allowed. Metal studs are strictly prohibited to maintain turf safety.</div>
-                                </li>
-                                <li class="d-flex align-items-start gap-2">
-                                    <i class="bi bi-check2 text-success mt-1"></i>
-                                    <div><strong>Reporting:</strong> Teams are requested to report at least 10 minutes before their scheduled slot time to complete warm-ups.</div>
-                                </li>
-                                <li class="d-flex align-items-start gap-2">
-                                    <i class="bi bi-check2 text-success mt-1"></i>
-                                    <div><strong>Operating Hours:</strong> Open daily 7 days a week from 6:00 AM to 11:00 PM with night floodlight play.</div>
-                                </li>
-                                <li class="d-flex align-items-start gap-2">
-                                    <i class="bi bi-check2 text-success mt-1"></i>
-                                    <div><strong>Booking & Confirmation:</strong> Reserve your slot online or send an instant WhatsApp request directly to owner phone: <strong class="text-success">6238006820</strong>.</div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Facility Chips -->
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-dribbble text-success me-1"></i> 7s & 5s Football</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-trophy text-warning me-1"></i> Box Cricket</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-water text-info me-1"></i> Temperature Pool</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-balloon text-danger me-1"></i> Kids Park</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-p-circle text-primary me-1"></i> Free Parking</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-cup-hot text-info me-1"></i> Drinking Water</span>
-                        </div>
-                    </div>
-
-                    <!-- Direct Contact Banner -->
-                    <div class="pt-3 border-top border-secondary border-opacity-25 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
-                        <div class="small text-secondary">
-                            <i class="bi bi-info-circle text-success me-1"></i> Need custom tournament booking or coaching sessions?
-                        </div>
-                        <a href="tel:6238006820" class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold text-nowrap">
-                            <i class="bi bi-telephone-fill me-1"></i> Contact Hub: 6238006820
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- ===================== PHOTO SHOWCASE & FACILITIES ("a few images and things like that") ===================== -->
-        <div class="mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <h4 class="text-white fw-bold mb-0">
-                        <i class="bi bi-images text-success me-2"></i> Amenities & Photo Gallery
-                    </h4>
-                    <small class="text-secondary">Complete sports & recreation facilities at Mulayankavu</small>
-                </div>
-                <a href="facilities.html" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
-                    View All Details <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
-
-            <div class="row g-3">
-                <!-- Facility 1: Turf -->
-                <div class="col-md-4">
-                    <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column">
-                        <div class="position-relative" style="height: 180px; overflow: hidden;">
-                            <img src="static/images/turf_hero.jpg" alt="Football Turf Ground" class="w-100 h-100" style="object-fit: cover;">
-                            <span class="badge bg-black bg-opacity-75 text-success position-absolute top-0 end-0 m-2 border border-success border-opacity-50 px-2 py-1 rounded-pill small">
-                                ₹900 / hr
-                            </span>
-                        </div>
-                        <div class="p-3 d-flex flex-column flex-grow-1">
-                            <h5 class="text-white fw-bold mb-1">Football & Cricket Turf</h5>
-                            <p class="text-secondary small mb-3 flex-grow-1">
-                                Synthetic shock-absorbing artificial grass with high mast LED floodlights. Suitable for 5s/7s matches and box cricket.
-                            </p>
-                            <a href="book.html?facility=turf" class="btn btn-outline-success btn-sm rounded-pill w-100 fw-semibold mt-auto">
-                                <i class="bi bi-calendar-plus me-1"></i> Book Turf Slot
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Facility 2: Swimming Pool -->
-                <div class="col-md-4">
-                    <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column">
-                        <div class="position-relative" style="height: 180px; overflow: hidden;">
-                            <img src="static/images/hub_banner.jpg" alt="Covered Swimming Pool" class="w-100 h-100" style="object-fit: cover;">
-                            <span class="badge bg-black bg-opacity-75 text-info position-absolute top-0 end-0 m-2 border border-info border-opacity-50 px-2 py-1 rounded-pill small">
-                                ₹150 / hr
-                            </span>
-                        </div>
-                        <div class="p-3 d-flex flex-column flex-grow-1">
-                            <h5 class="text-white fw-bold mb-1">Covered Swimming Pool</h5>
-                            <p class="text-secondary small mb-3 flex-grow-1">
-                                All-weather roof covered hygienic swimming pool with filtration system, clean changing rooms, and showers.
-                            </p>
-                            <a href="book.html?facility=swimming-pool" class="btn btn-outline-info btn-sm rounded-pill w-100 fw-semibold mt-auto">
-                                <i class="bi bi-calendar-plus me-1"></i> Book Pool Session
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Facility 3: Children's Park -->
-                <div class="col-md-4">
-                    <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column">
-                        <div class="position-relative" style="height: 180px; overflow: hidden;">
-                            <img src="static/images/hub_banner.jpg" alt="Children's Park" class="w-100 h-100" style="object-fit: cover;">
-                            <span class="badge bg-black bg-opacity-75 text-warning position-absolute top-0 end-0 m-2 border border-warning border-opacity-50 px-2 py-1 rounded-pill small">
-                                ₹50 entry
-                            </span>
-                        </div>
-                        <div class="p-3 d-flex flex-column flex-grow-1">
-                            <h5 class="text-white fw-bold mb-1">Children's Amusement Park</h5>
-                            <p class="text-secondary small mb-3 flex-grow-1">
-                                Safe and colorful amusement zone with slides, swings, soft turf ground, and shaded seating for parents.
-                            </p>
-                            <a href="book.html?facility=childrens-park" class="btn btn-outline-warning btn-sm rounded-pill w-100 fw-semibold mt-auto">
-                                <i class="bi bi-calendar-plus me-1"></i> View Park
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===================== LOCATION & GOOGLE MAPS ===================== -->
-        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 shadow-sm">
-            <div class="row align-items-center g-3">
-                <div class="col-md-8">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="badge bg-success bg-opacity-20 text-success p-3 rounded-circle fs-4">
-                            <i class="bi bi-geo-alt-fill"></i>
-                        </div>
-                        <div>
-                            <h5 class="text-white fw-bold mb-1">Kulukkallur, Mulayankavu, Palakkad</h5>
-                            <p class="text-secondary small mb-0">
-                                Open 7 days a week from 6:00 AM to 11:00 PM &bull; Direct Helpline: <strong class="text-white">6238006820</strong>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-outline-success rounded-pill px-4 py-2 fw-semibold">
-                        <i class="bi bi-box-arrow-up-right me-1"></i> Open Google Maps
-                    </a>
-                </div>
-            </div>
-        </div>
-
+  <!-- Top Facility Selector Bar -->
+  <div class="mb-3">
+    <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+      <div>
+        <h1 class="h5 fw-extrabold text-white mb-0">
+          <i class="bi bi-shield-shaded text-success me-1"></i> Friends Sports Hub
+        </h1>
+        <small class="text-secondary">Mulayankavu, Kulukkallur, Palakkad · Open 6:00 AM – 11:00 PM</small>
+      </div>
+      
     </div>
+
+    <!-- Facility Switcher Tabs -->
+    <div class="facility-tabs-wrap">
+      
+        <a href="book.html?facility=childrens-park&date=2026-11-02"
+           class="facility-tab-pill ">
+          
+            <i class="bi bi-balloon"></i>
+          
+          Children&#x27;s Park
+        </a>
+      
+        <a href="book.html?facility=turf&date=2026-11-02"
+           class="facility-tab-pill active">
+          
+            <i class="bi bi-dribbble"></i>
+          
+          Football &amp; Cricket Turf
+        </a>
+      
+        <a href="book.html?facility=swimming-pool&date=2026-11-02"
+           class="facility-tab-pill ">
+          
+            <i class="bi bi-water"></i>
+          
+          Swimming Pool
+        </a>
+      
+    </div>
+  </div>
+
+  
+  <div class="row g-4">
+
+    <!-- ── LEFT COLUMN: Turf & Facility Showcase & Details ── -->
+    <div class="col-lg-5 col-xl-4">
+      <div class="turf-showcase-card">
+
+        <!-- Photo Header with Live Badge -->
+        <div class="turf-photo-box">
+          
+            <img src="static/images/turf_hero.jpg" alt="Football &amp; Cricket Turf">
+          
+          <div class="turf-overlay-tag">
+            <i class="bi bi-stars me-1"></i>
+            
+              FIFA Standard Grass
+            
+          </div>
+          <div class="turf-rate-tag">
+            <div class="amount">₹900</div>
+            <div class="unit">per 60 min slot</div>
+          </div>
+        </div>
+
+        <div class="turf-info-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 rounded-pill px-3 py-1 small fw-bold">
+              <i class="bi bi-dribbble me-1"></i> Football & Sports Arena
+            </span>
+            <span class="badge bg-secondary bg-opacity-25 text-light small">
+              <i class="bi bi-geo-alt-fill text-success me-1"></i> Mulayankavu, Palakkad
+            </span>
+          </div>
+
+          <h2 class="turf-title">Football &amp; Cricket Turf</h2>
+
+          <!-- About Turf Section -->
+          <div class="about-turf-section mb-3 p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
+            <h6 class="text-white fw-bold mb-1 small d-flex align-items-center gap-1">
+              <i class="bi bi-info-circle-fill text-success"></i> About Friends Sports Hub
+            </h6>
+            <p class="turf-sub mb-0 text-secondary" style="font-size: 0.88rem; line-height: 1.45;">
+              FIFA standard high-density artificial turf with professional LED floodlights for 5s/7s football and cricket.
+            </p>
+          </div>
+
+          <!-- Highlights Grid -->
+          <div class="turf-features-grid">
+            
+              <div class="feature-item"><i class="bi bi-grid-3x3-gap-fill"></i> 7s & 5s Football Ready</div>
+              <div class="feature-item"><i class="bi bi-lightning-charge-fill"></i> Pro LED Floodlights</div>
+              <div class="feature-item"><i class="bi bi-shield-check"></i> Safety Cage Enclosure</div>
+              <div class="feature-item"><i class="bi bi-cup-hot-fill"></i> Water & Washrooms</div>
+              <div class="feature-item"><i class="bi bi-p-circle-fill"></i> Ample Free Parking</div>
+              <div class="feature-item"><i class="bi bi-people-fill"></i> Spectator Gallery</div>
+            
+          </div>
+
+          <!-- Ground Guidelines -->
+          <div class="ground-rules-box">
+            <strong>⚠️ Ground Guidelines:</strong><br>
+            • Report 10 mins before slot time.<br>
+            • Turf boots or rubber studs only (metal studs strictly prohibited).<br>
+            • Operating daily from 6:00 AM to 11:00 PM.
+          </div>
+
+          <!-- Location Information Box -->
+          <div class="location-info-section mb-3 p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
+            <div class="d-flex align-items-start gap-2">
+              <i class="bi bi-geo-alt-fill text-success fs-5 mt-1"></i>
+              <div>
+                <div class="text-white fw-bold small">Location & Access:</div>
+                <div class="text-secondary small">Mulayankavu, Kulukkallur, Palakkad District, Kerala &bull; 6:00 AM – 11:00 PM Daily</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Direct Contact & Map Actions -->
+          <div class="turf-contact-strip mb-2">
+            <a href="tel:+916238006820" class="btn-quick-call">
+              <i class="bi bi-telephone-fill text-success"></i> Call Owner
+            </a>
+            <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20inquire%20about%20Football%20%26%20Cricket%20Turf."
+               target="_blank" rel="noopener" class="btn-quick-wa">
+              <i class="bi bi-whatsapp"></i> WhatsApp
+            </a>
+          </div>
+
+          <div class="text-center mt-2">
+            <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="small text-secondary text-decoration-none">
+              <i class="bi bi-geo-alt-fill text-success me-1"></i> Open Location in Google Maps ›
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RIGHT COLUMN: Live Slot Schedule & Instant Booking ── -->
+    <div class="col-lg-7 col-xl-8">
+      <div class="booking-engine-card">
+
+        <!-- Header -->
+        <div class="engine-header">
+          <div>
+            <h3 class="engine-title mb-1">
+              <i class="bi bi-calendar2-week text-success"></i>
+              Live Slot Schedule
+            </h3>
+            <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill fw-bold">
+              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">6</span> Slots Available
+            </span>
+          </div>
+          <div class="engine-date-label">
+            <i class="bi bi-clock-history me-1"></i>
+            60 Min Slots
+          </div>
+        </div>
+
+        <!-- Date Selector -->
+        <form method="GET" id="datePickerForm" class="date-picker-wrap">
+          
+            <input type="hidden" name="facility" value="turf">
+          
+          <i class="bi bi-calendar3"></i>
+          <input type="date" name="date" id="slotDatePicker" class="date-picker-input"
+                 value="2026-11-02" min="2026-11-02" max="2026-12-02"
+                 onchange="if (window.handleDateChange) { window.handleDateChange(this.value); } else { document.getElementById('datePickerForm').submit(); }">
+          <span class="small text-secondary d-none d-sm-inline">Tap to change date</span>
+        </form>
+
+        <!-- Status Legend -->
+        <div class="slot-legend-strip">
+          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">6</span> Available)</div>
+          <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
+          <div class="legend-item"><span class="legend-dot past"></span> Past</div>
+        </div>
+
+        <!-- Slot Matrix -->
+        
+        <div class="slots-matrix">
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">06:00</div>
+                <div class="duration-text">– 07:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">07:00</div>
+                <div class="duration-text">– 08:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">08:00</div>
+                <div class="duration-text">– 09:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">09:00</div>
+                <div class="duration-text">– 10:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">10:00</div>
+                <div class="duration-text">– 11:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">11:00</div>
+                <div class="duration-text">– 12:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">12:00</div>
+                <div class="duration-text">– 13:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">13:00</div>
+                <div class="duration-text">– 14:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">14:00</div>
+                <div class="duration-text">– 15:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">15:00</div>
+                <div class="duration-text">– 16:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn past" title="This slot time has already passed">
+                <div class="time-text">16:00</div>
+                <div class="duration-text">– 17:00</div>
+                <span class="slot-badge-pill">Past</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn vacant"
+                   onclick="openBookingModal('17:00', '18:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
+                <span class="tap-badge">TAP</span>
+                <div class="time-text">17:00</div>
+                <div class="duration-text">– 18:00</div>
+                <span class="slot-badge-pill">✓ Vacant</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn vacant"
+                   onclick="openBookingModal('18:00', '19:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
+                <span class="tap-badge">TAP</span>
+                <div class="time-text">18:00</div>
+                <div class="duration-text">– 19:00</div>
+                <span class="slot-badge-pill">✓ Vacant</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn vacant"
+                   onclick="openBookingModal('19:00', '20:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
+                <span class="tap-badge">TAP</span>
+                <div class="time-text">19:00</div>
+                <div class="duration-text">– 20:00</div>
+                <span class="slot-badge-pill">✓ Vacant</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn vacant"
+                   onclick="openBookingModal('20:00', '21:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
+                <span class="tap-badge">TAP</span>
+                <div class="time-text">20:00</div>
+                <div class="duration-text">– 21:00</div>
+                <span class="slot-badge-pill">✓ Vacant</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn vacant"
+                   onclick="openBookingModal('21:00', '22:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
+                <span class="tap-badge">TAP</span>
+                <div class="time-text">21:00</div>
+                <div class="duration-text">– 22:00</div>
+                <span class="slot-badge-pill">✓ Vacant</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn vacant"
+                   onclick="openBookingModal('22:00', '23:00', '1', 'Football \u0026 Cricket Turf', '2026-11-02', '900')">
+                <span class="tap-badge">TAP</span>
+                <div class="time-text">22:00</div>
+                <div class="duration-text">– 23:00</div>
+                <span class="slot-badge-pill">✓ Vacant</span>
+              </div>
+            
+          
+        </div>
+        
+
+      </div>
+    </div>
+
+  </div>
+  
+
+</div>
+
+<!-- ── Booking Bottom Sheet / Modal ── -->
+<div class="booking-overlay" id="bookingOverlay" onclick="closeBookingModal()"></div>
+
+<div class="booking-modal-box" id="bookingModalBox">
+  <div class="modal-drag-handle"></div>
+
+  <div class="modal-header-line">
+    <h4 class="modal-title-text" id="modalSlotTitle">📅 Book Slot</h4>
+    <button type="button" class="modal-close-x" onclick="closeBookingModal()">✕</button>
+  </div>
+
+  <div class="modal-slot-meta" id="modalSlotSubtitle"></div>
+
+  <!-- Hidden state values -->
+  <input type="hidden" id="stateFacilityId">
+  <input type="hidden" id="stateFacilityName">
+  <input type="hidden" id="stateDate">
+  <input type="hidden" id="stateStart">
+  <input type="hidden" id="statePrice">
+
+  <!-- Customer Entry Form -->
+  <div class="field-group">
+    <label class="field-label">Your Name <span class="text-danger">*</span></label>
+    <input type="text" id="inputCustomerName" class="field-input" placeholder="e.g. Rahul Kumar" autocomplete="name">
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Club / Team Name</label>
+    <input type="text" id="inputClubName" class="field-input" placeholder="e.g. Friends FC, Kulukkallur Warriors (optional)">
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Phone Number <span class="text-danger">*</span></label>
+    <input type="tel" id="inputCustomerPhone" class="field-input" placeholder="e.g. 9876543210" inputmode="numeric">
+  </div>
+
+  <!-- Send WhatsApp to Owner -->
+  <button type="button" class="btn-submit-wa" onclick="submitToWhatsApp()">
+    <i class="bi bi-whatsapp fs-5"></i> Send Booking Request on WhatsApp
+  </button>
+
+  
+</div>
+
+<!-- Mobile Sticky Call Bar (Phones Only) -->
+<div class="mobile-call-dock">
+  <a href="tel:+916238006820" class="btn-dock-call">
+    <i class="bi bi-telephone-fill text-success"></i> Call Owner
+  </a>
+  <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20inquire%20about%20booking."
+     target="_blank" rel="noopener" class="btn-dock-wa">
+    <i class="bi bi-whatsapp"></i> WhatsApp Owner
+  </a>
 </div>
 
     </main>
@@ -460,8 +1177,430 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="static/js/main.js?v=20261028"></script>
     
+<script>
+const OWNER_WHATSAPP_NUMBER = '916238006820';
+
+function openBookingModal(start, end, facilityId, facilityName, dateStr, price) {
+  document.getElementById('modalSlotTitle').textContent = '📅 Slot: ' + start + ' – ' + end;
+  document.getElementById('modalSlotSubtitle').textContent =
+    facilityName + '  ·  ' + formatFriendlyDate(dateStr) + '  ·  ₹' + price + ' / slot';
+
+  document.getElementById('stateFacilityId').value = facilityId;
+  document.getElementById('stateFacilityName').value = facilityName;
+  document.getElementById('stateDate').value = dateStr;
+  document.getElementById('stateStart').value = start;
+  document.getElementById('statePrice').value = price;
+
+  // Clear inputs
+  document.getElementById('inputCustomerName').value = '';
+  document.getElementById('inputClubName').value = '';
+  document.getElementById('inputCustomerPhone').value = '';
+
+  document.getElementById('bookingModalBox').classList.add('open');
+  document.getElementById('bookingOverlay').classList.add('show');
+  document.getElementById('inputCustomerName').focus();
+}
+
+function closeBookingModal() {
+  document.getElementById('bookingModalBox').classList.remove('open');
+  document.getElementById('bookingOverlay').classList.remove('show');
+}
+
+function submitToWhatsApp() {
+  const name  = document.getElementById('inputCustomerName').value.trim();
+  const club  = document.getElementById('inputClubName').value.trim();
+  const phone = document.getElementById('inputCustomerPhone').value.trim();
+  const slot  = document.getElementById('modalSlotTitle').textContent.replace('📅 Slot: ', '');
+  const date  = document.getElementById('stateDate').value;
+  const fac   = document.getElementById('stateFacilityName').value;
+  const price = document.getElementById('statePrice').value;
+  const start = document.getElementById('stateStart').value;
+
+  if (!name || !phone) {
+    alert('Please enter your Name and Phone Number to book.');
+    return;
+  }
+
+  // Calculate end time
+  let end = '';
+  if (start && start.includes(':')) {
+    const parts = start.split(':');
+    end = (Number(parts[0]) + 1).toString().padStart(2, '0') + ':' + parts[1];
+  }
+
+  // Determine facility slug
+  let facSlug = 'turf';
+  if (window.currentFacilitySlug) {
+    facSlug = window.currentFacilitySlug;
+  } else if (fac.toLowerCase().includes('pool')) {
+    facSlug = 'swimming-pool';
+  } else if (fac.toLowerCase().includes('park') || fac.toLowerCase().includes('children')) {
+    facSlug = 'childrens-park';
+  }
+
+  const bookingId = 'BKG-FSH-' + Math.floor(100 + Math.random() * 900);
+
+  const newBooking = {
+    id: bookingId,
+    customer_name: name,
+    customer_phone: phone,
+    club_name: club || '',
+    facility_slug: facSlug,
+    facility_name: fac,
+    date: date,
+    start_time: start,
+    end_time: end,
+    display_time: slot,
+    total_price: Number(price) || 900,
+    advance_amount: 0,
+    balance_amount: Number(price) || 900,
+    payment_status: 'UNPAID',
+    status: 'CONFIRMED',
+    source: 'ONLINE_WHATSAPP',
+    created_at: new Date().toISOString()
+  };
+
+  // 1. Save to local storage
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+  } catch(e) { list = []; }
+  list.unshift(newBooking);
+  localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+  localStorage.setItem('fsh_data_initialized', 'true');
+
+  // 2. Push to cloud database if available
+  if (window.pushCloudBookings) {
+    window.pushCloudBookings(list);
+  }
+
+  // 3. Update DOM slots immediately
+  if (window.renderSlots) {
+    window.renderSlots(date);
+  } else if (window.syncBookingsToPage) {
+    window.syncBookingsToPage();
+  }
+
+  const message = [
+    '🏟️ *BOOKING REQUEST — Friends Sports Hub*',
+    'Ref ID: ' + bookingId,
+    '',
+    '📅 Date: ' + formatFriendlyDate(date),
+    '⏰ Slot: ' + slot,
+    '🏟️ Facility: ' + fac,
+    '💰 Rate: ₹' + price + ' / slot',
+    '',
+    '👤 Name: ' + name,
+    '🏆 Club/Team: ' + (club || '—'),
+    '📞 Phone: ' + phone,
+    '',
+    'Please confirm my booking. Thank you!'
+  ].join('\n');
+
+  const url = 'https://api.whatsapp.com/send?phone=' + OWNER_WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
+  
+  const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  if (isMobile) {
+    window.location.href = url;
+  } else {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+  closeBookingModal();
+  alert('Slot ' + slot + ' locked! Redirecting to WhatsApp to send booking details to owner (6238006820).');
+}
+
+function submitAdminBooking() {
+  const name  = document.getElementById('inputCustomerName').value.trim();
+  const phone = document.getElementById('inputCustomerPhone').value.trim();
+  const club  = document.getElementById('inputClubName').value.trim();
+
+  if (!name || !phone) {
+    alert('Admin: Please enter Customer Name and Phone Number.');
+    return;
+  }
+
+  document.getElementById('adminFacilityId').value   = document.getElementById('stateFacilityId').value;
+  document.getElementById('adminBookingDate').value  = document.getElementById('stateDate').value;
+  document.getElementById('adminStartTime').value    = document.getElementById('stateStart').value;
+  document.getElementById('adminCustomerName').value = name;
+  document.getElementById('adminCustomerPhone').value= phone;
+  document.getElementById('adminNotes').value        = club;
+  document.getElementById('adminDirectForm').submit();
+}
+
+function formatFriendlyDate(d) {
+  if (!d) return '';
+  const parts = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return parseInt(parts[2]) + ' ' + months[parseInt(parts[1])-1] + ' ' + parts[0];
+}
+</script>
+
 
 <script>
+// Universal Cloud Database API Endpoint (CORS enabled for GitHub Pages)
+const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
+
+const FACILITIES_DATA = {
+  'turf': {
+    name: 'Football & Cricket Turf',
+    tag: 'Sports Turf (Football / Cricket)',
+    rate: 900,
+    photo: 'static/images/turf_hero.jpg',
+    sub: 'Mulayankavu, Kulukkallur, Palakkad · 5s & 7s All-Weather Turf with Floodlights',
+    features: [
+      { icon: 'bi-check-circle-fill text-success', title: 'FIFA Standard 50mm Grass', desc: 'Shock absorbing turf' },
+      { icon: 'bi-lightning-charge-fill text-warning', title: 'High-Power LED Floodlights', desc: 'Crystal-clear night play' },
+      { icon: 'bi-shield-check text-success', title: 'Full Perimeter Netting', desc: 'High ball containment' },
+      { icon: 'bi-clock-fill text-info', title: 'Open 6:00 AM – 11:00 PM', desc: 'Flexible hourly slots' }
+    ]
+  },
+  'swimming-pool': {
+    name: 'Covered Swimming Pool',
+    tag: 'Covered Swimming Pool',
+    rate: 150,
+    photo: 'static/images/hub_banner.jpg',
+    sub: 'Mulayankavu, Kulukkallur, Palakkad · Hygienic Temperature-Maintained Pool',
+    features: [
+      { icon: 'bi-check-circle-fill text-success', title: 'Full Roof Covered', desc: 'All-weather swimming' },
+      { icon: 'bi-water text-info', title: 'Daily Chlorinated & Filtered', desc: 'Highest hygiene standard' },
+      { icon: 'bi-shield-check text-success', title: 'Separate Changing Rooms', desc: 'Clean showers & lockers' },
+      { icon: 'bi-clock-fill text-info', title: 'Open 6:00 AM – 8:00 PM', desc: 'Hourly lap swimming' }
+    ]
+  },
+  'childrens-park': {
+    name: "Children's Park",
+    tag: "Children's Play Park",
+    rate: 50,
+    photo: 'static/images/hub_banner.jpg',
+    sub: 'Mulayankavu, Kulukkallur, Palakkad · Safe Recreational Play Zone for Kids',
+    features: [
+      { icon: 'bi-check-circle-fill text-success', title: 'Kid-Safe Playground Equipment', desc: 'Swings, slides & climbing frames' },
+      { icon: 'bi-shield-check text-success', title: 'Soft Grass Turf Protection', desc: 'Cushioned ground surface' },
+      { icon: 'bi-people-fill text-warning', title: 'Shaded Seating for Parents', desc: 'Comfortable benches' },
+      { icon: 'bi-clock-fill text-info', title: 'Open 9:00 AM – 8:00 PM', desc: 'Family & kids entry' }
+    ]
+  }
+};
+
+const ALL_TIME_SLOTS = [
+  { start: "06:00", end: "07:00" },
+  { start: "07:00", end: "08:00" },
+  { start: "08:00", end: "09:00" },
+  { start: "09:00", end: "10:00" },
+  { start: "10:00", end: "11:00" },
+  { start: "11:00", end: "12:00" },
+  { start: "12:00", end: "13:00" },
+  { start: "13:00", end: "14:00" },
+  { start: "14:00", end: "15:00" },
+  { start: "15:00", end: "16:00" },
+  { start: "16:00", end: "17:00" },
+  { start: "17:00", end: "18:00" },
+  { start: "18:00", end: "19:00" },
+  { start: "19:00", end: "20:00" },
+  { start: "20:00", end: "21:00" },
+  { start: "21:00", end: "22:00" },
+  { start: "22:00", end: "23:00" }
+];
+
+let currentFacilitySlug = 'turf';
+let currentSelectedDate = new Date().toISOString().split('T')[0];
+
+// Cloud Synchronization
+async function fetchCloudBookings() {
+  try {
+    const res = await fetch(FSH_CLOUD_API_URL + '?t=' + Date.now());
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json && json.data && json.data.json) {
+      const cloudList = JSON.parse(json.data.json);
+      if (Array.isArray(cloudList)) {
+        let localList = [];
+        try { localList = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]'); } catch(e){}
+
+        const map = new Map();
+        cloudList.forEach(b => { if (b && b.id) map.set(b.id, b); });
+        localList.forEach(b => {
+          if (b && b.id && !map.has(b.id)) {
+            map.set(b.id, b);
+          }
+        });
+
+        const merged = Array.from(map.values());
+        localStorage.setItem('fsh_locked_slots', JSON.stringify(merged));
+        localStorage.setItem('fsh_data_initialized', 'true');
+        return merged;
+      }
+    }
+  } catch(err) {
+    console.warn('Cloud sync offline, using local storage cache:', err);
+  }
+  return null;
+}
+
+async function pushCloudBookings(list) {
+  try {
+    const payload = {
+      name: 'Friends Sports Hub Master Live Store',
+      data: {
+        json: JSON.stringify(list)
+      }
+    };
+    await fetch(FSH_CLOUD_API_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(err) {
+    console.warn('Cloud sync push failed, saved locally:', err);
+  }
+}
+window.pushCloudBookings = pushCloudBookings;
+
+// Dynamic Slot Renderer
+function renderSlots(dateStr) {
+  if (!dateStr) dateStr = currentSelectedDate;
+  currentSelectedDate = dateStr;
+
+  const matrix = document.querySelector('.slots-matrix');
+  if (!matrix) return;
+
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+  } catch(e) { list = []; }
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const nowHour = new Date().getHours();
+  const facData = FACILITIES_DATA[currentFacilitySlug] || FACILITIES_DATA['turf'];
+
+  matrix.innerHTML = '';
+
+  ALL_TIME_SLOTS.forEach(slot => {
+    const isPast = (dateStr < todayStr) || (dateStr === todayStr && Number(slot.start.split(':')[0]) <= nowHour);
+    const lockedBooking = list.find(b => 
+      b.date === dateStr && 
+      (b.facility_slug === currentFacilitySlug || !b.facility_slug) && 
+      b.start_time.startsWith(slot.start) && 
+      b.status !== 'CANCELLED'
+    );
+
+    const slotBox = document.createElement('div');
+
+    if (lockedBooking) {
+      slotBox.className = 'slot-btn booked';
+      slotBox.title = 'Already booked by ' + (lockedBooking.customer_name || 'player');
+      slotBox.innerHTML = `
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill booked">✗ Booked</span>
+      `;
+    } else if (isPast) {
+      slotBox.className = 'slot-btn past';
+      slotBox.title = 'This slot time has already passed';
+      slotBox.innerHTML = `
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill">Past</span>
+      `;
+    } else {
+      slotBox.className = 'slot-btn vacant';
+      slotBox.title = 'Available for booking';
+      slotBox.innerHTML = `
+        <span class="tap-badge">TAP</span>
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill">✓ Vacant</span>
+      `;
+      slotBox.onclick = function() {
+        openBookingModal(slot.start, slot.end, '1', facData.name, dateStr, facData.rate);
+      };
+    }
+
+    matrix.appendChild(slotBox);
+  });
+
+  // Dynamically update available slots count badge and legend
+  const vacantCount = matrix.querySelectorAll('.slot-btn.vacant').length;
+  const badge = document.getElementById('availableSlotsBadge');
+  if (badge) badge.textContent = vacantCount;
+  const legendCount = document.getElementById('legendVacantCount');
+  if (legendCount) legendCount.textContent = vacantCount;
+}
+window.renderSlots = renderSlots;
+
+function handleDateChange(newDate) {
+  if (!newDate) return;
+  currentSelectedDate = newDate;
+
+  const url = new URL(window.location);
+  url.searchParams.set('date', newDate);
+  window.history.replaceState({}, '', url);
+
+  const dateInput = document.getElementById('slotDatePicker');
+  if (dateInput) dateInput.value = newDate;
+
+  renderSlots(newDate);
+}
+window.handleDateChange = handleDateChange;
+
+function switchFacility(slug, event) {
+  if (event) event.preventDefault();
+  if (!FACILITIES_DATA[slug]) slug = 'turf';
+  currentFacilitySlug = slug;
+  window.currentFacilitySlug = slug;
+
+  const data = FACILITIES_DATA[slug];
+
+  // Update URL without page reload
+  const url = new URL(window.location);
+  url.searchParams.set('facility', slug);
+  window.history.replaceState({}, '', url);
+
+  // Update tabs active state
+  document.querySelectorAll('.facility-tab-pill').forEach(pill => {
+    const href = pill.getAttribute('href') || '';
+    if (href.includes(slug)) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+
+  // Update Showcase
+  const titleEl = document.querySelector('.turf-title');
+  if (titleEl) titleEl.textContent = data.name;
+
+  const rateAmountEl = document.querySelector('.turf-rate-tag .amount');
+  if (rateAmountEl) rateAmountEl.textContent = '₹' + data.rate;
+
+  const overlayTagEl = document.querySelector('.turf-overlay-tag');
+  if (overlayTagEl) overlayTagEl.innerHTML = '<i class="bi bi-stars me-1"></i> ' + data.tag;
+
+  const photoEl = document.querySelector('.turf-photo-box img');
+  if (photoEl) {
+    photoEl.src = data.photo;
+    photoEl.alt = data.name;
+  }
+
+  const subEl = document.querySelector('.turf-sub');
+  if (subEl) subEl.textContent = data.sub;
+
+  // Update modal state hidden fields
+  const stateFac = document.getElementById('stateFacilityName');
+  if (stateFac) stateFac.value = data.name;
+  const statePrice = document.getElementById('statePrice');
+  if (statePrice) statePrice.value = data.rate;
+
+  renderSlots(currentSelectedDate);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   const isAdmin = sessionStorage.getItem('fsh_admin_logged_in') === 'true';
   if (isAdmin) {
@@ -484,7 +1623,64 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
     }
   }
+
+  // Intercept facility tab clicks
+  document.querySelectorAll('.facility-tab-pill').forEach(pill => {
+    pill.addEventListener('click', function(e) {
+      e.preventDefault();
+      const href = this.getAttribute('href') || '';
+      let slug = 'turf';
+      if (href.includes('pool')) slug = 'swimming-pool';
+      else if (href.includes('park') || href.includes('children')) slug = 'childrens-park';
+      switchFacility(slug, e);
+    });
+  });
+
+  // Check URL params on load
+  const urlParams = new URLSearchParams(window.location.search);
+  const requestedFacility = urlParams.get('facility');
+  if (requestedFacility && FACILITIES_DATA[requestedFacility]) {
+    switchFacility(requestedFacility);
+  }
+
+  const requestedDate = urlParams.get('date');
+  if (requestedDate) {
+    currentSelectedDate = requestedDate;
+  }
+  const dateInput = document.getElementById('slotDatePicker');
+  if (dateInput) {
+    dateInput.value = currentSelectedDate;
+    dateInput.min = new Date().toISOString().split('T')[0];
+    dateInput.addEventListener('change', function(e) {
+      e.preventDefault();
+      handleDateChange(this.value);
+    });
+  }
+
+  const dateForm = document.getElementById('datePickerForm');
+  if (dateForm) {
+    dateForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const val = dateInput ? dateInput.value : currentSelectedDate;
+      handleDateChange(val);
+    });
+  }
+
+  // Initial render from local cache
+  renderSlots(currentSelectedDate);
+
+  // Background Cloud Sync
+  fetchCloudBookings().then(cloudData => {
+    if (cloudData) renderSlots(currentSelectedDate);
+  });
+
+  // Real-time polling every 8 seconds to update booked slots instantly from any other device
+  setInterval(async () => {
+    const cloudData = await fetchCloudBookings();
+    if (cloudData) renderSlots(currentSelectedDate);
+  }, 8000);
 });
+
 function logoutAdmin() {
   sessionStorage.removeItem('fsh_admin_logged_in');
   window.location.href = 'index.html';

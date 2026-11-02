@@ -672,10 +672,26 @@
         </div>
 
         <div class="turf-info-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 rounded-pill px-3 py-1 small fw-bold">
+              <i class="bi bi-dribbble me-1"></i> Football & Sports Arena
+            </span>
+            <span class="badge bg-secondary bg-opacity-25 text-light small">
+              <i class="bi bi-geo-alt-fill text-success me-1"></i> Mulayankavu, Palakkad
+            </span>
+          </div>
+
           <h2 class="turf-title">{{ selected_facility.name }}</h2>
-          <p class="turf-sub">
-            {{ selected_facility.description }}
-          </p>
+
+          <!-- About Turf Section -->
+          <div class="about-turf-section mb-3 p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
+            <h6 class="text-white fw-bold mb-1 small d-flex align-items-center gap-1">
+              <i class="bi bi-info-circle-fill text-success"></i> About Friends Sports Hub
+            </h6>
+            <p class="turf-sub mb-0 text-secondary" style="font-size: 0.88rem; line-height: 1.45;">
+              {{ selected_facility.description }}
+            </p>
+          </div>
 
           <!-- Highlights Grid -->
           <div class="turf-features-grid">
@@ -707,6 +723,17 @@
             • Operating daily from {{ selected_facility.open_time|time:"g:i A" }} to {{ selected_facility.close_time|time:"g:i A" }}.
           </div>
 
+          <!-- Location Information Box -->
+          <div class="location-info-section mb-3 p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
+            <div class="d-flex align-items-start gap-2">
+              <i class="bi bi-geo-alt-fill text-success fs-5 mt-1"></i>
+              <div>
+                <div class="text-white fw-bold small">Location & Access:</div>
+                <div class="text-secondary small">Mulayankavu, Kulukkallur, Palakkad District, Kerala &bull; 6:00 AM – 11:00 PM Daily</div>
+              </div>
+            </div>
+          </div>
+
           <!-- Direct Contact & Map Actions -->
           <div class="turf-contact-strip mb-2">
             <a href="tel:+91{{ owner_phone }}" class="btn-quick-call">
@@ -734,10 +761,15 @@
 
         <!-- Header -->
         <div class="engine-header">
-          <h3 class="engine-title">
-            <i class="bi bi-calendar2-week text-success"></i>
-            Live Slot Schedule
-          </h3>
+          <div>
+            <h3 class="engine-title mb-1">
+              <i class="bi bi-calendar2-week text-success"></i>
+              Live Slot Schedule
+            </h3>
+            <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill fw-bold">
+              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">{{ available_slots_count|default:"11" }}</span> Slots Available
+            </span>
+          </div>
           <div class="engine-date-label">
             <i class="bi bi-clock-history me-1"></i>
             {{ selected_facility.slot_duration_minutes }} Min Slots
@@ -758,7 +790,7 @@
 
         <!-- Status Legend -->
         <div class="slot-legend-strip">
-          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (Tap to Book)</div>
+          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">{{ available_slots_count|default:"11" }}</span> Available)</div>
           <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
           <div class="legend-item"><span class="legend-dot past"></span> Past</div>
         </div>

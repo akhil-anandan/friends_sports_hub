@@ -60,6 +60,8 @@ def booking_view(request, slug=None):
     if selected_facility:
         slots = generate_slots_for_date(selected_facility, target_date)
 
+    available_slots_count = sum(1 for s in slots if s.get('is_available'))
+
     context = {
         'facilities': facilities,
         'selected_facility': selected_facility,
@@ -68,6 +70,7 @@ def booking_view(request, slug=None):
         'min_date': min_date.strftime('%Y-%m-%d'),
         'max_date': max_date.strftime('%Y-%m-%d'),
         'slots': slots,
+        'available_slots_count': available_slots_count,
         'owner_phone': OWNER_PHONE,
         'whatsapp_phone': WHATSAPP_PHONE,
     }
