@@ -134,55 +134,19 @@ const FACILITY_NAMES = {
   'childrens-park': "Children's Park"
 };
 
-// Seed initial bookings only once if empty
+// Ensure clean slate start - completely fresh without past test data
+if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
+  localStorage.removeItem('fsh_locked_slots');
+  localStorage.removeItem('fsh_data_initialized');
+  localStorage.setItem('fsh_fresh_clean_v1', 'true');
+}
+
+// Retrieve current bookings (starts clean with 0 bookings)
 function getBookings() {
   let list = [];
   try {
     list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
   } catch(e) { list = []; }
-
-  const isInit = localStorage.getItem('fsh_data_initialized') === 'true';
-  if (!isInit && list.length === 0) {
-    const today = new Date().toISOString().split('T')[0];
-    list = [
-      {
-        id: 'BKG-FSH-101',
-        customer_name: 'Mohammed Nihal',
-        customer_phone: '9847123456',
-        club_name: 'Friends FC',
-        facility_slug: 'turf',
-        facility_name: 'Football & Cricket Turf',
-        date: today,
-        start_time: '19:00',
-        end_time: '20:00',
-        display_time: '07:00 PM - 08:00 PM',
-        total_price: 1000,
-        advance_amount: 1000,
-        balance_amount: 0,
-        payment_status: 'PAID',
-        status: 'CONFIRMED'
-      },
-      {
-        id: 'BKG-FSH-102',
-        customer_name: 'Salman Faris',
-        customer_phone: '9745987654',
-        club_name: 'Kulukkallur Stars',
-        facility_slug: 'turf',
-        facility_name: 'Football & Cricket Turf',
-        date: today,
-        start_time: '20:00',
-        end_time: '21:00',
-        display_time: '08:00 PM - 09:00 PM',
-        total_price: 1000,
-        advance_amount: 500,
-        balance_amount: 500,
-        payment_status: 'ADVANCE_PAID',
-        status: 'CONFIRMED'
-      }
-    ];
-    localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
-    localStorage.setItem('fsh_data_initialized', 'true');
-  }
   return list;
 }
 
@@ -200,23 +164,8 @@ async function fetchCloudBookings() {
     if (json && json.data && json.data.json) {
       const cloudList = JSON.parse(json.data.json);
       if (Array.isArray(cloudList)) {
-        let localList = [];
-        try { localList = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]'); } catch(e){}
-
-        const map = new Map();
-        // Add cloud bookings
-        cloudList.forEach(b => { if (b && b.id) map.set(b.id, b); });
-        // Retain local bookings if newer or not yet synced
-        localList.forEach(b => {
-          if (b && b.id && !map.has(b.id)) {
-            map.set(b.id, b);
-          }
-        });
-
-        const merged = Array.from(map.values());
-        localStorage.setItem('fsh_locked_slots', JSON.stringify(merged));
-        localStorage.setItem('fsh_data_initialized', 'true');
-        return merged;
+        localStorage.setItem('fsh_locked_slots', JSON.stringify(cloudList));
+        return cloudList;
       }
     }
   } catch(err) {

@@ -327,6 +327,13 @@ const ALL_TIME_SLOTS = [
 let currentFacilitySlug = 'turf';
 let currentSelectedDate = new Date().toISOString().split('T')[0];
 
+// Ensure clean slate start - completely fresh without past test data
+if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
+  localStorage.removeItem('fsh_locked_slots');
+  localStorage.removeItem('fsh_data_initialized');
+  localStorage.setItem('fsh_fresh_clean_v1', 'true');
+}
+
 // Cloud Synchronization
 async function fetchCloudBookings() {
   try {
@@ -336,21 +343,8 @@ async function fetchCloudBookings() {
     if (json && json.data && json.data.json) {
       const cloudList = JSON.parse(json.data.json);
       if (Array.isArray(cloudList)) {
-        let localList = [];
-        try { localList = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]'); } catch(e){}
-
-        const map = new Map();
-        cloudList.forEach(b => { if (b && b.id) map.set(b.id, b); });
-        localList.forEach(b => {
-          if (b && b.id && !map.has(b.id)) {
-            map.set(b.id, b);
-          }
-        });
-
-        const merged = Array.from(map.values());
-        localStorage.setItem('fsh_locked_slots', JSON.stringify(merged));
-        localStorage.setItem('fsh_data_initialized', 'true');
-        return merged;
+        localStorage.setItem('fsh_locked_slots', JSON.stringify(cloudList));
+        return cloudList;
       }
     }
   } catch(err) {
@@ -638,6 +632,12 @@ function logoutAdmin() {
   window.location.href = 'index.html';
 }
 
+if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
+  localStorage.removeItem('fsh_locked_slots');
+  localStorage.removeItem('fsh_data_initialized');
+  localStorage.setItem('fsh_fresh_clean_v1', 'true');
+}
+
 const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
 
 async function pushCloudBookings(list) {
@@ -726,6 +726,12 @@ if (sessionStorage.getItem('fsh_admin_logged_in') !== 'true') {
 function logoutAdmin() {
   sessionStorage.removeItem('fsh_admin_logged_in');
   window.location.href = 'index.html';
+}
+
+if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
+  localStorage.removeItem('fsh_locked_slots');
+  localStorage.removeItem('fsh_data_initialized');
+  localStorage.setItem('fsh_fresh_clean_v1', 'true');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
