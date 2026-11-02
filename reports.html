@@ -140,8 +140,8 @@
             <div class="col-md-4">
                 <div class="card bg-black border border-success border-opacity-30 rounded-4 p-4 shadow">
                     <div class="text-secondary small fw-bold">TOTAL ALL-TIME REVENUE</div>
-                    <div class="display-6 fw-extrabold text-success mt-2">₹9000</div>
-                    <small class="text-secondary">11 Total Bookings Logged</small>
+                    <div class="display-6 fw-extrabold text-success mt-2">₹0</div>
+                    <small class="text-secondary">0 Total Bookings Logged</small>
                 </div>
             </div>
 
@@ -300,6 +300,12 @@ if (sessionStorage.getItem('fsh_admin_logged_in') !== 'true') {
 function logoutAdmin() {
   sessionStorage.removeItem('fsh_admin_logged_in');
   window.location.href = 'index.html';
+}
+
+if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
+  localStorage.removeItem('fsh_locked_slots');
+  localStorage.removeItem('fsh_data_initialized');
+  localStorage.setItem('fsh_fresh_clean_v1', 'true');
 }
 
 document.addEventListener('DOMContentLoaded', function() {

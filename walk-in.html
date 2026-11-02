@@ -139,7 +139,7 @@
             </div>
 
             <form method="POST">
-                <input type="hidden" name="csrfmiddlewaretoken" value="83nO0RXYIfLOQYvGtCtr5LT2jTXCfPnUh0Fc0aG34tXo5e0ZhMfpdqik9OJyCk4N">
+                <input type="hidden" name="csrfmiddlewaretoken" value="2aYqYJO5cEQFF3wln1MOqRXBajIbp5uJqbYLPHRmyVY1qklOHf0Rc71x5HWpWcRX">
                 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
@@ -302,6 +302,12 @@ if (sessionStorage.getItem('fsh_admin_logged_in') !== 'true') {
 function logoutAdmin() {
   sessionStorage.removeItem('fsh_admin_logged_in');
   window.location.href = 'index.html';
+}
+
+if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
+  localStorage.removeItem('fsh_locked_slots');
+  localStorage.removeItem('fsh_data_initialized');
+  localStorage.setItem('fsh_fresh_clean_v1', 'true');
 }
 
 const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
