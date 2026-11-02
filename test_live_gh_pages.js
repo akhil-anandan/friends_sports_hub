@@ -84,6 +84,8 @@ async function runLiveTests() {
   await cdp.connect();
   await cdp.send('Page.enable');
   await cdp.send('Runtime.enable');
+  await cdp.send('Network.enable');
+  await cdp.send('Network.setCacheDisabled', { cacheDisabled: true });
 
   const liveBase = 'https://akhil-anandan.github.io/friends_sports_hub';
   const results = [];
