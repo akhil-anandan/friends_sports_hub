@@ -125,6 +125,17 @@ async function runLiveTests() {
     const modalOpened = await cdp.eval('document.querySelector(".booking-modal-box") ? document.querySelector(".booking-modal-box").classList.contains("open") : false');
     record('Live Home', 'Slot Click Opens Modal Popup on Front Page', modalOpened);
 
+    // Test Navbar "About Us" Click & Details Display
+    const aboutClicked = await cdp.eval(`(() => {
+      const link = Array.from(document.querySelectorAll('a.nav-link')).find(a => a.textContent.trim().includes('About Us'));
+      if (link) { link.click(); return true; }
+      return false;
+    })()`);
+    await new Promise(r => setTimeout(r, 800));
+    const aboutUrl = await cdp.eval('window.location.href');
+    const aboutHasDetails = await cdp.eval('document.body.innerText.includes("A Modern Sports Destination") || document.body.innerText.includes("Our Passion for Sports")');
+    record('Live Navbar', 'About Us Link Navigates and Displays Details', aboutUrl.includes('about.html') && aboutHasDetails, aboutUrl);
+
     // 2. Live Book Page & Facility Switching
     await cdp.navigate(`${liveBase}/book.html`);
     const tabsCount = await cdp.eval('document.querySelectorAll(".facility-tab-pill").length');

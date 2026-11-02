@@ -120,6 +120,31 @@ async function runBookingLifecycleTest() {
     if (!availableBadge) throw new Error('Available slots badge not found on front page!');
 
     // -------------------------------------------------------------
+    // TEST 1B: NAVBAR "ABOUT US" CLICK & VERIFY DETAILS
+    // -------------------------------------------------------------
+    console.log('\n[Test 1B] Clicking "About Us" link in navbar...');
+    const aboutNavClicked = await cdp.eval(`(() => {
+      const link = Array.from(document.querySelectorAll('a.nav-link')).find(a => a.textContent.trim().includes('About Us'));
+      if (link) {
+        link.click();
+        return true;
+      }
+      return false;
+    })()`);
+    console.log(`  Navbar "About Us" clicked: ${aboutNavClicked}`);
+    await new Promise(r => setTimeout(r, 800));
+
+    const aboutPageUrl = await cdp.eval(`window.location.href`);
+    console.log(`  Navigated URL: ${aboutPageUrl}`);
+    const hasAboutHeading = await cdp.eval(`document.body.innerText.includes('A Modern Sports Destination') || document.body.innerText.includes('Our Passion for Sports')`);
+    console.log(`  About Us details displayed: ${hasAboutHeading}`);
+    if (!hasAboutHeading) throw new Error('About Us details not displayed after clicking navbar link!');
+
+    // Navigate back to indexUrl for booking test
+    await cdp.navigate(indexUrl);
+    await new Promise(r => setTimeout(r, 600));
+
+    // -------------------------------------------------------------
     // TEST 2: CUSTOMER SELECTS AND LOCKS A SLOT ON FRONT PAGE
     // -------------------------------------------------------------
     console.log('\n[Test 2] Customer books a slot directly on front page (index.html)...');

@@ -35,7 +35,7 @@ def clean_urls(html):
     
     # Internal routes
     html = re.sub(r'href="/"', 'href="index.html"', html)
-    html = re.sub(r'href="/about/"', 'href="index.html#about"', html)
+    html = re.sub(r'href="/about/"', 'href="about.html"', html)
     html = re.sub(r'href="/login/"', 'href="login.html"', html)
     html = re.sub(r'action="/login/"', 'action="login.html"', html)
     
@@ -81,6 +81,7 @@ def clean_urls(html):
 anon_client = Client()
 public_routes = {
     '/': 'index.html',
+    '/about/': 'about.html',
     '/book/': 'book.html',
     '/facilities/': 'facilities.html',
     '/pricing/': 'pricing.html',
@@ -181,7 +182,7 @@ function logoutAdmin() {
 </body>
 """
 
-for fn in ['facilities.html', 'pricing.html']:
+for fn in ['facilities.html', 'pricing.html', 'about.html']:
     p = out_dir / fn
     if p.exists():
         content = p.read_text(encoding='utf-8')
