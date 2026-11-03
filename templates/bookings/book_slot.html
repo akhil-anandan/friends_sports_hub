@@ -380,6 +380,17 @@
     color: #f87171;
     border: 1px solid rgba(239, 68, 68, 0.4);
   }
+  .slot-btn.pending {
+    background: #1c1500;
+    border-color: #78580a;
+    cursor: not-allowed;
+    opacity: 0.9;
+  }
+  .slot-btn.pending .slot-badge-pill {
+    background: rgba(255, 193, 7, 0.18);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.4);
+  }
   .slot-btn.past .slot-badge-pill {
     background: rgba(107, 114, 128, 0.15);
     color: #9ca3af;
@@ -986,7 +997,7 @@ function submitToWhatsApp() {
     advance_amount: 0,
     balance_amount: Number(price) || 900,
     payment_status: 'UNPAID',
-    status: 'CONFIRMED',
+    status: 'PENDING',
     source: 'ONLINE_WHATSAPP',
     created_at: new Date().toISOString()
   };
@@ -1015,6 +1026,7 @@ function submitToWhatsApp() {
   const message = [
     '🏟️ *BOOKING REQUEST — Friends Sports Hub*',
     'Ref ID: ' + bookingId,
+    '⚠️ Status: PENDING (Awaiting Owner Approval)',
     '',
     '📅 Date: ' + formatFriendlyDate(date),
     '⏰ Slot: ' + slot,
@@ -1025,7 +1037,7 @@ function submitToWhatsApp() {
     '🏆 Club/Team: ' + (club || '—'),
     '📞 Phone: ' + phone,
     '',
-    'Please confirm my booking. Thank you!'
+    'Please approve/confirm my booking. Thank you!'
   ].join('\n');
 
   const url = 'https://api.whatsapp.com/send?phone=' + OWNER_WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
@@ -1043,7 +1055,7 @@ function submitToWhatsApp() {
     link.remove();
   }
   closeBookingModal();
-  alert('Slot ' + slot + ' locked! Redirecting to WhatsApp to send booking details to owner (6238006820).');
+  alert('Slot ' + slot + ' request sent! The slot is now PENDING approval. Redirecting to WhatsApp to notify the owner (6238006820).');
 }
 
 function submitAdminBooking() {

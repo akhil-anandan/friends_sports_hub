@@ -394,12 +394,25 @@ function renderSlots(dateStr) {
 
   ALL_TIME_SLOTS.forEach(slot => {
     const isPast = (dateStr < todayStr) || (dateStr === todayStr && Number(slot.start.split(':')[0]) <= nowHour);
-    const lockedBooking = list.find(b => 
-      b.date === dateStr && 
-      (b.facility_slug === currentFacilitySlug || !b.facility_slug) && 
-      b.start_time.startsWith(slot.start) && 
-      b.status !== 'CANCELLED'
+    const confirmedBooking = list.find(b =>
+      b.date === dateStr &&
+      (b.facility_slug === currentFacilitySlug || !b.facility_slug) &&
+      b.start_time.startsWith(slot.start) &&
+      b.status === 'CONFIRMED'
     );
+    const pendingBooking = !confirmedBooking && list.find(b =>
+      b.date === dateStr &&
+      (b.facility_slug === currentFacilitySlug || !b.facility_slug) &&
+      b.start_time.startsWith(slot.start) &&
+      b.status === 'PENDING'
+    );
+    // legacy: treat any non-cancelled, non-pending booking as confirmed
+    const lockedBooking = confirmedBooking || (!pendingBooking && list.find(b =>
+      b.date === dateStr &&
+      (b.facility_slug === currentFacilitySlug || !b.facility_slug) &&
+      b.start_time.startsWith(slot.start) &&
+      b.status !== 'CANCELLED' && b.status !== 'PENDING'
+    ));
 
     const slotBox = document.createElement('div');
 
@@ -410,6 +423,14 @@ function renderSlots(dateStr) {
         <div class="time-text">${slot.start}</div>
         <div class="duration-text">– ${slot.end}</div>
         <span class="slot-badge-pill booked">✗ Booked</span>
+      `;
+    } else if (pendingBooking) {
+      slotBox.className = 'slot-btn pending';
+      slotBox.title = 'Booking pending owner approval';
+      slotBox.innerHTML = `
+        <div class="time-text">${slot.start}</div>
+        <div class="duration-text">– ${slot.end}</div>
+        <span class="slot-badge-pill">⏳ Pending</span>
       `;
     } else if (isPast) {
       slotBox.className = 'slot-btn past';

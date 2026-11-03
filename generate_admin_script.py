@@ -265,6 +265,7 @@ function renderDashboard() {
 
   // 2. Update KPI Metrics
   const confirmed = dayBookings.filter(b => b.status === 'CONFIRMED');
+  const pending = dayBookings.filter(b => b.status === 'PENDING');
   const completed = dayBookings.filter(b => b.status === 'COMPLETED');
   const cancelled = dayBookings.filter(b => b.status === 'CANCELLED');
 
@@ -289,7 +290,7 @@ function renderDashboard() {
   }
   const cancelledLabel = document.querySelector('.row.g-3.mb-4 .col-6.col-lg-3:last-child small');
   if (cancelledLabel) {
-    cancelledLabel.textContent = 'Cancelled: ' + cancelled.length;
+    cancelledLabel.textContent = 'Cancelled: ' + cancelled.length + (pending.length > 0 ? ' | Pending: ' + pending.length : '');
   }
 
   // Update timeline header
@@ -319,6 +320,9 @@ function renderDashboard() {
         if (booking.status === 'COMPLETED') {
           badgeClass = 'bg-info text-dark';
           badgeText = 'COMPLETED';
+        } else if (booking.status === 'PENDING') {
+          badgeClass = 'bg-warning text-dark';
+          badgeText = 'PENDING';
         } else if (booking.payment_status === 'PAID') {
           badgeClass = 'bg-success';
           badgeText = 'PAID';
@@ -327,8 +331,10 @@ function renderDashboard() {
           badgeText = 'ADVANCE PAID';
         }
 
+        const cardBorder = booking.status === 'COMPLETED' ? 'border-info' : (booking.status === 'PENDING' ? 'border-warning' : 'border-success');
+
         col.innerHTML = `
-          <div class="card h-100 rounded-3 p-3 border ${booking.status === 'COMPLETED' ? 'border-info' : 'border-success'} bg-dark bg-opacity-75 shadow-sm">
+          <div class="card h-100 rounded-3 p-3 border ${cardBorder} bg-dark bg-opacity-75 shadow-sm">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <span class="fw-bold text-white fs-6">${slot.display}</span>
               <span class="badge ${badgeClass} small">${badgeText}</span>
@@ -346,7 +352,14 @@ function renderDashboard() {
               ` : ''}
             </div>
             <div class="d-flex gap-1 mt-auto pt-2 border-top border-secondary border-opacity-25 flex-wrap">
-              ${booking.status === 'CONFIRMED' ? `
+              ${booking.status === 'PENDING' ? `
+                <button type="button" class="btn btn-xs btn-warning rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="approveBooking('${booking.id}')">
+                  <i class="bi bi-check-circle-fill"></i> Approve
+                </button>
+                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="cancelBooking('${booking.id}')">
+                  Cancel
+                </button>
+              ` : booking.status === 'CONFIRMED' ? `
                 ${booking.payment_status !== 'PAID' ? `
                   <button type="button" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="collectBalance('${booking.id}')">
                     <i class="bi bi-cash-coin"></i> Collect ₹${booking.balance_amount}
@@ -415,7 +428,7 @@ function renderDashboard() {
       dayBookings.forEach(b => {
         const isPaid = b.payment_status === 'PAID';
         const payBadgeClass = isPaid ? 'bg-success' : (b.payment_status === 'ADVANCE_PAID' ? 'bg-info text-dark' : 'bg-warning text-dark');
-        const statusBadgeClass = b.status === 'CONFIRMED' ? 'bg-primary' : (b.status === 'COMPLETED' ? 'bg-info text-dark' : 'bg-danger');
+        const statusBadgeClass = b.status === 'CONFIRMED' ? 'bg-primary' : (b.status === 'PENDING' ? 'bg-warning text-dark' : (b.status === 'COMPLETED' ? 'bg-info text-dark' : 'bg-danger'));
 
         // Desktop Table Row
         rowsHtml += `
@@ -441,7 +454,14 @@ function renderDashboard() {
             <td><span class="badge ${statusBadgeClass}">${b.status}</span></td>
             <td class="text-end">
               <div class="d-inline-flex gap-1 flex-wrap justify-content-end">
-                ${b.status === 'CONFIRMED' ? `
+                ${b.status === 'PENDING' ? `
+                  <button type="button" class="btn btn-sm btn-warning rounded-pill px-2 py-1" title="Approve Booking" onclick="approveBooking('${b.id}')">
+                    <i class="bi bi-check-circle-fill"></i> Approve
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
+                    <i class="bi bi-x-circle"></i> Cancel
+                  </button>
+                ` : b.status === 'CONFIRMED' ? `
                   ${b.payment_status !== 'PAID' ? `
                     <button type="button" class="btn btn-sm btn-success rounded-pill px-2 py-1" title="Collect Balance" onclick="collectBalance('${b.id}')">
                       <i class="bi bi-cash-stack"></i> Collect ₹${b.balance_amount}
@@ -494,7 +514,14 @@ function renderDashboard() {
               <span class="text-warning fw-semibold"><i class="bi bi-clock me-1"></i>${b.display_time || b.start_time}</span>
             </div>
             <div class="d-flex gap-1 flex-wrap pt-1">
-              ${b.status === 'CONFIRMED' ? `
+              ${b.status === 'PENDING' ? `
+                <button type="button" class="btn btn-sm btn-warning rounded-pill px-3 flex-grow-1" onclick="approveBooking('${b.id}')">
+                  <i class="bi bi-check-circle-fill me-1"></i> Approve
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 flex-grow-1" onclick="cancelBooking('${b.id}')">
+                  <i class="bi bi-x-circle me-1"></i> Cancel
+                </button>
+              ` : b.status === 'CONFIRMED' ? `
                 ${b.payment_status !== 'PAID' ? `
                   <button type="button" class="btn btn-sm btn-success rounded-pill px-3 flex-grow-1" onclick="collectBalance('${b.id}')">
                     <i class="bi bi-cash-stack me-1"></i> Collect ₹${b.balance_amount}
@@ -594,6 +621,18 @@ function cancelBooking(id) {
     saveBookings(list);
     renderDashboard();
     alert('Booking #' + id + ' for ' + b.customer_name + ' has been CANCELLED and slot is opened for booking! ❌');
+  }
+}
+
+function approveBooking(id) {
+  if (!confirm('Approve this booking? The slot will be confirmed and marked as BOOKED.')) return;
+  const list = getBookings();
+  const b = list.find(item => item.id === id);
+  if (b) {
+    b.status = 'CONFIRMED';
+    saveBookings(list);
+    renderDashboard();
+    alert('Booking #' + id + ' for ' + b.customer_name + ' has been APPROVED and CONFIRMED! ✅');
   }
 }
 
