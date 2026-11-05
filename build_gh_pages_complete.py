@@ -260,8 +260,7 @@ book_html = book_path.read_text(encoding='utf-8')
 
 book_enhancement = """
 <script>
-// Universal Cloud Database API Endpoint (CORS enabled for GitHub Pages)
-const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
+// Universal Cloud Database Real-Time MQTT Sync is powered by fsh_sync.js
 
 const FACILITIES_DATA = {
   'turf': {
@@ -327,56 +326,34 @@ const ALL_TIME_SLOTS = [
 
 let currentFacilitySlug = 'turf';
 let currentSelectedDate = new Date().toISOString().split('T')[0];
-
-// Ensure clean slate start - completely fresh without past test data
-if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
-  localStorage.removeItem('fsh_locked_slots');
-  localStorage.removeItem('fsh_data_initialized');
-  localStorage.setItem('fsh_fresh_clean_v1', 'true');
-}
+window.currentSelectedDate = currentSelectedDate;
 
 // Cloud Synchronization
 async function fetchCloudBookings() {
+  if (window.FSH_SYNC) return window.FSH_SYNC.getBookings();
   try {
-    const res = await fetch(FSH_CLOUD_API_URL + '?t=' + Date.now());
-    if (!res.ok) return null;
-    const json = await res.json();
-    if (json && json.data && json.data.json) {
-      const cloudList = JSON.parse(json.data.json);
-      if (Array.isArray(cloudList)) {
-        localStorage.setItem('fsh_locked_slots', JSON.stringify(cloudList));
-        return cloudList;
-      }
-    }
-  } catch(err) {
-    console.warn('Cloud sync offline, using local storage cache:', err);
-  }
-  return null;
+    return JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+  } catch(e) { return []; }
 }
 
 async function pushCloudBookings(list) {
-  try {
-    const payload = {
-      name: 'Friends Sports Hub Master Live Store',
-      data: {
-        json: JSON.stringify(list)
-      }
-    };
-    await fetch(FSH_CLOUD_API_URL, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-  } catch(err) {
-    console.warn('Cloud sync push failed, saved locally:', err);
+  if (typeof window.pushCloudBookings === 'function') {
+    // If fsh_sync.js has registered window.pushCloudBookings, it handles MQTT + localStorage
+    return;
+  }
+  if (window.FSH_SYNC) {
+    window.FSH_SYNC.saveBookings(list);
   }
 }
-window.pushCloudBookings = pushCloudBookings;
+if (!window.pushCloudBookings) {
+  window.pushCloudBookings = pushCloudBookings;
+}
 
 // Dynamic Slot Renderer
 function renderSlots(dateStr) {
   if (!dateStr) dateStr = currentSelectedDate;
   currentSelectedDate = dateStr;
+  window.currentSelectedDate = dateStr;
 
   const matrix = document.querySelector('.slots-matrix');
   if (!matrix) return;
@@ -600,16 +577,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initial render from local cache
   renderSlots(currentSelectedDate);
 
-  // Background Cloud Sync
-  fetchCloudBookings().then(cloudData => {
-    if (cloudData) renderSlots(currentSelectedDate);
+  // Real-time Cloud Sync handled instantly via MQTT in fsh_sync.js
+  window.addEventListener('fsh_sync_updated', function() {
+    renderSlots(currentSelectedDate);
   });
-
-  // Real-time polling every 8 seconds to update booked slots instantly from any other device
-  setInterval(async () => {
-    const cloudData = await fetchCloudBookings();
-    if (cloudData) renderSlots(currentSelectedDate);
-  }, 8000);
 });
 
 function logoutAdmin() {
@@ -654,26 +625,12 @@ function logoutAdmin() {
   window.location.href = 'index.html';
 }
 
-if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
-  localStorage.removeItem('fsh_locked_slots');
-  localStorage.removeItem('fsh_data_initialized');
-  localStorage.setItem('fsh_fresh_clean_v1', 'true');
-}
-
-const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
-
-async function pushCloudBookings(list) {
-  try {
-    const payload = {
-      name: 'Friends Sports Hub Master Live Store',
-      data: { json: JSON.stringify(list) }
-    };
-    await fetch(FSH_CLOUD_API_URL, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-  } catch(e) {}
+function pushCloudBookings(list) {
+  if (typeof window.pushCloudBookings === 'function') {
+    window.pushCloudBookings(list);
+  } else if (window.FSH_SYNC) {
+    window.FSH_SYNC.saveBookings(list);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -748,12 +705,6 @@ if (sessionStorage.getItem('fsh_admin_logged_in') !== 'true') {
 function logoutAdmin() {
   sessionStorage.removeItem('fsh_admin_logged_in');
   window.location.href = 'index.html';
-}
-
-if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
-  localStorage.removeItem('fsh_locked_slots');
-  localStorage.removeItem('fsh_data_initialized');
-  localStorage.setItem('fsh_fresh_clean_v1', 'true');
 }
 
 document.addEventListener('DOMContentLoaded', function() {

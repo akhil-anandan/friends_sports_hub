@@ -104,8 +104,7 @@ function logoutAdmin() {
   window.location.href = 'index.html';
 }
 
-// Universal Cloud Database API Endpoint (CORS enabled for GitHub Pages)
-const FSH_CLOUD_API_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a186b286c4486c';
+// Universal Cloud Database Real-Time MQTT Sync is powered by fsh_sync.js
 
 // Slot definitions
 const TIME_SLOTS = [
@@ -134,13 +133,6 @@ const FACILITY_NAMES = {
   'childrens-park': "Children's Park"
 };
 
-// Ensure clean slate start - completely fresh without past test data
-if (localStorage.getItem('fsh_fresh_clean_v1') !== 'true') {
-  localStorage.removeItem('fsh_locked_slots');
-  localStorage.removeItem('fsh_data_initialized');
-  localStorage.setItem('fsh_fresh_clean_v1', 'true');
-}
-
 // Retrieve current bookings (starts clean with 0 bookings)
 function getBookings() {
   let list = [];
@@ -152,44 +144,24 @@ function getBookings() {
 
 function saveBookings(list) {
   localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
-  pushCloudBookings(list);
+  if (typeof window.pushCloudBookings === 'function') {
+    window.pushCloudBookings(list);
+  }
 }
 
 // Cloud Synchronization
 async function fetchCloudBookings() {
-  try {
-    const res = await fetch(FSH_CLOUD_API_URL + '?t=' + Date.now());
-    if (!res.ok) return null;
-    const json = await res.json();
-    if (json && json.data && json.data.json) {
-      const cloudList = JSON.parse(json.data.json);
-      if (Array.isArray(cloudList)) {
-        localStorage.setItem('fsh_locked_slots', JSON.stringify(cloudList));
-        return cloudList;
-      }
-    }
-  } catch(err) {
-    console.warn('Live Cloud Sync offline, running on local storage cache:', err);
-  }
-  return null;
+  if (window.FSH_SYNC) return window.FSH_SYNC.getBookings();
+  return getBookings();
 }
 
-async function pushCloudBookings(list) {
-  try {
-    const payload = {
-      name: 'Friends Sports Hub Master Live Store',
-      data: {
-        json: JSON.stringify(list)
-      }
-    };
-    await fetch(FSH_CLOUD_API_URL, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-  } catch(err) {
-    console.warn('Live Cloud Push failed, saved to local cache:', err);
-  }
+async function syncAndRefreshDashboard() {
+  const btn = document.getElementById('btnManualRefresh');
+  if (btn) btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1 spin"></i> Syncing...';
+  renderDashboard();
+  setTimeout(() => {
+    if (btn) btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Refresh';
+  }, 400);
 }
 
 // Render Dashboard
