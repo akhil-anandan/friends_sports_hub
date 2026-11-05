@@ -30,6 +30,30 @@ def no_cache_json(data, status=200):
     return res
 
 
+def api_health_check(request):
+    """
+    Production Health Endpoint.
+    Verifies backend operational status and database connection.
+    """
+    from django.db import connection
+    db_status = 'disconnected'
+    db_engine = connection.vendor
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT 1;')
+            if cursor.fetchone():
+                db_status = 'connected'
+    except Exception as e:
+        db_status = f'error: {str(e)}'
+
+    return no_cache_json({
+        'status': 'ok' if db_status == 'connected' else 'degraded',
+        'database_engine': db_engine,
+        'database_status': db_status,
+        'timestamp': timezone.now().isoformat()
+    }, status=200 if db_status == 'connected' else 503)
+
+
 def is_staff_user(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
 

@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: friends-sports-hub
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn friends_hub.wsgi:application"
+    healthCheckPath: "/api/health/"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "friends-sports-hub.onrender.com,*.onrender.com,akhil-anandan.github.io"
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://akhil-anandan.github.io"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com,https://akhil-anandan.github.io"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: friends-hub-postgres
+          property: connectionString
+
+  - type: cron
+    name: expire-pending-bookings
+    runtime: python
+    region: singapore
+    plan: free
+    schedule: "*/5 * * * *"
+    buildCommand: "./build.sh"
+    startCommand: "python manage.py expire_pending_bookings"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: friends-hub-postgres
+          property: connectionString
+
+databases:
+  - name: friends-hub-postgres
+    plan: free
+    region: singapore
+    databaseName: friends_hub
+    user: postgres

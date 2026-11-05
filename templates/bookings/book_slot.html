@@ -1046,8 +1046,8 @@ function submitToWhatsApp() {
 
   // Try server-side reservation API if available
   try {
-    const baseUrl = window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || '';
-    fetch(${baseUrl}/api/bookings/reserve/, {
+    const baseUrl = (window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://friends-sports-hub.onrender.com'));
+    fetch(`${baseUrl}/api/bookings/reserve/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -94,5 +94,18 @@ class Command(BaseCommand):
             status_text = "created" if created else "updated"
             self.stdout.write(f"Facility '{fac.name}' {status_text}.")
 
+        # 4. Restore verified existing customer bookings on initial fresh database launch
+        from bookings.models import Booking
+        from django.core.management import call_command
+        if Booking.objects.count() == 0:
+            fixture_path = os.path.join('database_backups', 'bookings_dump.json')
+            if os.path.exists(fixture_path):
+                self.stdout.write("Loading verified booking records into database...")
+                try:
+                    call_command('loaddata', fixture_path)
+                    self.stdout.write(self.style.SUCCESS(f"Loaded {Booking.objects.count()} booking records."))
+                except Exception as e:
+                    self.stdout.write(self.style.WARNING(f"Note on loading bookings fixture: {e}"))
+
         self.stdout.write(self.style.SUCCESS("[SUCCESS] Production bootstrap completed successfully!"))
 

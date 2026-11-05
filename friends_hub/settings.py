@@ -269,3 +269,18 @@ if cors_extra:
             CORS_ALLOWED_ORIGINS.append(o.strip())
 
 CORS_ALLOW_CREDENTIALS = True
+
+# CSRF Trusted Origins for Cross-Origin Form Submissions & Admin Login
+CSRF_TRUSTED_ORIGINS = [
+    'https://akhil-anandan.github.io',
+    'https://*.onrender.com',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+csrf_extra = os.environ.get('CSRF_TRUSTED_ORIGINS')
+if csrf_extra:
+    for o in csrf_extra.split(','):
+        if o.strip() and o.strip() not in CSRF_TRUSTED_ORIGINS:
+            CSRF_TRUSTED_ORIGINS.append(o.strip())

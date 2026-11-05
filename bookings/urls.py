@@ -4,6 +4,10 @@ from . import staff_views
 from . import api
 
 urlpatterns = [
+    # Health check for Render and monitoring
+    path('api/health/', api.api_health_check, name='api_health_check'),
+    path('health/', api.api_health_check, name='health_check'),
+
     # REST API Endpoints for Multi-Device First-Come-First-Served Real-Time Concurrency
     path('api/bookings/reserve/', api.api_reserve_slot, name='api_reserve_slot'),
     path('api/bookings/availability/', api.api_get_availability, name='api_get_availability'),
