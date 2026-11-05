@@ -47,3 +47,4 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunPython(apply_pg_exclusion_constraint, remove_pg_exclusion_constraint),
     ]
+

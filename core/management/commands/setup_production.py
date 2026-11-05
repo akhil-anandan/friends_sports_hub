@@ -23,14 +23,11 @@ class Command(BaseCommand):
         admin_user.last_name = 'Owner'
         admin_user.save()
 
-        # Deactivate any other accounts for strict security
-        User.objects.exclude(username__iexact='admin').update(is_active=False)
-
         # 2. Staff Profile
         staff_profile, _ = StaffProfile.objects.get_or_create(user=admin_user)
         staff_profile.role = 'OWNER'
         staff_profile.phone_number = '6238006820'
-        staff_profile.is_approved = True
+        staff_profile.is_active = True
         staff_profile.save()
 
         self.stdout.write(self.style.SUCCESS("[OK] Admin account configured: ID 'Admin'"))

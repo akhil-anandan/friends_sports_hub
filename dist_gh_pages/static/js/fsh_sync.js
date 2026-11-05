@@ -71,7 +71,8 @@
     try {
       const targetDate = window.currentSelectedDate || document.getElementById('slotDatePicker')?.value || new Date().toISOString().split('T')[0];
       const facilitySlug = window.currentFacilitySlug || 'turf';
-      const apiUrl = `/api/bookings/availability/?facility_slug=${encodeURIComponent(facilitySlug)}&date=${encodeURIComponent(targetDate)}&_t=${now}`;
+      const baseUrl = window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || '';
+      const apiUrl = `${baseUrl}/api/bookings/availability/?facility_slug=${encodeURIComponent(facilitySlug)}&date=${encodeURIComponent(targetDate)}&_t=${now}`;
 
       const res = await fetch(apiUrl, {
         method: 'GET',

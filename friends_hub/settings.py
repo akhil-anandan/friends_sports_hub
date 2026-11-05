@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'django.contrib.postgres',
     # Project apps
     'core',
@@ -65,6 +66,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -249,3 +251,21 @@ WHATSAPP_CLOUD_PHONE_ID = None      # e.g. '1059...'
 
 
 
+
+
+# CORS Configuration for GitHub Pages & Cross-Origin Multi-Device Mobile Access
+CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'True').lower() in ('true', '1', 'yes')
+CORS_ALLOWED_ORIGINS = [
+    'https://akhil-anandan.github.io',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+cors_extra = os.environ.get('CORS_ALLOWED_ORIGINS')
+if cors_extra:
+    for o in cors_extra.split(','):
+        if o.strip() and o.strip() not in CORS_ALLOWED_ORIGINS:
+            CORS_ALLOWED_ORIGINS.append(o.strip())
+
+CORS_ALLOW_CREDENTIALS = True

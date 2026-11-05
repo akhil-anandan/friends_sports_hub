@@ -1046,7 +1046,8 @@ function submitToWhatsApp() {
 
   // Try server-side reservation API if available
   try {
-    fetch('api/bookings/reserve/', {
+    const baseUrl = window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || '';
+    fetch(${baseUrl}/api/bookings/reserve/, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
