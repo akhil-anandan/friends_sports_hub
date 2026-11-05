@@ -139,7 +139,7 @@
             </div>
 
             <form method="POST">
-                <input type="hidden" name="csrfmiddlewaretoken" value="Ho9b4OZtO4Gvff3iuEYhJnL2IeNuS8Cxbmippu5USNe5PAyDoyWG09lcVnwRyYFk">
+                <input type="hidden" name="csrfmiddlewaretoken" value="QrOjPZllnfjgD3ca1znBLLU9VTQCL8FjjrH5P60yx9FGE96xK754wOFmu4P974po">
                 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
@@ -314,7 +314,69 @@ function pushCloudBookings(list) {
   }
 }
 
+function getLocalTodayString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function isSlotExpired(dateStr, slotStart) {
+  if (!dateStr || !slotStart) return false;
+  const now = new Date();
+  const todayStr = getLocalTodayString();
+  if (dateStr < todayStr) return true;
+  if (dateStr > todayStr) return false;
+
+  const parts = slotStart.split(':');
+  const slotH = parseInt(parts[0], 10);
+  const currentH = now.getHours();
+  const currentM = now.getMinutes();
+
+  return (slotH < currentH) || (slotH === currentH && currentM >= 0);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+  const todayStr = getLocalTodayString();
+  const dateInput = document.querySelector('input[name="booking_date"]');
+  const slotSelect = document.querySelector('select[name="start_time"]');
+
+  if (dateInput) {
+    dateInput.min = todayStr;
+    if (!dateInput.value || dateInput.value < todayStr) {
+      dateInput.value = todayStr;
+    }
+
+    function refreshWalkinSlots() {
+      if (!slotSelect) return;
+      const curDate = dateInput.value || todayStr;
+      Array.from(slotSelect.options).forEach(opt => {
+        if (!opt.value) return;
+        const expired = isSlotExpired(curDate, opt.value);
+        opt.disabled = expired;
+        if (expired) {
+          if (!opt.textContent.includes('(Expired)')) {
+            opt.textContent += ' (Expired)';
+          }
+        } else {
+          opt.textContent = opt.textContent.replace(' (Expired)', '');
+        }
+      });
+      if (slotSelect.selectedOptions[0] && slotSelect.selectedOptions[0].disabled) {
+        const firstValid = Array.from(slotSelect.options).find(o => o.value && !o.disabled);
+        slotSelect.value = firstValid ? firstValid.value : '';
+      }
+    }
+
+    dateInput.addEventListener('change', function() {
+      if (this.value < todayStr) this.value = todayStr;
+      refreshWalkinSlots();
+    });
+
+    refreshWalkinSlots();
+  }
+
   const form = document.querySelector('form');
   if (!form) return;
 
@@ -326,6 +388,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const facSlug = (facName.toLowerCase().includes('pool')) ? 'swimming-pool' : ((facName.toLowerCase().includes('park')) ? 'childrens-park' : 'turf');
     const date = document.querySelector('input[name="booking_date"]').value;
     const time = document.querySelector('select[name="start_time"]').value;
+
+    if (!time || isSlotExpired(date, time)) {
+      alert('Cannot book slot: The time for this slot has already passed.');
+      return;
+    }
+
+    let list = [];
+    try {
+      list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+    } catch(err) { list = []; }
+
+    const conflict = list.find(b =>
+      b.date === date &&
+      (b.facility_slug === facSlug || !b.facility_slug) &&
+      b.start_time.startsWith(time) &&
+      (b.status === 'PENDING' || b.status === 'PENDING_APPROVAL' || b.status === 'CONFIRMED' || b.status === 'APPROVED')
+    );
+
+    if (conflict) {
+      alert("Sorry! This slot has just been booked by another customer. Please select another available time slot.");
+      return;
+    }
     const name = document.querySelector('input[name="customer_name"]').value.trim();
     const phone = document.querySelector('input[name="customer_phone"]').value.trim();
     const price = Number(document.querySelector('input[name="total_price"]').value || 900);
@@ -352,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
       advance_amount: adv,
       balance_amount: Math.max(0, price - adv),
       payment_status: payStatus,
-      status: 'CONFIRMED'
+      status: 'APPROVED'
     };
 
     let list = [];

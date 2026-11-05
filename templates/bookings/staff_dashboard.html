@@ -127,10 +127,16 @@
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="fw-bold text-white fs-6">{{ slot.display_time }}</span>
                                 {% if slot.booking %}
-                                    {% if slot.booking.status == 'COMPLETED' %}
+                                    {% if slot.booking.status == 'PENDING_APPROVAL' %}
+                                        <span class="badge bg-warning text-dark small"><i class="bi bi-hourglass-split"></i> PENDING APPROVAL</span>
+                                    {% elif slot.booking.status == 'COMPLETED' %}
                                         <span class="badge bg-info text-dark small"><i class="bi bi-check2-all"></i> COMPLETED</span>
                                     {% elif slot.booking.status == 'CANCELLED' %}
                                         <span class="badge bg-danger small">CANCELLED</span>
+                                    {% elif slot.booking.status == 'REJECTED' %}
+                                        <span class="badge bg-danger small">REJECTED</span>
+                                    {% elif slot.booking.status in 'APPROVED,CONFIRMED' %}
+                                        <span class="badge bg-primary small">APPROVED</span>
                                     {% elif slot.booking.payment_status == 'PAID' %}
                                         <span class="badge bg-success small">PAID</span>
                                     {% else %}
@@ -164,19 +170,36 @@
                                 </div>
 
                                 <div class="d-flex gap-1 mt-auto pt-2 border-top border-secondary border-opacity-25 flex-wrap">
-                                    {% if slot.booking.payment_status != 'PAID' and slot.booking.status == 'CONFIRMED' %}
+                                    {% if slot.booking.status == 'PENDING_APPROVAL' %}
                                         <form method="POST" action="{% url 'staff_update_booking_status' slot.booking.booking_id %}" class="d-inline">
                                             {% csrf_token %}
-                                            <input type="hidden" name="action" value="collect_balance">
+                                            <input type="hidden" name="action" value="approve">
                                             <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                            <button type="submit" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.7rem;">
-                                                <i class="bi bi-cash-coin"></i> {% if slot.booking.balance_amount > 0 %}Collect Bal ₹{{ slot.booking.balance_amount|floatformat:0 }}{% else %}Mark Paid{% endif %}
+                                            <button type="submit" class="btn btn-xs btn-warning rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                                <i class="bi bi-check-circle-fill"></i> Approve
                                             </button>
                                         </form>
-                                    {% endif %}
 
+                                        <form method="POST" action="{% url 'staff_update_booking_status' slot.booking.booking_id %}" class="d-inline" onsubmit="return confirm('Reject this booking request?');">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="reject">
+                                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                            <button type="submit" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                                <i class="bi bi-x-circle"></i> Reject
+                                            </button>
+                                        </form>
+                                    {% elif slot.booking.status == 'CONFIRMED' or slot.booking.status == 'APPROVED' %}
+                                        {% if slot.booking.payment_status != 'PAID' %}
+                                            <form method="POST" action="{% url 'staff_update_booking_status' slot.booking.booking_id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="collect_balance">
+                                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                                <button type="submit" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                                    <i class="bi bi-cash-coin"></i> {% if slot.booking.balance_amount > 0 %}Collect Bal ₹{{ slot.booking.balance_amount|floatformat:0 }}{% else %}Mark Paid{% endif %}
+                                                </button>
+                                            </form>
+                                        {% endif %}
 
-                                    {% if slot.booking.status == 'CONFIRMED' %}
                                         <form method="POST" action="{% url 'staff_update_booking_status' slot.booking.booking_id %}" class="d-inline">
                                             {% csrf_token %}
                                             <input type="hidden" name="action" value="mark_completed">

@@ -106,6 +106,29 @@ function logoutAdmin() {
 
 // Universal Cloud Database Real-Time MQTT Sync is powered by fsh_sync.js
 
+function getLocalTodayString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function isSlotExpired(dateStr, slotStart) {
+  if (!dateStr || !slotStart) return false;
+  const now = new Date();
+  const todayStr = getLocalTodayString();
+  if (dateStr < todayStr) return true;
+  if (dateStr > todayStr) return false;
+
+  const parts = slotStart.split(':');
+  const slotH = parseInt(parts[0], 10);
+  const currentH = now.getHours();
+  const currentM = now.getMinutes();
+
+  return (slotH < currentH) || (slotH === currentH && currentM >= 0);
+}
+
 // Slot definitions
 const TIME_SLOTS = [
   { start: "06:00", end: "07:00", display: "06:00 AM - 07:00 AM" },
@@ -168,9 +191,26 @@ async function syncAndRefreshDashboard() {
 document.addEventListener('DOMContentLoaded', function() {
   // Wire up filter controls
   const dateInput = document.querySelector('input[name="date"]');
-  if (dateInput && !dateInput.value) {
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.value = today;
+  if (dateInput) {
+    const today = getLocalTodayString();
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateParam = urlParams.get('date');
+    if (dateParam) {
+      dateInput.value = dateParam;
+    } else if (!dateInput.value || dateInput.value < today) {
+      dateInput.value = today;
+    }
+  }
+
+  const modalDateInput = document.getElementById('modalDate');
+  if (modalDateInput) {
+    modalDateInput.min = getLocalTodayString();
+    modalDateInput.addEventListener('change', function() {
+      if (this.value < getLocalTodayString()) {
+        this.value = getLocalTodayString();
+      }
+      updateModalSlotsDropdown(this.value);
+    });
   }
 
   const filterForm = document.querySelector('form');
@@ -218,7 +258,7 @@ function renderDashboard() {
   const facilitySelect = document.querySelector('select[name="facility"]');
   const searchInput = document.querySelector('input[name="q"]');
 
-  const selectedDate = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+  const selectedDate = (dateInput && dateInput.value) ? dateInput.value : getLocalTodayString();
   const selectedFacility = (facilitySelect && facilitySelect.value) ? facilitySelect.value : 'turf';
   const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
@@ -280,21 +320,35 @@ function renderDashboard() {
   const scheduleRow = document.querySelector('.row.row-cols-1.row-cols-md-2.row-cols-lg-3.row-cols-xl-4.g-3');
   if (scheduleRow) {
     scheduleRow.innerHTML = '';
+    let visibleSlotCount = 0;
+
     TIME_SLOTS.forEach(slot => {
       // Find active (non-cancelled) booking
       const booking = dayBookings.find(b => b.start_time === slot.start && b.status !== 'CANCELLED');
+      const isPast = isSlotExpired(selectedDate, slot.start);
+
+      // If there is NO active booking and the slot has expired / time has already passed:
+      // Remove it! Do not display expired unbooked slots.
+      if (!booking && isPast) {
+        return;
+      }
+
+      visibleSlotCount++;
       const col = document.createElement('div');
       col.className = 'col';
 
       if (booking) {
         let badgeClass = 'bg-primary';
-        let badgeText = 'CONFIRMED';
+        let badgeText = 'APPROVED';
         if (booking.status === 'COMPLETED') {
           badgeClass = 'bg-info text-dark';
           badgeText = 'COMPLETED';
-        } else if (booking.status === 'PENDING') {
+        } else if (booking.status === 'PENDING' || booking.status === 'PENDING_APPROVAL') {
           badgeClass = 'bg-warning text-dark';
-          badgeText = 'PENDING';
+          badgeText = 'PENDING APPROVAL';
+        } else if (booking.status === 'REJECTED') {
+          badgeClass = 'bg-danger';
+          badgeText = 'REJECTED';
         } else if (booking.payment_status === 'PAID') {
           badgeClass = 'bg-success';
           badgeText = 'PAID';
@@ -303,7 +357,7 @@ function renderDashboard() {
           badgeText = 'ADVANCE PAID';
         }
 
-        const cardBorder = booking.status === 'COMPLETED' ? 'border-info' : (booking.status === 'PENDING' ? 'border-warning' : 'border-success');
+        const cardBorder = booking.status === 'COMPLETED' ? 'border-info' : ((booking.status === 'PENDING' || booking.status === 'PENDING_APPROVAL') ? 'border-warning' : 'border-success');
 
         col.innerHTML = `
           <div class="card h-100 rounded-3 p-3 border ${cardBorder} bg-dark bg-opacity-75 shadow-sm">
@@ -318,20 +372,23 @@ function renderDashboard() {
                 <a href="tel:${booking.customer_phone}" class="text-secondary text-decoration-none">${booking.customer_phone}</a>
               </div>
               <div class="small text-success fw-bold mt-1">Fee: ₹${booking.total_price}</div>
-              ${booking.payment_status === 'ADVANCE_PAID' && booking.status === 'CONFIRMED' ? `
+              ${booking.payment_status === 'ADVANCE_PAID' && (booking.status === 'CONFIRMED' || booking.status === 'APPROVED') ? `
                 <div class="small text-info"><i class="bi bi-qr-code text-success me-1"></i>Adv: ₹${booking.advance_amount}</div>
                 <div class="small text-warning fw-bold">Bal: ₹${booking.balance_amount}</div>
               ` : ''}
             </div>
             <div class="d-flex gap-1 mt-auto pt-2 border-top border-secondary border-opacity-25 flex-wrap">
-              ${booking.status === 'PENDING' ? `
+              ${(booking.status === 'PENDING' || booking.status === 'PENDING_APPROVAL') ? `
                 <button type="button" class="btn btn-xs btn-warning rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="approveBooking('${booking.id}')">
                   <i class="bi bi-check-circle-fill"></i> Approve
                 </button>
-                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="cancelBooking('${booking.id}')">
+                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="rejectBooking('${booking.id}')">
+                  <i class="bi bi-x-circle"></i> Reject
+                </button>
+                <button type="button" class="btn btn-xs btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="cancelBooking('${booking.id}')">
                   Cancel
                 </button>
-              ` : booking.status === 'CONFIRMED' ? `
+              ` : (booking.status === 'CONFIRMED' || booking.status === 'APPROVED') ? `
                 ${booking.payment_status !== 'PAID' ? `
                   <button type="button" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="collectBalance('${booking.id}')">
                     <i class="bi bi-cash-coin"></i> Collect ₹${booking.balance_amount}
@@ -371,6 +428,16 @@ function renderDashboard() {
       }
       scheduleRow.appendChild(col);
     });
+
+    if (visibleSlotCount === 0) {
+      scheduleRow.innerHTML = `
+        <div class="col-12 w-100 text-center py-5 text-secondary">
+          <i class="bi bi-clock-history fs-1 mb-2 d-block text-secondary opacity-50"></i>
+          <h6 class="text-white fw-bold mb-1">No Active Slots to Display</h6>
+          <p class="small text-secondary mb-0">All earlier slots for this date have passed and been removed.</p>
+        </div>
+      `;
+    }
   }
 
   // 4. Render Section 2: Detailed Bookings Table (Desktop Table + Mobile Cards)
@@ -426,14 +493,17 @@ function renderDashboard() {
             <td><span class="badge ${statusBadgeClass}">${b.status}</span></td>
             <td class="text-end">
               <div class="d-inline-flex gap-1 flex-wrap justify-content-end">
-                ${b.status === 'PENDING' ? `
+                ${(b.status === 'PENDING' || b.status === 'PENDING_APPROVAL') ? `
                   <button type="button" class="btn btn-sm btn-warning rounded-pill px-2 py-1" title="Approve Booking" onclick="approveBooking('${b.id}')">
                     <i class="bi bi-check-circle-fill"></i> Approve
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
-                    <i class="bi bi-x-circle"></i> Cancel
+                  <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" title="Reject Booking" onclick="rejectBooking('${b.id}')">
+                    <i class="bi bi-x-circle"></i> Reject
                   </button>
-                ` : b.status === 'CONFIRMED' ? `
+                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-1" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
+                    Cancel
+                  </button>
+                ` : (b.status === 'CONFIRMED' || b.status === 'APPROVED') ? `
                   ${b.payment_status !== 'PAID' ? `
                     <button type="button" class="btn btn-sm btn-success rounded-pill px-2 py-1" title="Collect Balance" onclick="collectBalance('${b.id}')">
                       <i class="bi bi-cash-stack"></i> Collect ₹${b.balance_amount}
@@ -447,7 +517,7 @@ function renderDashboard() {
                   </button>
                 ` : `
                   <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.75rem;">
-                    ${b.status === 'COMPLETED' ? '<i class="bi bi-check2"></i> Finished' : '<i class="bi bi-x-circle"></i> Cancelled'}
+                    ${b.status === 'COMPLETED' ? '<i class="bi bi-check2"></i> Finished' : (b.status === 'REJECTED' ? '<i class="bi bi-x-circle"></i> Rejected' : '<i class="bi bi-x-circle"></i> Cancelled')}
                   </span>
                 `}
                 <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1" title="WhatsApp Confirmation" onclick="sendWhatsAppVoucher('${b.id}')">
@@ -486,14 +556,17 @@ function renderDashboard() {
               <span class="text-warning fw-semibold"><i class="bi bi-clock me-1"></i>${b.display_time || b.start_time}</span>
             </div>
             <div class="d-flex gap-1 flex-wrap pt-1">
-              ${b.status === 'PENDING' ? `
+              ${(b.status === 'PENDING' || b.status === 'PENDING_APPROVAL') ? `
                 <button type="button" class="btn btn-sm btn-warning rounded-pill px-3 flex-grow-1" onclick="approveBooking('${b.id}')">
                   <i class="bi bi-check-circle-fill me-1"></i> Approve
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 flex-grow-1" onclick="cancelBooking('${b.id}')">
-                  <i class="bi bi-x-circle me-1"></i> Cancel
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 flex-grow-1" onclick="rejectBooking('${b.id}')">
+                  <i class="bi bi-x-circle me-1"></i> Reject
                 </button>
-              ` : b.status === 'CONFIRMED' ? `
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 flex-grow-1" onclick="cancelBooking('${b.id}')">
+                  Cancel
+                </button>
+              ` : (b.status === 'CONFIRMED' || b.status === 'APPROVED') ? `
                 ${b.payment_status !== 'PAID' ? `
                   <button type="button" class="btn btn-sm btn-success rounded-pill px-3 flex-grow-1" onclick="collectBalance('${b.id}')">
                     <i class="bi bi-cash-stack me-1"></i> Collect ₹${b.balance_amount}
@@ -507,7 +580,7 @@ function renderDashboard() {
                 </button>
               ` : `
                 <span class="badge bg-secondary bg-opacity-50 text-light py-2 px-3 w-100 text-center">
-                  ${b.status === 'COMPLETED' ? '<i class="bi bi-check2 me-1"></i> Match Finished' : '<i class="bi bi-x-circle me-1"></i> Reservation Cancelled'}
+                  ${b.status === 'COMPLETED' ? '<i class="bi bi-check2 me-1"></i> Match Finished' : (b.status === 'REJECTED' ? '<i class="bi bi-x-circle me-1"></i> Reservation Rejected' : '<i class="bi bi-x-circle me-1"></i> Reservation Cancelled')}
                 </span>
               `}
               <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="sendWhatsAppVoucher('${b.id}')">
@@ -601,10 +674,23 @@ function approveBooking(id) {
   const list = getBookings();
   const b = list.find(item => item.id === id);
   if (b) {
-    b.status = 'CONFIRMED';
+    b.status = 'APPROVED';
     saveBookings(list);
     renderDashboard();
     alert('Booking #' + id + ' for ' + b.customer_name + ' has been APPROVED and CONFIRMED! ✅');
+  }
+}
+
+function rejectBooking(id) {
+  if (!confirm('Reject this booking request? The reservation will be cancelled and the slot made AVAILABLE immediately.')) return;
+  const list = getBookings();
+  const b = list.find(item => item.id === id);
+  if (b) {
+    b.status = 'REJECTED';
+    b.rejection_reason = 'Rejected by owner';
+    saveBookings(list);
+    renderDashboard();
+    alert('Booking #' + id + ' for ' + b.customer_name + ' has been REJECTED. Slot is now free and available for other customers! ❌');
   }
 }
 
@@ -637,12 +723,56 @@ Thank you for choosing Friends Sports Hub!`;
 }
 
 // Quick Walk-in Modal Handlers
+function updateModalSlotsDropdown(selectedDate, defaultSlot) {
+  const slotSelect = document.getElementById('modalSlot');
+  if (!slotSelect) return;
+  if (!selectedDate) selectedDate = getLocalTodayString();
+
+  slotSelect.innerHTML = '';
+  let validCount = 0;
+
+  TIME_SLOTS.forEach(slot => {
+    if (!isSlotExpired(selectedDate, slot.start)) {
+      validCount++;
+      const opt = document.createElement('option');
+      opt.value = slot.start;
+      opt.textContent = slot.display;
+      if (defaultSlot && slot.start === defaultSlot) {
+        opt.selected = true;
+      }
+      slotSelect.appendChild(opt);
+    }
+  });
+
+  if (validCount === 0) {
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = '-- All slots expired for this date --';
+    slotSelect.appendChild(opt);
+    slotSelect.disabled = true;
+  } else {
+    slotSelect.disabled = false;
+    if (!slotSelect.value && slotSelect.options.length > 0) {
+      slotSelect.selectedIndex = 0;
+    }
+  }
+}
+
 function openQuickWalkinModal(facility, date, time) {
+  const todayStr = getLocalTodayString();
   if (facility) document.getElementById('modalFacility').value = facility;
-  if (date) document.getElementById('modalDate').value = date;
-  else document.getElementById('modalDate').value = new Date().toISOString().split('T')[0];
-  if (time) document.getElementById('modalSlot').value = time;
-  
+
+  const targetDate = (date && date >= todayStr) ? date : todayStr;
+  const dateInput = document.getElementById('modalDate');
+  if (dateInput) {
+    dateInput.value = targetDate;
+    dateInput.min = todayStr;
+  }
+
+  // Guard against expired time
+  const targetTime = (time && !isSlotExpired(targetDate, time)) ? time : null;
+  updateModalSlotsDropdown(targetDate, targetTime);
+
   updateModalPrice();
   const modalEl = document.getElementById('quickWalkinModal');
   const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
@@ -675,6 +805,12 @@ function submitQuickWalkin() {
   const facName = facSel.options[facSel.selectedIndex].getAttribute('data-name');
   const date = document.getElementById('modalDate').value;
   const time = document.getElementById('modalSlot').value;
+
+  if (!time || isSlotExpired(date, time)) {
+    alert('Cannot book slot: The time for this slot has already passed.');
+    return;
+  }
+
   const name = document.getElementById('modalCustomerName').value.trim();
   const phone = document.getElementById('modalCustomerPhone').value.trim();
   const total = Number(document.getElementById('modalTotalPrice').value || 900);

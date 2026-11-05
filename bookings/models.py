@@ -46,10 +46,18 @@ class Facility(models.Model):
 
 class Booking(models.Model):
     STATUS_CHOICES = [
-        ('CONFIRMED', 'Confirmed'),
+        ('AVAILABLE', 'Available'),
+        ('PENDING_APPROVAL', 'Pending Owner Approval'),
+        ('APPROVED', 'Approved by Owner'),
+        ('REJECTED', 'Rejected by Owner'),
         ('CANCELLED', 'Cancelled'),
+        ('EXPIRED', 'Expired'),
+        # Legacy compatibility mappings
+        ('CONFIRMED', 'Confirmed'),
         ('COMPLETED', 'Completed'),
     ]
+
+    ACTIVE_STATUSES = ['PENDING_APPROVAL', 'APPROVED', 'CONFIRMED', 'COMPLETED']
 
     PAYMENT_STATUS_CHOICES = [
         ('ADVANCE_PAID', 'Advance Paid (₹100 via UPI)'),
@@ -77,7 +85,7 @@ class Booking(models.Model):
     upi_transaction_id = models.CharField(max_length=64, blank=True, help_text="12-digit UPI UTR / Transaction Reference")
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default='UPI')
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='CONFIRMED', db_index=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING_APPROVAL', db_index=True)
     payment_status = models.CharField(max_length=25, choices=PAYMENT_STATUS_CHOICES, default='ADVANCE_PAID')
     
     # Customer contact info captured at booking time
@@ -86,12 +94,22 @@ class Booking(models.Model):
     customer_email = models.EmailField(blank=True)
     notes = models.TextField(blank=True, help_text="Team name, notes, or special requirements")
     
+    # Expiration for pending owner approval
+    expires_at = models.DateTimeField(null=True, blank=True, db_index=True, help_text="Timestamp when pending reservation expires if not approved")
+    
+    # Approval tracking
+    approved_at = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='approved_bookings')
+    
+    # Rejection tracking
+    rejection_reason = models.TextField(blank=True)
+    rejected_at = models.DateTimeField(null=True, blank=True)
+    
     cancellation_reason = models.TextField(blank=True)
     cancelled_at = models.DateTimeField(null=True, blank=True)
     
     created_by_staff = models.BooleanField(default=False, help_text="True if booked by counter employee")
     staff_notes = models.TextField(blank=True, help_text="Internal notes by ground staff")
-
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -99,10 +117,10 @@ class Booking(models.Model):
     class Meta:
         ordering = ['-booking_date', '-start_time']
         constraints = [
-            # Overlapping/duplicate protection: only 1 non-cancelled booking per facility, date, start_time
+            # Strict concurrency protection: only 1 active reservation per facility, date, and start_time
             models.UniqueConstraint(
                 fields=['facility', 'booking_date', 'start_time'],
-                condition=~Q(status='CANCELLED'),
+                condition=models.Q(status__in=['PENDING_APPROVAL', 'APPROVED', 'CONFIRMED', 'COMPLETED']),
                 name='unique_active_booking_slot'
             )
         ]
@@ -120,15 +138,33 @@ class Booking(models.Model):
             self.balance_amount = max(Decimal('0.00'), total_val - advance_val)
         super().save(*args, **kwargs)
 
-
-
     def __str__(self):
-        return f"{self.booking_id} - {self.facility.name} ({self.booking_date} {self.start_time.strftime('%H:%M')})"
+        return f"{self.booking_id} - {self.facility.name} ({self.booking_date} {self.start_time.strftime('%H:%M')} [{self.status}])"
+
+    @property
+    def is_active(self):
+        return self.status in self.ACTIVE_STATUSES
+
+    @property
+    def is_pending(self):
+        return self.status == 'PENDING_APPROVAL'
+
+    @property
+    def is_approved(self):
+        return self.status in ['APPROVED', 'CONFIRMED']
+
+    @property
+    def is_expired(self):
+        if self.status == 'EXPIRED':
+            return True
+        if self.status == 'PENDING_APPROVAL' and self.expires_at:
+            return timezone.now() > self.expires_at
+        return False
 
     @property
     def is_cancellable(self):
-        """Allows cancellation if status is CONFIRMED and booking is in the future."""
-        if self.status != 'CONFIRMED':
+        """Allows cancellation if status is in active statuses and booking is in the future."""
+        if self.status not in ['PENDING_APPROVAL', 'APPROVED', 'CONFIRMED']:
             return False
         booking_datetime = timezone.datetime.combine(self.booking_date, self.start_time)
         booking_datetime = timezone.make_aware(booking_datetime, timezone.get_current_timezone())

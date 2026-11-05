@@ -325,7 +325,33 @@ const ALL_TIME_SLOTS = [
 ];
 
 let currentFacilitySlug = 'turf';
-let currentSelectedDate = new Date().toISOString().split('T')[0];
+
+function getLocalTodayString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function isSlotExpired(dateStr, slotStart) {
+  if (!dateStr || !slotStart) return false;
+  const now = new Date();
+  const todayStr = getLocalTodayString();
+  if (dateStr < todayStr) return true;
+  if (dateStr > todayStr) return false;
+
+  const parts = slotStart.split(':');
+  const slotH = parseInt(parts[0], 10);
+  const currentH = now.getHours();
+  const currentM = now.getMinutes();
+
+  return (slotH < currentH) || (slotH === currentH && currentM >= 0);
+}
+window.isSlotExpired = isSlotExpired;
+window.getLocalTodayString = getLocalTodayString;
+
+let currentSelectedDate = getLocalTodayString();
 window.currentSelectedDate = currentSelectedDate;
 
 // Cloud Synchronization
@@ -363,33 +389,40 @@ function renderSlots(dateStr) {
     list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
   } catch(e) { list = []; }
 
-  const todayStr = new Date().toISOString().split('T')[0];
-  const nowHour = new Date().getHours();
-  const facData = FACILITIES_DATA[currentFacilitySlug] || FACILITIES_DATA['turf'];
+  // Sweep any expired pending reservations
+  let storageChanged = false;
+  const nowTime = new Date();
+  list.forEach(b => {
+    if ((b.status === 'PENDING' || b.status === 'PENDING_APPROVAL') && b.expires_at) {
+      if (new Date(b.expires_at) <= nowTime) {
+        b.status = 'EXPIRED';
+        storageChanged = true;
+      }
+    }
+  });
+  if (storageChanged) {
+    localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
+    if (window.pushCloudBookings) window.pushCloudBookings(list);
+  }
 
+  const facData = FACILITIES_DATA[currentFacilitySlug] || FACILITIES_DATA['turf'];
   matrix.innerHTML = '';
 
   ALL_TIME_SLOTS.forEach(slot => {
-    const isPast = (dateStr < todayStr) || (dateStr === todayStr && Number(slot.start.split(':')[0]) <= nowHour);
+    const isPast = isSlotExpired(dateStr, slot.start);
     const confirmedBooking = list.find(b =>
       b.date === dateStr &&
       (b.facility_slug === currentFacilitySlug || !b.facility_slug) &&
       b.start_time.startsWith(slot.start) &&
-      b.status === 'CONFIRMED'
+      (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'COMPLETED')
     );
     const pendingBooking = !confirmedBooking && list.find(b =>
       b.date === dateStr &&
       (b.facility_slug === currentFacilitySlug || !b.facility_slug) &&
       b.start_time.startsWith(slot.start) &&
-      b.status === 'PENDING'
+      (b.status === 'PENDING' || b.status === 'PENDING_APPROVAL')
     );
-    // legacy: treat any non-cancelled, non-pending booking as confirmed
-    const lockedBooking = confirmedBooking || (!pendingBooking && list.find(b =>
-      b.date === dateStr &&
-      (b.facility_slug === currentFacilitySlug || !b.facility_slug) &&
-      b.start_time.startsWith(slot.start) &&
-      b.status !== 'CANCELLED' && b.status !== 'PENDING'
-    ));
+    const lockedBooking = confirmedBooking;
 
     const slotBox = document.createElement('div');
 
@@ -403,7 +436,7 @@ function renderSlots(dateStr) {
       `;
     } else if (pendingBooking) {
       slotBox.className = 'slot-btn pending';
-      slotBox.title = 'Booking pending owner approval';
+      slotBox.title = 'Booking pending owner approval (temporarily reserved)';
       slotBox.innerHTML = `
         <div class="time-text">${slot.start}</div>
         <div class="duration-text">– ${slot.end}</div>
@@ -633,7 +666,69 @@ function pushCloudBookings(list) {
   }
 }
 
+function getLocalTodayString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function isSlotExpired(dateStr, slotStart) {
+  if (!dateStr || !slotStart) return false;
+  const now = new Date();
+  const todayStr = getLocalTodayString();
+  if (dateStr < todayStr) return true;
+  if (dateStr > todayStr) return false;
+
+  const parts = slotStart.split(':');
+  const slotH = parseInt(parts[0], 10);
+  const currentH = now.getHours();
+  const currentM = now.getMinutes();
+
+  return (slotH < currentH) || (slotH === currentH && currentM >= 0);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+  const todayStr = getLocalTodayString();
+  const dateInput = document.querySelector('input[name="booking_date"]');
+  const slotSelect = document.querySelector('select[name="start_time"]');
+
+  if (dateInput) {
+    dateInput.min = todayStr;
+    if (!dateInput.value || dateInput.value < todayStr) {
+      dateInput.value = todayStr;
+    }
+
+    function refreshWalkinSlots() {
+      if (!slotSelect) return;
+      const curDate = dateInput.value || todayStr;
+      Array.from(slotSelect.options).forEach(opt => {
+        if (!opt.value) return;
+        const expired = isSlotExpired(curDate, opt.value);
+        opt.disabled = expired;
+        if (expired) {
+          if (!opt.textContent.includes('(Expired)')) {
+            opt.textContent += ' (Expired)';
+          }
+        } else {
+          opt.textContent = opt.textContent.replace(' (Expired)', '');
+        }
+      });
+      if (slotSelect.selectedOptions[0] && slotSelect.selectedOptions[0].disabled) {
+        const firstValid = Array.from(slotSelect.options).find(o => o.value && !o.disabled);
+        slotSelect.value = firstValid ? firstValid.value : '';
+      }
+    }
+
+    dateInput.addEventListener('change', function() {
+      if (this.value < todayStr) this.value = todayStr;
+      refreshWalkinSlots();
+    });
+
+    refreshWalkinSlots();
+  }
+
   const form = document.querySelector('form');
   if (!form) return;
 
@@ -645,6 +740,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const facSlug = (facName.toLowerCase().includes('pool')) ? 'swimming-pool' : ((facName.toLowerCase().includes('park')) ? 'childrens-park' : 'turf');
     const date = document.querySelector('input[name="booking_date"]').value;
     const time = document.querySelector('select[name="start_time"]').value;
+
+    if (!time || isSlotExpired(date, time)) {
+      alert('Cannot book slot: The time for this slot has already passed.');
+      return;
+    }
+
+    let list = [];
+    try {
+      list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+    } catch(err) { list = []; }
+
+    const conflict = list.find(b =>
+      b.date === date &&
+      (b.facility_slug === facSlug || !b.facility_slug) &&
+      b.start_time.startsWith(time) &&
+      (b.status === 'PENDING' || b.status === 'PENDING_APPROVAL' || b.status === 'CONFIRMED' || b.status === 'APPROVED')
+    );
+
+    if (conflict) {
+      alert("Sorry! This slot has just been booked by another customer. Please select another available time slot.");
+      return;
+    }
     const name = document.querySelector('input[name="customer_name"]').value.trim();
     const phone = document.querySelector('input[name="customer_phone"]').value.trim();
     const price = Number(document.querySelector('input[name="total_price"]').value || 900);
@@ -671,7 +788,7 @@ document.addEventListener('DOMContentLoaded', function() {
       advance_amount: adv,
       balance_amount: Math.max(0, price - adv),
       payment_status: payStatus,
-      status: 'CONFIRMED'
+      status: 'APPROVED'
     };
 
     let list = [];

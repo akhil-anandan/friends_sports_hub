@@ -61,9 +61,10 @@ def staff_dashboard_view(request):
         )
 
     # Calculate KPIs for selected date
-    confirmed_bookings = bookings_qs.filter(status='CONFIRMED')
+    confirmed_bookings = bookings_qs.filter(status__in=['APPROVED', 'CONFIRMED'])
+    pending_bookings = bookings_qs.filter(status='PENDING_APPROVAL')
     completed_bookings = bookings_qs.filter(status='COMPLETED')
-    cancelled_bookings = bookings_qs.filter(status='CANCELLED')
+    cancelled_bookings = bookings_qs.filter(status__in=['CANCELLED', 'REJECTED', 'EXPIRED'])
 
     total_revenue_expected = confirmed_bookings.aggregate(Sum('total_price'))['total_price__sum'] or 0
     full_paid = confirmed_bookings.filter(payment_status='PAID').aggregate(Sum('total_price'))['total_price__sum'] or 0
@@ -71,16 +72,11 @@ def staff_dashboard_view(request):
     total_revenue_paid = full_paid + advance_paid
     total_revenue_pending = confirmed_bookings.aggregate(Sum('balance_amount'))['balance_amount__sum'] or 0
 
-
     # Hourly match schedule grid for the primary turf (or selected facility)
     primary_facility = facilities.filter(slug=facility_slug).first() or facilities.filter(slug='turf').first() or facilities.first()
     schedule_slots = []
     if primary_facility:
         schedule_slots = generate_slots_for_date(primary_facility, selected_date)
-        # Attach active booking object to each slot if booked
-        active_day_bookings = {b.start_time.strftime('%H:%M'): b for b in Booking.objects.filter(facility=primary_facility, booking_date=selected_date).exclude(status='CANCELLED')}
-        for s in schedule_slots:
-            s['booking'] = active_day_bookings.get(s['start_time'])
 
     is_owner = is_owner_user(request.user)
 
@@ -92,6 +88,7 @@ def staff_dashboard_view(request):
         'facility_slug': facility_slug,
         'bookings': bookings_qs.order_by('start_time'),
         'total_confirmed_count': confirmed_bookings.count(),
+        'total_pending_count': pending_bookings.count(),
         'total_completed_count': completed_bookings.count(),
         'total_cancelled_count': cancelled_bookings.count(),
         'total_revenue_expected': total_revenue_expected,
@@ -207,7 +204,18 @@ def staff_update_booking_status(request, booking_id):
     booking = get_object_or_404(Booking, booking_id=booking_id)
     action = request.POST.get('action')
 
-    if action in ['mark_paid', 'collect_balance']:
+    if action == 'approve':
+        from .services import approve_booking
+        approve_booking(booking.booking_id, approved_by_user=request.user)
+        messages.success(request, f"Booking #{booking.booking_id} has been APPROVED! Slot is confirmed.")
+
+    elif action == 'reject':
+        from .services import reject_booking
+        reason = request.POST.get('reason', 'Rejected by owner').strip()
+        reject_booking(booking.booking_id, rejected_by_user=request.user, reason=reason)
+        messages.warning(request, f"Booking #{booking.booking_id} has been REJECTED. Slot is released and AVAILABLE.")
+
+    elif action in ['mark_paid', 'collect_balance']:
         booking.payment_status = 'PAID'
         booking.balance_amount = 0.00
         booking.save()

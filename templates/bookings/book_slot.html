@@ -802,6 +802,7 @@
         <!-- Status Legend -->
         <div class="slot-legend-strip">
           <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">{{ available_slots_count|default:"11" }}</span> Available)</div>
+          <div class="legend-item"><span class="legend-dot pending"></span> Pending Approval</div>
           <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
           <div class="legend-item"><span class="legend-dot past"></span> Past</div>
         </div>
@@ -816,6 +817,12 @@
                 <div class="duration-text">– {{ slot.end_time }}</div>
                 <span class="slot-badge-pill">Past</span>
               </div>
+            {% elif slot.is_pending %}
+              <div class="slot-btn pending" title="Temporarily reserved, awaiting owner approval">
+                <div class="time-text">{{ slot.start_time }}</div>
+                <div class="duration-text">– {{ slot.end_time }}</div>
+                <span class="slot-badge-pill">⏳ Pending</span>
+              </div>
             {% elif slot.is_available %}
               <div class="slot-btn vacant"
                    onclick="openBookingModal('{{ slot.start_time }}', '{{ slot.end_time }}', '{{ selected_facility.id }}', '{{ selected_facility.name|escapejs }}', '{{ date_str }}', '{{ selected_facility.price_per_hour|floatformat:0 }}')">
@@ -828,7 +835,7 @@
               <div class="slot-btn booked" title="Already booked by another club / player">
                 <div class="time-text">{{ slot.start_time }}</div>
                 <div class="duration-text">– {{ slot.end_time }}</div>
-                <span class="slot-badge-pill">✗ Booked</span>
+                <span class="slot-badge-pill booked">✗ Booked</span>
               </div>
             {% endif %}
           {% endfor %}
@@ -923,6 +930,10 @@
 const OWNER_WHATSAPP_NUMBER = '{{ whatsapp_phone }}';
 
 function openBookingModal(start, end, facilityId, facilityName, dateStr, price) {
+  if (typeof isSlotExpired === 'function' && isSlotExpired(dateStr, start)) {
+    alert('This slot time has already passed and cannot be booked.');
+    return;
+  }
   document.getElementById('modalSlotTitle').textContent = '📅 Slot: ' + start + ' – ' + end;
   document.getElementById('modalSlotSubtitle').textContent =
     facilityName + '  ·  ' + formatFriendlyDate(dateStr) + '  ·  ₹' + price + ' / slot';
@@ -963,6 +974,11 @@ function submitToWhatsApp() {
     return;
   }
 
+  if (typeof isSlotExpired === 'function' && isSlotExpired(date, start)) {
+    alert('This slot time has already passed and cannot be booked.');
+    return;
+  }
+
   // Calculate end time
   let end = '';
   if (start && start.includes(':')) {
@@ -980,7 +996,28 @@ function submitToWhatsApp() {
     facSlug = 'childrens-park';
   }
 
+  // 1. Check local & cloud synchronization for existing conflict
+  let list = [];
+  try {
+    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
+  } catch(e) { list = []; }
+
+  const conflict = list.find(b =>
+    b.date === date &&
+    (b.facility_slug === facSlug || !b.facility_slug) &&
+    b.start_time.startsWith(start) &&
+    (b.status === 'PENDING' || b.status === 'PENDING_APPROVAL' || b.status === 'CONFIRMED' || b.status === 'APPROVED')
+  );
+
+  if (conflict) {
+    alert("Sorry! This slot has just been booked by another customer. Please select another available time slot.");
+    closeBookingModal();
+    if (window.renderSlots) window.renderSlots(date);
+    return;
+  }
+
   const bookingId = 'BKG-FSH-' + Math.floor(100 + Math.random() * 900);
+  const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
 
   const newBooking = {
     id: bookingId,
@@ -997,19 +1034,37 @@ function submitToWhatsApp() {
     advance_amount: 0,
     balance_amount: Number(price) || 900,
     payment_status: 'UNPAID',
-    status: 'PENDING',
+    status: 'PENDING_APPROVAL',
+    expires_at: expiresAt,
     source: 'ONLINE_WHATSAPP',
     created_at: new Date().toISOString()
   };
 
-  // 1. Save to local storage
-  let list = [];
-  try {
-    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
-  } catch(e) { list = []; }
   list.unshift(newBooking);
   localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
   localStorage.setItem('fsh_data_initialized', 'true');
+
+  // Try server-side reservation API if available
+  try {
+    fetch('api/bookings/reserve/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        facility_slug: facSlug,
+        date: date,
+        start_time: start,
+        customer_name: name,
+        customer_phone: phone,
+        notes: club
+      })
+    }).then(res => {
+      if (res.status === 409) {
+        alert("Sorry! This slot has just been booked by another customer. Please select another available time slot.");
+        closeBookingModal();
+        if (window.renderSlots) window.renderSlots(date);
+      }
+    }).catch(() => {});
+  } catch(e) {}
 
   // 2. Push to cloud database if available
   if (window.pushCloudBookings) {

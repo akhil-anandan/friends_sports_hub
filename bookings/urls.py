@@ -1,8 +1,17 @@
 from django.urls import path
 from . import views
 from . import staff_views
+from . import api
 
 urlpatterns = [
+    # REST API Endpoints for Multi-Device First-Come-First-Served Real-Time Concurrency
+    path('api/bookings/reserve/', api.api_reserve_slot, name='api_reserve_slot'),
+    path('api/bookings/availability/', api.api_get_availability, name='api_get_availability'),
+    path('api/bookings/<str:booking_id>/approve/', api.api_approve_booking, name='api_approve_booking'),
+    path('api/bookings/<str:booking_id>/reject/', api.api_reject_booking, name='api_reject_booking'),
+    path('api/bookings/<str:booking_id>/cancel/', api.api_cancel_booking, name='api_cancel_booking'),
+    path('api/bookings/sweep-expired/', api.api_sweep_expired, name='api_sweep_expired'),
+
     # Public slot availability page (view-only for public users)
     path('book/', views.booking_view, name='book_slot'),
     path('book/<slug:slug>/', views.booking_view, name='book_facility_slot'),
