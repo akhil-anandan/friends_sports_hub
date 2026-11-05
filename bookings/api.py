@@ -22,6 +22,14 @@ from .services import (
 )
 
 
+def no_cache_json(data, status=200):
+    res = JsonResponse(data, status=status)
+    res['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
+    res['Pragma'] = 'no-cache'
+    res['Expires'] = '0'
+    return res
+
+
 def is_staff_user(user):
     return user.is_authenticated and (user.is_staff or user.is_superuser)
 
@@ -54,7 +62,7 @@ def api_reserve_slot(request):
             facility_id = fac.id
 
     if not all([facility_id, date_str, start_time_str, customer_name, customer_phone]):
-        return JsonResponse({
+        return no_cache_json({
             'success': False,
             'error': 'validation',
             'message': 'Please provide all required fields: facility, date, start_time, customer_name, customer_phone.'
@@ -71,7 +79,7 @@ def api_reserve_slot(request):
             notes=notes,
             initial_status='PENDING_APPROVAL'
         )
-        return JsonResponse({
+        return no_cache_json({
             'success': True,
             'booking_id': booking.booking_id,
             'status': booking.status,
@@ -92,21 +100,21 @@ def api_reserve_slot(request):
         msg = str(e)
         if isinstance(e, (IntegrityError, OperationalError)) or not msg:
             msg = "Sorry! This slot has just been booked by another customer. Please select another available time slot."
-        return JsonResponse({
+        return no_cache_json({
             'success': False,
             'error': 'conflict',
             'message': msg
         }, status=409)
 
     except BookingValidationError as e:
-        return JsonResponse({
+        return no_cache_json({
             'success': False,
             'error': 'validation',
             'message': str(e)
         }, status=400)
 
     except Exception as e:
-        return JsonResponse({
+        return no_cache_json({
             'success': False,
             'error': 'server_error',
             'message': f"Unexpected reservation error: {str(e)}"
@@ -128,7 +136,7 @@ def api_get_availability(request):
     try:
         target_date = datetime.strptime(date_str, '%Y-%m-%d').date()
     except ValueError:
-        return JsonResponse({'success': False, 'error': 'Invalid date format. Expected YYYY-MM-DD.'}, status=400)
+        return no_cache_json({'success': False, 'error': 'Invalid date format. Expected YYYY-MM-DD.'}, status=400)
 
     if facility_id:
         facility = Facility.objects.filter(id=facility_id, is_active=True).first()
@@ -138,14 +146,14 @@ def api_get_availability(request):
         facility = Facility.objects.filter(slug='turf', is_active=True).first() or Facility.objects.filter(is_active=True).first()
 
     if not facility:
-        return JsonResponse({'success': False, 'error': 'Facility not found'}, status=404)
+        return no_cache_json({'success': False, 'error': 'Facility not found'}, status=404)
 
     slots = get_slot_availability(facility, target_date)
     available_count = sum(1 for s in slots if s['is_available'])
     pending_count = sum(1 for s in slots if s['is_pending'])
     booked_count = sum(1 for s in slots if s['is_booked'])
 
-    return JsonResponse({
+    return no_cache_json({
         'success': True,
         'facility_id': facility.id,
         'facility_name': facility.name,
@@ -175,20 +183,20 @@ def api_approve_booking(request, booking_id):
             is_admin = True
 
     if not is_admin:
-        return JsonResponse({'success': False, 'error': 'unauthorized', 'message': 'Owner authentication required.'}, status=403)
+        return no_cache_json({'success': False, 'error': 'unauthorized', 'message': 'Owner authentication required.'}, status=403)
 
     try:
         booking = approve_booking(booking_id, approved_by_user=request.user if request.user.is_authenticated else None)
-        return JsonResponse({
+        return no_cache_json({
             'success': True,
             'booking_id': booking.booking_id,
             'status': booking.status,
             'message': f"Booking #{booking.booking_id} has been APPROVED and marked as BOOKED."
         })
     except BookingNotFoundError as e:
-        return JsonResponse({'success': False, 'error': 'not_found', 'message': str(e)}, status=404)
+        return no_cache_json({'success': False, 'error': 'not_found', 'message': str(e)}, status=404)
     except BookingStateError as e:
-        return JsonResponse({'success': False, 'error': 'invalid_state', 'message': str(e)}, status=400)
+        return no_cache_json({'success': False, 'error': 'invalid_state', 'message': str(e)}, status=400)
 
 
 @csrf_exempt
@@ -206,19 +214,19 @@ def api_reject_booking(request, booking_id):
             is_admin = True
 
     if not is_admin:
-        return JsonResponse({'success': False, 'error': 'unauthorized', 'message': 'Owner authentication required.'}, status=403)
+        return no_cache_json({'success': False, 'error': 'unauthorized', 'message': 'Owner authentication required.'}, status=403)
 
     reason = request.POST.get('reason', 'Rejected by owner')
     try:
         booking = reject_booking(booking_id, rejected_by_user=request.user if request.user.is_authenticated else None, reason=reason)
-        return JsonResponse({
+        return no_cache_json({
             'success': True,
             'booking_id': booking.booking_id,
             'status': booking.status,
             'message': f"Booking #{booking.booking_id} has been REJECTED. The slot is released and AVAILABLE."
         })
     except BookingNotFoundError as e:
-        return JsonResponse({'success': False, 'error': 'not_found', 'message': str(e)}, status=404)
+        return no_cache_json({'success': False, 'error': 'not_found', 'message': str(e)}, status=404)
 
 
 @csrf_exempt
@@ -232,14 +240,14 @@ def api_cancel_booking(request, booking_id):
     reason = request.POST.get('reason', 'Cancelled')
     try:
         booking = cancel_booking_service(booking_id, reason=reason)
-        return JsonResponse({
+        return no_cache_json({
             'success': True,
             'booking_id': booking.booking_id,
             'status': booking.status,
             'message': f"Booking #{booking.booking_id} has been CANCELLED. The slot is released and AVAILABLE."
         })
     except BookingNotFoundError as e:
-        return JsonResponse({'success': False, 'error': 'not_found', 'message': str(e)}, status=404)
+        return no_cache_json({'success': False, 'error': 'not_found', 'message': str(e)}, status=404)
 
 
 def api_sweep_expired(request):
@@ -247,7 +255,7 @@ def api_sweep_expired(request):
     Triggers automated expiration sweep.
     """
     expired = expire_stale_bookings()
-    return JsonResponse({
+    return no_cache_json({
         'success': True,
         'expired_count': len(expired),
         'expired_booking_ids': [b.booking_id for b in expired]

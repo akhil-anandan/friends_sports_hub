@@ -1,0 +1,56 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$Oa71m9vcOAZUZeDWDESTiZ$UQXDmy+CiInZ053CQb3TM+v37jiEgyFQHxVkpgneYvo=",
+    "last_login": "2026-11-05T08:04:26.384Z",
+    "is_superuser": true,
+    "username": "Admin",
+    "first_name": "Turf",
+    "last_name": "Owner",
+    "email": "admin@friendssportshub.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-10-19T07:20:49.632Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$75GpT999ZfP2JEFWlmCafO$bzOc1rgUb6u+Pq1sCLPjexBHA2JXM8XMDAbrEAmCHaA=",
+    "last_login": "2026-10-19T07:45:26.062Z",
+    "is_superuser": false,
+    "username": "manu",
+    "first_name": "Akhil.k",
+    "last_name": "",
+    "email": "iamnjan853@gmail.com",
+    "is_staff": false,
+    "is_active": false,
+    "date_joined": "2026-10-19T07:31:26.287Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$NZvRRA0N5ugcJGF5UOWUxe$3QkEaTd/ZtpiUSmOXV/uwIgWPiQ6tRNifrDTYOb6HeI=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "staff_shabeer",
+    "first_name": "Shabeer",
+    "last_name": "(Ground Staff)",
+    "email": "shabeer@friendssportshub.com",
+    "is_staff": true,
+    "is_active": false,
+    "date_joined": "2026-10-19T07:37:19.950Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

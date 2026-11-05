@@ -13,3 +13,4 @@ class Command(BaseCommand):
             )
         else:
             self.stdout.write("No stale pending bookings to expire.")
+

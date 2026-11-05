@@ -1,4 +1,4 @@
-// Unified Real-Time Multi-Device Synchronization Engine
+// Unified Real-Time Multi-Device Synchronization & Cache Reconciliation Engine
 // Friends Sports Hub - Kerala
 (function() {
   const SYNC_TOPIC = 'friends_sports_hub_kerala/master_live_v5';
@@ -10,6 +10,7 @@
   let mqttClient = null;
   let isConnected = false;
   let currentBrokerIdx = 0;
+  let lastReconciledTime = 0;
 
   function getLocalBookings() {
     try {
@@ -61,9 +62,54 @@
     window.dispatchEvent(new CustomEvent('fsh_sync_updated', { detail: { bookings: list } }));
   }
 
+  // Active Server API Reconciliation (Phase 8: Cache & Stale Data Prevention)
+  async function reconcileServerState(force = false) {
+    const now = Date.now();
+    if (!force && now - lastReconciledTime < 2000) return; // Prevent excessive thrashing within 2s
+    lastReconciledTime = now;
+
+    try {
+      const targetDate = window.currentSelectedDate || document.getElementById('slotDatePicker')?.value || new Date().toISOString().split('T')[0];
+      const facilitySlug = window.currentFacilitySlug || 'turf';
+      const apiUrl = `/api/bookings/availability/?facility_slug=${encodeURIComponent(facilitySlug)}&date=${encodeURIComponent(targetDate)}&_t=${now}`;
+
+      const res = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache'
+        }
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success && Array.isArray(data.slots)) {
+          // Map server slots into locked list
+          const activeBookings = getLocalBookings().filter(b => b.date !== targetDate);
+          data.slots.forEach(s => {
+            if (s.status === 'PENDING_APPROVAL' || s.status === 'APPROVED' || s.status === 'CONFIRMED') {
+              activeBookings.push({
+                date: targetDate,
+                time: s.start_time,
+                start_time: s.start_time,
+                end_time: s.end_time,
+                status: s.status,
+                customer_name: s.customer_name || 'Customer',
+                booking_id: s.booking_id
+              });
+            }
+          });
+          saveLocalBookings(activeBookings);
+          triggerUIRefresh(activeBookings);
+        }
+      }
+    } catch (err) {
+      // Offline fallback: continue using local state silently
+    }
+  }
+
   function initMqtt() {
     if (typeof mqtt === 'undefined') {
-      console.warn('MQTT library not loaded yet, retrying in 300ms...');
       setTimeout(initMqtt, 300);
       return;
     }
@@ -81,17 +127,16 @@
 
       mqttClient.on('connect', function() {
         isConnected = true;
-        console.log('✅ Real-Time Cloud Synced connected via', brokerUrl);
-
-        // Update live indicator badge if present
         document.querySelectorAll('.fsh-live-indicator').forEach(el => {
           el.innerHTML = '<span class="badge bg-success bg-opacity-25 text-success"><i class="bi bi-broadcast me-1"></i> Live Cloud Synced</span>';
         });
 
-        // Subscribe to master sync topic
         mqttClient.subscribe(SYNC_TOPIC, { qos: 0 }, function(err) {
           if (err) console.warn('Subscription error:', err);
         });
+
+        // Immediately reconcile server state on connection
+        reconcileServerState(true);
       });
 
       mqttClient.on('message', function(topic, message, packet) {
@@ -100,19 +145,16 @@
             const raw = message.toString();
             const cloudList = JSON.parse(raw);
             if (Array.isArray(cloudList)) {
-              console.log('🔄 Cloud update received:', cloudList.length, 'bookings');
               saveLocalBookings(cloudList);
               triggerUIRefresh(cloudList);
             }
-          } catch(e) {
-            console.warn('Invalid sync payload received:', e);
-          }
+          } catch(e) {}
+          // Re-verify against server database
+          reconcileServerState(true);
         }
       });
 
       mqttClient.on('error', function(err) {
-        console.warn('MQTT connection warning:', err.message || err);
-        // Switch to fallback broker if HiveMQ fails
         if (!isConnected && currentBrokerIdx < BROKERS.length - 1) {
           currentBrokerIdx++;
           try { mqttClient.end(true); } catch(e) {}
@@ -122,11 +164,10 @@
 
       mqttClient.on('offline', function() {
         isConnected = false;
-        console.warn('Live Cloud Sync offline, relying on local storage cache');
       });
 
     } catch(err) {
-      console.warn('MQTT init failed:', err);
+      console.warn('MQTT init exception:', err);
     }
   }
 
@@ -139,26 +180,41 @@
     if (mqttClient && isConnected) {
       try {
         const payload = JSON.stringify(list);
-        mqttClient.publish(SYNC_TOPIC, payload, { retain: true, qos: 0 }, function(err) {
-          if (err) console.warn('Cloud publish error:', err);
-          else console.log('☁️ Pushed update to Cloud Store across all devices');
-        });
-      } catch(e) {
-        console.warn('MQTT publish exception:', e);
-      }
+        mqttClient.publish(SYNC_TOPIC, payload, { retain: true, qos: 0 });
+      } catch(e) {}
     }
+    // Reconcile with server database
+    reconcileServerState(true);
   };
 
   // Universal Fetch function
   window.fetchCloudBookings = async function() {
+    await reconcileServerState();
     return getLocalBookings();
   };
+
+  window.reconcileServerState = reconcileServerState;
 
   window.FSH_SYNC = {
     getBookings: getLocalBookings,
     saveBookings: saveLocalBookings,
-    refreshUI: triggerUIRefresh
+    refreshUI: triggerUIRefresh,
+    reconcile: reconcileServerState
   };
+
+  // Revalidate on browser window focus, visibility change, and network reconnect
+  window.addEventListener('focus', function() { reconcileServerState(true); });
+  window.addEventListener('online', function() { reconcileServerState(true); });
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') {
+      reconcileServerState(true);
+    }
+  });
+
+  // Background reconciliation interval every 8 seconds
+  setInterval(function() {
+    reconcileServerState(false);
+  }, 8000);
 
   // Start sync on page load
   if (document.readyState === 'loading') {

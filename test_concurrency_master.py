@@ -145,18 +145,15 @@ def run_all_tests():
     num_threads = 10
 
     def attempt_reservation(customer_idx):
-        try:
-            c = Client()
-            r = c.post('/api/bookings/reserve/', {
-                'facility_id': facility.id,
-                'date': test_date_str,
-                'start_time': slot_time_4,
-                'customer_name': f'Concurrent Player {customer_idx}',
-                'customer_phone': f'98765432{customer_idx:02d}'
-            }, content_type='application/json')
-            return r.status_code, r.json()
-        finally:
-            connection.close()
+        c = Client()
+        r = c.post('/api/bookings/reserve/', {
+            'facility_id': facility.id,
+            'date': test_date_str,
+            'start_time': slot_time_4,
+            'customer_name': f'Concurrent Player {customer_idx}',
+            'customer_phone': f'98765432{customer_idx:02d}'
+        }, content_type='application/json')
+        return r.status_code, r.json()
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
         futures = [executor.submit(attempt_reservation, i) for i in range(num_threads)]
@@ -178,18 +175,15 @@ def run_all_tests():
     slots_to_book = ["07:00", "08:00", "09:00", "10:00", "11:00"]
 
     def book_distinct_slot(time_str):
-        try:
-            c = Client()
-            r = c.post('/api/bookings/reserve/', {
-                'facility_id': facility.id,
-                'date': test_date_str,
-                'start_time': time_str,
-                'customer_name': f'Distinct Player for {time_str}',
-                'customer_phone': '9876543299'
-            }, content_type='application/json')
-            return r.status_code
-        finally:
-            connection.close()
+        c = Client()
+        r = c.post('/api/bookings/reserve/', {
+            'facility_id': facility.id,
+            'date': test_date_str,
+            'start_time': time_str,
+            'customer_name': f'Distinct Player for {time_str}',
+            'customer_phone': '9876543299'
+        }, content_type='application/json')
+        return r.status_code
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(slots_to_book)) as executor:
         distinct_futures = [executor.submit(book_distinct_slot, s) for s in slots_to_book]

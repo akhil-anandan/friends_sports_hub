@@ -1,0 +1,74 @@
+[
+{
+  "model": "bookings.facility",
+  "pk": 1,
+  "fields": {
+    "name": "Football & Cricket Turf",
+    "slug": "turf",
+    "facility_type": "TURF",
+    "description": "FIFA standard high-density artificial turf with professional LED floodlights for 5s/7s football and cricket.",
+    "image": "",
+    "image_static_fallback": "images/turf_hero.jpg",
+    "price_per_hour": "900.00",
+    "open_time": "06:00:00",
+    "close_time": "23:00:00",
+    "slot_duration_minutes": 60,
+    "features": [
+      "FIFA Standard Artificial Grass",
+      "High Power Floodlights (Night Match)",
+      "Goal Nets & Boundary Safety Netting",
+      "Dressing Rooms & Clean Drinking Water",
+      "Ample Free Parking",
+      "Spectator Viewing Gallery"
+    ],
+    "is_active": true,
+    "created_at": "2026-10-19T07:20:50.033Z"
+  }
+},
+{
+  "model": "bookings.facility",
+  "pk": 2,
+  "fields": {
+    "name": "Swimming Pool",
+    "slug": "swimming-pool",
+    "facility_type": "POOL",
+    "description": "Hygienic, chlorinated and filtered swimming pool for fitness, practice, and recreation.",
+    "image": "",
+    "image_static_fallback": "images/hub_banner.jpg",
+    "price_per_hour": "150.00",
+    "open_time": "06:00:00",
+    "close_time": "21:00:00",
+    "slot_duration_minutes": 60,
+    "features": [
+      "Filtered Fresh Water",
+      "Shower & Changing Facilities",
+      "Life Guards On-Duty"
+    ],
+    "is_active": true,
+    "created_at": "2026-10-19T07:20:50.042Z"
+  }
+},
+{
+  "model": "bookings.facility",
+  "pk": 3,
+  "fields": {
+    "name": "Children's Park",
+    "slug": "childrens-park",
+    "facility_type": "PARK",
+    "description": "Fun-filled outdoor play area with swings, slides, and safety grass for kids and families.",
+    "image": "",
+    "image_static_fallback": "images/hub_banner.jpg",
+    "price_per_hour": "50.00",
+    "open_time": "09:00:00",
+    "close_time": "20:00:00",
+    "slot_duration_minutes": 60,
+    "features": [
+      "Kid-Safe Playground Equipment",
+      "Shaded Seating Area for Parents",
+      "Green Lawn Environment"
+    ],
+    "is_active": true,
+    "created_at": "2026-10-19T07:20:50.050Z"
+  }
+}
+]

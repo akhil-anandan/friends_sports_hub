@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     # Project apps
     'core',
     'bookings',
@@ -97,15 +98,53 @@ WSGI_APPLICATION = 'friends_hub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'OPTIONS': {
-            'timeout': 30,
-        },
+# Database Configuration (PostgreSQL 16+ Production Architecture with SQLite Fallback)
+DATABASE_URL = os.environ.get('DATABASE_URL')
+USE_SQLITE = os.environ.get('USE_SQLITE', 'False').lower() in ('true', '1', 'yes')
+
+if not USE_SQLITE and (DATABASE_URL or os.environ.get('DB_NAME') or os.environ.get('POSTGRES_DB')):
+    if DATABASE_URL:
+        import urllib.parse
+        url = urllib.parse.urlparse(DATABASE_URL)
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': url.path[1:],
+                'USER': url.username or '',
+                'PASSWORD': url.password or '',
+                'HOST': url.hostname or 'localhost',
+                'PORT': url.port or 5432,
+                'CONN_MAX_AGE': int(os.environ.get('DB_CONN_MAX_AGE', 600)),
+                'OPTIONS': {
+                    'sslmode': os.environ.get('DB_SSLMODE', 'prefer'),
+                }
+            }
+        }
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': os.environ.get('DB_NAME', 'friends_hub'),
+                'USER': os.environ.get('DB_USER', 'postgres'),
+                'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+                'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
+                'PORT': os.environ.get('DB_PORT', '5433'),
+                'CONN_MAX_AGE': int(os.environ.get('DB_CONN_MAX_AGE', 600)),
+                'OPTIONS': {
+                    'sslmode': os.environ.get('DB_SSLMODE', 'prefer'),
+                }
+            }
+        }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+            'OPTIONS': {
+                'timeout': 30,
+            },
+        }
     }
-}
 
 
 # Password validation

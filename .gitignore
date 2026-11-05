@@ -8,3 +8,9 @@ media/
 staticfiles/
 .DS_Store
 Thumbs.db
+
+pgdata/
+postgres.log
+
+*.backup*
+*.latest_backup

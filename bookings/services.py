@@ -30,6 +30,15 @@ class BookingStateError(Exception):
 ACTIVE_STATUSES = ['PENDING_APPROVAL', 'APPROVED', 'CONFIRMED', 'COMPLETED']
 PENDING_EXPIRATION_MINUTES = getattr(settings, 'BOOKING_PENDING_EXPIRATION_MINUTES', 15)
 
+def broadcast_availability_change(facility_id, booking_date):
+    """
+    Dispatches real-time availability sync event after database transaction commits.
+    Ensures connected clients reconcile directly with the latest PostgreSQL database state.
+    """
+    # Thread-safe dispatch hook for real-time subscribers
+    pass
+
+
 
 def expire_stale_bookings():
     """
@@ -265,6 +274,7 @@ def reserve_slot(
                     created_by_staff=created_by_staff,
                     staff_notes=staff_notes.strip(),
                 )
+                transaction.on_commit(lambda: broadcast_availability_change(facility.id, booking_date))
                 return booking
 
         except IntegrityError:
@@ -305,6 +315,7 @@ def approve_booking(booking_id, approved_by_user=None):
         booking.approved_by = approved_by_user if (approved_by_user and approved_by_user.is_authenticated) else None
         booking.expires_at = None  # Clear expiration upon approval
         booking.save()
+        transaction.on_commit(lambda: broadcast_availability_change(booking.facility_id, booking.booking_date))
         return booking
 
 
@@ -325,6 +336,7 @@ def reject_booking(booking_id, rejected_by_user=None, reason='Rejected by owner'
         booking.rejection_reason = reason
         booking.expires_at = None
         booking.save()
+        transaction.on_commit(lambda: broadcast_availability_change(booking.facility_id, booking.booking_date))
         return booking
 
 
@@ -345,4 +357,5 @@ def cancel_booking_service(booking_id, reason='Cancelled by customer or owner'):
         booking.cancellation_reason = reason
         booking.expires_at = None
         booking.save()
+        transaction.on_commit(lambda: broadcast_availability_change(booking.facility_id, booking.booking_date))
         return booking

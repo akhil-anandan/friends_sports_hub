@@ -1,0 +1,24 @@
+[
+{
+  "model": "bookings.staffprofile",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "role": "OWNER",
+    "phone_number": "6238006820",
+    "is_active": true,
+    "created_at": "2026-10-19T07:37:19.937Z"
+  }
+},
+{
+  "model": "bookings.staffprofile",
+  "pk": 2,
+  "fields": {
+    "user": 3,
+    "role": "GROUND_STAFF",
+    "phone_number": "9633388662",
+    "is_active": true,
+    "created_at": "2026-10-19T07:37:20.317Z"
+  }
+}
+]
