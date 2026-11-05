@@ -62,6 +62,16 @@
     window.dispatchEvent(new CustomEvent('fsh_sync_updated', { detail: { bookings: list } }));
   }
 
+  function getApiBaseUrl() {
+    if (window.FSH_API_BASE_URL) return window.FSH_API_BASE_URL;
+    const stored = window.localStorage.getItem('fsh_api_base_url');
+    if (stored) return stored;
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return '';
+    }
+    return 'https://friends-sports-hub.onrender.com';
+  }
+
   // Active Server API Reconciliation (Phase 8: Cache & Stale Data Prevention)
   async function reconcileServerState(force = false) {
     const now = Date.now();
@@ -71,7 +81,7 @@
     try {
       const targetDate = window.currentSelectedDate || document.getElementById('slotDatePicker')?.value || new Date().toISOString().split('T')[0];
       const facilitySlug = window.currentFacilitySlug || 'turf';
-      const baseUrl = window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || '';
+      const baseUrl = getApiBaseUrl();
       const apiUrl = `${baseUrl}/api/bookings/availability/?facility_slug=${encodeURIComponent(facilitySlug)}&date=${encodeURIComponent(targetDate)}&_t=${now}`;
 
       const res = await fetch(apiUrl, {

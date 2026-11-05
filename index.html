@@ -870,7 +870,7 @@
               Live Slot Schedule
             </h3>
             <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill fw-bold">
-              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">8</span> Slots Available
+              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">7</span> Slots Available
             </span>
           </div>
           <div class="engine-date-label">
@@ -893,7 +893,7 @@
 
         <!-- Status Legend -->
         <div class="slot-legend-strip">
-          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">8</span> Available)</div>
+          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">7</span> Available)</div>
           <div class="legend-item"><span class="legend-dot pending"></span> Pending Approval</div>
           <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
           <div class="legend-item"><span class="legend-dot past"></span> Past</div>
@@ -976,12 +976,10 @@
             
           
             
-              <div class="slot-btn vacant"
-                   onclick="openBookingModal('15:00', '16:00', '1', 'Football \u0026 Cricket Turf', '2026-11-05', '900')">
-                <span class="tap-badge">TAP</span>
+              <div class="slot-btn past" title="This slot time has already passed">
                 <div class="time-text">15:00</div>
                 <div class="duration-text">– 16:00</div>
-                <span class="slot-badge-pill">✓ Vacant</span>
+                <span class="slot-badge-pill">Past</span>
               </div>
             
           
@@ -1315,8 +1313,8 @@ function submitToWhatsApp() {
 
   // Try server-side reservation API if available
   try {
-    const baseUrl = window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || '';
-    fetch(${baseUrl}/api/bookings/reserve/, {
+    const baseUrl = (window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://friends-sports-hub.onrender.com'));
+    fetch(`${baseUrl}/api/bookings/reserve/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
