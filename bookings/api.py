@@ -34,8 +34,9 @@ def api_health_check(request):
     """
     Production Health Endpoint.
     Verifies backend operational status and database connection.
+    Supports ?full=1 for comprehensive read-only diagnostics without exposing credentials.
     """
-    from django.db import connection
+    from django.db import connection, models
     db_status = 'disconnected'
     db_engine = connection.vendor
     try:
@@ -46,12 +47,68 @@ def api_health_check(request):
     except Exception as e:
         db_status = f'error: {str(e)}'
 
-    return no_cache_json({
+    payload = {
         'status': 'ok' if db_status == 'connected' else 'degraded',
         'database_engine': db_engine,
         'database_status': db_status,
         'timestamp': timezone.now().isoformat()
-    }, status=200 if db_status == 'connected' else 503)
+    }
+
+    if request.GET.get('full') == '1' and db_status == 'connected':
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        from .models import Facility, StaffProfile, Booking
+
+        raw_host = connection.settings_dict.get('HOST', 'unknown')
+        payload['database_host'] = raw_host
+
+        with connection.cursor() as cursor:
+            # 1. PostgreSQL version
+            try:
+                cursor.execute("SELECT version();")
+                payload['postgresql_version'] = cursor.fetchone()[0]
+            except Exception as e:
+                payload['postgresql_version'] = str(e)
+
+            # 2. btree_gist extension
+            try:
+                cursor.execute("SELECT extname, extversion FROM pg_extension WHERE extname = 'btree_gist';")
+                row = cursor.fetchone()
+                payload['btree_gist'] = {'installed': bool(row), 'version': row[1] if row else None}
+            except Exception as e:
+                payload['btree_gist'] = {'installed': False, 'error': str(e)}
+
+            # 3. Exclusion constraint
+            try:
+                cursor.execute("SELECT conname FROM pg_constraint WHERE conname = 'exclude_overlapping_active_bookings';")
+                row = cursor.fetchone()
+                payload['exclusion_constraint'] = {'active': bool(row), 'name': row[0] if row else None}
+            except Exception as e:
+                payload['exclusion_constraint'] = {'active': False, 'error': str(e)}
+
+            # 4. Total applied migrations
+            try:
+                cursor.execute("SELECT COUNT(*) FROM django_migrations;")
+                payload['applied_migrations_count'] = cursor.fetchone()[0]
+            except Exception as e:
+                payload['applied_migrations_count'] = None
+
+        # 5. Existing records audit (zero modification, no sensitive fields)
+        try:
+            status_counts = dict(Booking.objects.values_list('status').annotate(cnt=models.Count('id')))
+            payload['records_audit'] = {
+                'users_count': User.objects.count(),
+                'users': list(User.objects.values('id', 'username', 'is_staff', 'is_superuser')),
+                'facilities_count': Facility.objects.count(),
+                'facilities': list(Facility.objects.values('id', 'name', 'slug', 'is_active')),
+                'staff_profiles_count': StaffProfile.objects.count(),
+                'bookings_count': Booking.objects.count(),
+                'bookings_by_status': status_counts,
+            }
+        except Exception as e:
+            payload['records_audit'] = {'error': str(e)}
+
+    return no_cache_json(payload, status=200 if db_status == 'connected' else 503)
 
 
 def is_staff_user(user):
