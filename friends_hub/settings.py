@@ -234,6 +234,8 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
 X_FRAME_OPTIONS = 'DENY'
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -262,9 +264,11 @@ WHATSAPP_CLOUD_PHONE_ID = None      # e.g. '1059...'
 
 
 # CORS Configuration for GitHub Pages & Cross-Origin Multi-Device Mobile Access
-CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'True').lower() in ('true', '1', 'yes')
+# Strict whitelist mode: default False in production
+CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'False').lower() in ('true', '1', 'yes')
 CORS_ALLOWED_ORIGINS = [
     'https://akhil-anandan.github.io',
+    'https://friends-sports-hub.onrender.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://localhost:8000',
@@ -281,6 +285,7 @@ CORS_ALLOW_CREDENTIALS = True
 # CSRF Trusted Origins for Cross-Origin Form Submissions & Admin Login
 CSRF_TRUSTED_ORIGINS = [
     'https://akhil-anandan.github.io',
+    'https://friends-sports-hub.onrender.com',
     'https://*.onrender.com',
     'http://localhost:3000',
     'http://127.0.0.1:3000',

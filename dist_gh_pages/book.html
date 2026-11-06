@@ -733,7 +733,7 @@
     <!-- Facility Switcher Tabs -->
     <div class="facility-tabs-wrap">
       
-        <a href="book.html?facility=childrens-park&date=2026-11-05"
+        <a href="book.html?facility=childrens-park&date=2026-11-06"
            class="facility-tab-pill ">
           
             <i class="bi bi-balloon"></i>
@@ -741,7 +741,7 @@
           Children&#x27;s Park
         </a>
       
-        <a href="book.html?facility=turf&date=2026-11-05"
+        <a href="book.html?facility=turf&date=2026-11-06"
            class="facility-tab-pill active">
           
             <i class="bi bi-dribbble"></i>
@@ -749,7 +749,7 @@
           Football &amp; Cricket Turf
         </a>
       
-        <a href="book.html?facility=swimming-pool&date=2026-11-05"
+        <a href="book.html?facility=swimming-pool&date=2026-11-06"
            class="facility-tab-pill ">
           
             <i class="bi bi-water"></i>
@@ -870,7 +870,7 @@
               Live Slot Schedule
             </h3>
             <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill fw-bold">
-              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">7</span> Slots Available
+              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">9</span> Slots Available
             </span>
           </div>
           <div class="engine-date-label">
@@ -886,14 +886,14 @@
           
           <i class="bi bi-calendar3"></i>
           <input type="date" name="date" id="slotDatePicker" class="date-picker-input"
-                 value="2026-11-05" min="2026-11-05" max="2026-12-05"
+                 value="2026-11-06" min="2026-11-06" max="2026-12-06"
                  onchange="if (window.handleDateChange) { window.handleDateChange(this.value); } else { document.getElementById('datePickerForm').submit(); }">
           <span class="small text-secondary d-none d-sm-inline">Tap to change date</span>
         </form>
 
         <!-- Status Legend -->
         <div class="slot-legend-strip">
-          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">7</span> Available)</div>
+          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">9</span> Available)</div>
           <div class="legend-item"><span class="legend-dot pending"></span> Pending Approval</div>
           <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
           <div class="legend-item"><span class="legend-dot past"></span> Past</div>
@@ -968,24 +968,28 @@
             
           
             
-              <div class="slot-btn past" title="This slot time has already passed">
+              <div class="slot-btn vacant"
+                   onclick="openBookingModal('14:00', '15:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
+                <span class="tap-badge">TAP</span>
                 <div class="time-text">14:00</div>
                 <div class="duration-text">– 15:00</div>
-                <span class="slot-badge-pill">Past</span>
-              </div>
-            
-          
-            
-              <div class="slot-btn past" title="This slot time has already passed">
-                <div class="time-text">15:00</div>
-                <div class="duration-text">– 16:00</div>
-                <span class="slot-badge-pill">Past</span>
+                <span class="slot-badge-pill">✓ Vacant</span>
               </div>
             
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('16:00', '17:00', '1', 'Football \u0026 Cricket Turf', '2026-11-05', '900')">
+                   onclick="openBookingModal('15:00', '16:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
+                <span class="tap-badge">TAP</span>
+                <div class="time-text">15:00</div>
+                <div class="duration-text">– 16:00</div>
+                <span class="slot-badge-pill">✓ Vacant</span>
+              </div>
+            
+          
+            
+              <div class="slot-btn vacant"
+                   onclick="openBookingModal('16:00', '17:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">16:00</div>
                 <div class="duration-text">– 17:00</div>
@@ -995,7 +999,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('17:00', '18:00', '1', 'Football \u0026 Cricket Turf', '2026-11-05', '900')">
+                   onclick="openBookingModal('17:00', '18:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">17:00</div>
                 <div class="duration-text">– 18:00</div>
@@ -1005,7 +1009,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('18:00', '19:00', '1', 'Football \u0026 Cricket Turf', '2026-11-05', '900')">
+                   onclick="openBookingModal('18:00', '19:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">18:00</div>
                 <div class="duration-text">– 19:00</div>
@@ -1015,7 +1019,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('19:00', '20:00', '1', 'Football \u0026 Cricket Turf', '2026-11-05', '900')">
+                   onclick="openBookingModal('19:00', '20:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">19:00</div>
                 <div class="duration-text">– 20:00</div>
@@ -1025,7 +1029,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('20:00', '21:00', '1', 'Football \u0026 Cricket Turf', '2026-11-05', '900')">
+                   onclick="openBookingModal('20:00', '21:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">20:00</div>
                 <div class="duration-text">– 21:00</div>
@@ -1035,7 +1039,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('21:00', '22:00', '1', 'Football \u0026 Cricket Turf', '2026-11-05', '900')">
+                   onclick="openBookingModal('21:00', '22:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">21:00</div>
                 <div class="duration-text">– 22:00</div>
@@ -1045,7 +1049,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('22:00', '23:00', '1', 'Football \u0026 Cricket Turf', '2026-11-05', '900')">
+                   onclick="openBookingModal('22:00', '23:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">22:00</div>
                 <div class="duration-text">– 23:00</div>

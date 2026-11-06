@@ -123,23 +123,53 @@ login_enhancement = """
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.querySelector('form');
   if (!form) return;
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit', async function(e) {
     e.preventDefault();
     const idInput = document.querySelector('input[name="username"]') || document.getElementById('id_username');
     const pwdInput = document.querySelector('input[name="password"]') || document.getElementById('id_password');
     const user = idInput ? idInput.value.trim() : '';
     const pwd = pwdInput ? pwdInput.value.trim() : '';
 
-    if (user.toLowerCase() !== 'admin') {
-      alert('Access Denied: Only Administrator account is permitted.');
+    if (!user || !pwd) {
+      alert('Please enter your Administrator ID and Password.');
       return;
     }
-    if (pwd !== 'admin1010') {
-      alert('Authentication failed: Incorrect password. Please try again.');
-      return;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Verifying...';
     }
-    sessionStorage.setItem('fsh_admin_logged_in', 'true');
-    window.location.href = 'admin.html';
+
+    const baseUrl = (window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://friends-sports-hub.onrender.com'));
+
+    try {
+      const res = await fetch(baseUrl + '/api/auth/login/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username: user, password: pwd })
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.token) {
+        sessionStorage.setItem('fsh_admin_logged_in', 'true');
+        sessionStorage.setItem('fsh_auth_token', data.token);
+        sessionStorage.setItem('fsh_admin_user', JSON.stringify(data.user));
+        window.location.href = 'admin.html';
+      } else {
+        alert(data.message || 'Authentication failed: Incorrect credentials.');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Sign In as Owner';
+        }
+      }
+    } catch(err) {
+      alert('Unable to connect to authentication server. Please verify network connectivity.');
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Sign In as Owner';
+      }
+    }
   });
 });
 </script>

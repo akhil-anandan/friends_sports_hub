@@ -13,14 +13,24 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write("Bootstrapping production setup...")
 
-        # 1. Ensure Admin Superuser
+        # 1. Ensure Admin Superuser without hardcoded password
         admin_user, created = User.objects.get_or_create(username='Admin')
-        admin_user.set_password('admin1010')
         admin_user.is_staff = True
         admin_user.is_superuser = True
         admin_user.is_active = True
         admin_user.first_name = 'Turf'
         admin_user.last_name = 'Owner'
+
+        # Safely preserve existing password hash; only update if explicitly provided via env
+        admin_env_pass = os.environ.get('DJANGO_ADMIN_PASSWORD')
+        if admin_env_pass:
+            admin_user.set_password(admin_env_pass)
+            self.stdout.write(self.style.SUCCESS("[OK] Admin password configured from environment variable."))
+        elif created or not admin_user.has_usable_password():
+            import secrets
+            init_pass = secrets.token_urlsafe(16)
+            admin_user.set_password(init_pass)
+            self.stdout.write(self.style.WARNING("[INFO] Initial Admin password generated. Set DJANGO_ADMIN_PASSWORD to override."))
         admin_user.save()
 
         # 2. Staff Profile

@@ -8,6 +8,11 @@ urlpatterns = [
     path('api/health/', api.api_health_check, name='api_health_check'),
     path('health/', api.api_health_check, name='health_check'),
 
+    # Owner & Staff REST Authentication
+    path('api/auth/login/', api.api_auth_login, name='api_auth_login'),
+    path('api/auth/logout/', api.api_auth_logout, name='api_auth_logout'),
+    path('api/auth/verify/', api.api_auth_verify, name='api_auth_verify'),
+
     # REST API Endpoints for Multi-Device First-Come-First-Served Real-Time Concurrency
     path('api/bookings/reserve/', api.api_reserve_slot, name='api_reserve_slot'),
     path('api/bookings/availability/', api.api_get_availability, name='api_get_availability'),

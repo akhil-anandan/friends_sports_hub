@@ -90,7 +90,7 @@ def register_view(request):
 def login_view(request):
     """
     Secure Administrator Authentication Portal.
-    Strictly restricted solely to ID: 'Admin' (credentials: Admin / admin1010).
+    Strictly restricted solely to ID: 'Admin' with secure password authentication.
     Enforces brute-force defense, rate limiting, and session cycling.
     """
     if request.user.is_authenticated and request.user.is_staff:
