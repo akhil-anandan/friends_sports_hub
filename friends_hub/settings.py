@@ -102,24 +102,32 @@ WSGI_APPLICATION = 'friends_hub.wsgi.application'
 
 # Database Configuration (PostgreSQL 16+ Production Architecture with SQLite Fallback)
 DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASE_URL = DATABASE_URL.strip().strip('"').strip("'")
 USE_SQLITE = os.environ.get('USE_SQLITE', 'False').lower() in ('true', '1', 'yes')
 
 if not USE_SQLITE and (DATABASE_URL or os.environ.get('DB_NAME') or os.environ.get('POSTGRES_DB')):
     if DATABASE_URL:
         import urllib.parse
         url = urllib.parse.urlparse(DATABASE_URL)
+        query_params = urllib.parse.parse_qs(url.query)
+        sslmode = query_params.get('sslmode', [os.environ.get('DB_SSLMODE', 'require')])[0]
+        db_options = {
+            'sslmode': sslmode,
+        }
+        if 'channel_binding' in query_params:
+            db_options['channel_binding'] = query_params['channel_binding'][0]
+
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
-                'NAME': url.path[1:],
-                'USER': url.username or '',
-                'PASSWORD': url.password or '',
+                'NAME': url.path.lstrip('/'),
+                'USER': urllib.parse.unquote(url.username or ''),
+                'PASSWORD': urllib.parse.unquote(url.password or ''),
                 'HOST': url.hostname or 'localhost',
                 'PORT': url.port or 5432,
                 'CONN_MAX_AGE': int(os.environ.get('DB_CONN_MAX_AGE', 600)),
-                'OPTIONS': {
-                    'sslmode': os.environ.get('DB_SSLMODE', 'prefer'),
-                }
+                'OPTIONS': db_options,
             }
         }
     else:

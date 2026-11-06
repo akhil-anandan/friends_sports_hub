@@ -14,3 +14,5 @@ postgres.log
 
 *.backup*
 *.latest_backup
+.neon
+.env.neon
