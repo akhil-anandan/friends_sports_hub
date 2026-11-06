@@ -4,6 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>
+      // Force clear any stale Service Workers or CacheStorage for this origin
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          for (var i = 0; i < regs.length; i++) { regs[i].unregister(); }
+        });
+      }
+      if (window.caches) {
+        caches.keys().then(function(names) {
+          for (var i = 0; i < names.length; i++) { caches.delete(names[i]); }
+        });
+      }
+    </script>
     <title>Football &amp; Cricket Turf | Friends Sports Hub Mulayankavu</title>
     
     <!-- Meta tags for SEO -->
@@ -21,7 +39,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/style.css?v=20261106_v2">
     
 <style>
   :root {
@@ -901,7 +919,7 @@
               Live Slot Schedule
             </h3>
             <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill fw-bold">
-              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">8</span> Slots Available
+              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">7</span> Slots Available
             </span>
           </div>
           <div class="engine-date-label">
@@ -924,7 +942,7 @@
 
         <!-- Status Legend -->
         <div class="slot-legend-strip">
-          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">8</span> Available)</div>
+          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">7</span> Available)</div>
           <div class="legend-item"><span class="legend-dot pending"></span> Pending Approval</div>
           <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
           <div class="legend-item"><span class="legend-dot past"></span> Past</div>
@@ -1007,12 +1025,10 @@
             
           
             
-              <div class="slot-btn vacant"
-                   onclick="openBookingModal('15:00', '16:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
-                <span class="tap-badge">TAP</span>
+              <div class="slot-btn past" title="This slot time has already passed">
                 <div class="time-text">15:00</div>
                 <div class="duration-text">– 16:00</div>
-                <span class="slot-badge-pill">✓ Vacant</span>
+                <span class="slot-badge-pill">Past</span>
               </div>
             
           
@@ -1224,9 +1240,9 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="static/js/main.js?v=20261028"></script>
+    <script src="static/js/main.js?v=20261106_v2"></script>
     <script src="static/js/mqtt.min.js"></script>
-    <script src="static/js/fsh_sync.js"></script>
+    <script src="static/js/fsh_sync.js?v=20261106_v2"></script>
     
 <script>
 const OWNER_WHATSAPP_NUMBER = '916238006820';
@@ -1261,7 +1277,7 @@ function closeBookingModal() {
   document.getElementById('bookingOverlay').classList.remove('show');
 }
 
-function submitToWhatsApp() {
+async function submitToWhatsApp() {
   const name  = document.getElementById('inputCustomerName').value.trim();
   const club  = document.getElementById('inputClubName').value.trim();
   const phone = document.getElementById('inputCustomerPhone').value.trim();
@@ -1281,11 +1297,11 @@ function submitToWhatsApp() {
     return;
   }
 
-  // Calculate end time
-  let end = '';
-  if (start && start.includes(':')) {
-    const parts = start.split(':');
-    end = (Number(parts[0]) + 1).toString().padStart(2, '0') + ':' + parts[1];
+  const btn = document.querySelector('.btn-submit-wa');
+  const originalBtnText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Locking slot in database...';
   }
 
   // Determine facility slug
@@ -1298,60 +1314,19 @@ function submitToWhatsApp() {
     facSlug = 'childrens-park';
   }
 
-  // 1. Check local & cloud synchronization for existing conflict
-  let list = [];
+  const baseUrl = (window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://friends-sports-hub.onrender.com'));
+
+  let reservationSuccess = false;
+  let canonicalBookingId = '';
+  let serverPrice = price;
+
   try {
-    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
-  } catch(e) { list = []; }
-
-  const conflict = list.find(b =>
-    b.date === date &&
-    (b.facility_slug === facSlug || !b.facility_slug) &&
-    b.start_time.startsWith(start) &&
-    (b.status === 'PENDING' || b.status === 'PENDING_APPROVAL' || b.status === 'CONFIRMED' || b.status === 'APPROVED')
-  );
-
-  if (conflict) {
-    alert("Sorry! This slot has just been booked by another customer. Please select another available time slot.");
-    closeBookingModal();
-    if (window.renderSlots) window.renderSlots(date);
-    return;
-  }
-
-  const bookingId = 'BKG-FSH-' + Math.floor(100 + Math.random() * 900);
-  const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
-
-  const newBooking = {
-    id: bookingId,
-    customer_name: name,
-    customer_phone: phone,
-    club_name: club || '',
-    facility_slug: facSlug,
-    facility_name: fac,
-    date: date,
-    start_time: start,
-    end_time: end,
-    display_time: slot,
-    total_price: Number(price) || 900,
-    advance_amount: 0,
-    balance_amount: Number(price) || 900,
-    payment_status: 'UNPAID',
-    status: 'PENDING_APPROVAL',
-    expires_at: expiresAt,
-    source: 'ONLINE_WHATSAPP',
-    created_at: new Date().toISOString()
-  };
-
-  list.unshift(newBooking);
-  localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
-  localStorage.setItem('fsh_data_initialized', 'true');
-
-  // Try server-side reservation API if available
-  try {
-    const baseUrl = (window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://friends-sports-hub.onrender.com'));
-    fetch(`${baseUrl}/api/bookings/reserve/`, {
+    const res = await fetch(`${baseUrl}/api/bookings/reserve/`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      },
       body: JSON.stringify({
         facility_slug: facSlug,
         date: date,
@@ -1360,43 +1335,70 @@ function submitToWhatsApp() {
         customer_phone: phone,
         notes: club
       })
-    }).then(res => {
-      if (res.status === 409) {
-        alert("Sorry! This slot has just been booked by another customer. Please select another available time slot.");
-        closeBookingModal();
-        if (window.renderSlots) window.renderSlots(date);
-      }
-    }).catch(() => {});
-  } catch(e) {}
+    });
 
-  // 2. Push to cloud database if available
-  if (window.pushCloudBookings) {
-    window.pushCloudBookings(list);
+    const data = await res.json();
+
+    if (res.status === 409 || !data.success) {
+      alert(data.message || "Sorry! This slot has just been booked by another customer. Please select another available time slot.");
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnText;
+      }
+      closeBookingModal();
+      if (window.reconcileServerState) {
+        await window.reconcileServerState(true);
+      } else if (window.renderSlots) {
+        window.renderSlots(date);
+      }
+      return;
+    }
+
+    if (res.ok && data.success) {
+      reservationSuccess = true;
+      canonicalBookingId = data.booking_id;
+      serverPrice = data.total_price || price;
+    }
+  } catch (err) {
+    alert("Network error connecting to booking server. Please verify internet connectivity and try again.");
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalBtnText;
+    }
+    return;
   }
 
-  // 3. Update DOM slots immediately
-  if (window.renderSlots) {
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = originalBtnText;
+  }
+
+  closeBookingModal();
+
+  // Reconcile and refresh availability slots immediately from server
+  if (window.reconcileServerState) {
+    await window.reconcileServerState(true);
+  } else if (window.renderSlots) {
     window.renderSlots(date);
-  } else if (window.syncBookingsToPage) {
-    window.syncBookingsToPage();
   }
 
   const message = [
     '🏟️ *BOOKING REQUEST — Friends Sports Hub*',
-    'Ref ID: ' + bookingId,
+    'Ref ID: ' + canonicalBookingId,
     '⚠️ Status: PENDING (Awaiting Owner Approval)',
     '',
     '📅 Date: ' + formatFriendlyDate(date),
     '⏰ Slot: ' + slot,
     '🏟️ Facility: ' + fac,
-    '💰 Rate: ₹' + price + ' / slot',
+    '💰 Rate: ₹' + serverPrice + ' / slot',
     '',
     '👤 Name: ' + name,
     '🏆 Club/Team: ' + (club || '—'),
     '📞 Phone: ' + phone,
     '',
     'Please approve/confirm my booking. Thank you!'
-  ].join('\n');
+  ].join('
+');
 
   const url = 'https://api.whatsapp.com/send?phone=' + OWNER_WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
   
@@ -1412,8 +1414,6 @@ function submitToWhatsApp() {
     link.click();
     link.remove();
   }
-  closeBookingModal();
-  alert('Slot ' + slot + ' request sent! The slot is now PENDING approval. Redirecting to WhatsApp to notify the owner (6238006820).');
 }
 
 function submitAdminBooking() {
@@ -1560,8 +1560,18 @@ if (!window.pushCloudBookings) {
   window.pushCloudBookings = pushCloudBookings;
 }
 
-// Dynamic Slot Renderer
-function renderSlots(dateStr) {
+function getApiBaseUrl() {
+  if (window.FSH_API_BASE_URL) return window.FSH_API_BASE_URL;
+  const stored = window.localStorage.getItem('fsh_api_base_url');
+  if (stored) return stored;
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return '';
+  }
+  return 'https://friends-sports-hub.onrender.com';
+}
+
+// PostgreSQL-Backed Real-Time Availability Slot Renderer (Port 443 HTTPS)
+async function renderSlots(dateStr) {
   if (!dateStr) dateStr = currentSelectedDate;
   currentSelectedDate = dateStr;
   window.currentSelectedDate = dateStr;
@@ -1569,95 +1579,125 @@ function renderSlots(dateStr) {
   const matrix = document.querySelector('.slots-matrix');
   if (!matrix) return;
 
-  let list = [];
-  try {
-    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
-  } catch(e) { list = []; }
+  const facSlug = currentFacilitySlug || 'turf';
+  const facData = FACILITIES_DATA[facSlug] || FACILITIES_DATA['turf'];
+  const baseUrl = getApiBaseUrl();
 
-  // Sweep any expired pending reservations
-  let storageChanged = false;
-  const nowTime = new Date();
-  list.forEach(b => {
-    if ((b.status === 'PENDING' || b.status === 'PENDING_APPROVAL') && b.expires_at) {
-      if (new Date(b.expires_at) <= nowTime) {
-        b.status = 'EXPIRED';
-        storageChanged = true;
+  let serverSlots = null;
+  let availableCount = 0;
+  let pendingCount = 0;
+  let bookedCount = 0;
+
+  try {
+    const apiUrl = `${baseUrl}/api/bookings/availability/?facility_slug=${encodeURIComponent(facSlug)}&date=${encodeURIComponent(dateStr)}&_t=${Date.now()}`;
+    const res = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success && Array.isArray(data.slots)) {
+        serverSlots = data.slots;
+        availableCount = data.available_count || 0;
+        pendingCount = data.pending_count || 0;
+        bookedCount = data.booked_count || 0;
       }
     }
-  });
-  if (storageChanged) {
-    localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
-    if (window.pushCloudBookings) window.pushCloudBookings(list);
+  } catch (err) {
+    console.warn('Direct availability API fetch failed, falling back to local slots:', err);
   }
 
-  const facData = FACILITIES_DATA[currentFacilitySlug] || FACILITIES_DATA['turf'];
   matrix.innerHTML = '';
 
-  ALL_TIME_SLOTS.forEach(slot => {
-    const isPast = isSlotExpired(dateStr, slot.start);
-    const confirmedBooking = list.find(b =>
-      b.date === dateStr &&
-      (b.facility_slug === currentFacilitySlug || !b.facility_slug) &&
-      b.start_time.startsWith(slot.start) &&
-      (b.status === 'CONFIRMED' || b.status === 'APPROVED' || b.status === 'COMPLETED')
-    );
-    const pendingBooking = !confirmedBooking && list.find(b =>
-      b.date === dateStr &&
-      (b.facility_slug === currentFacilitySlug || !b.facility_slug) &&
-      b.start_time.startsWith(slot.start) &&
-      (b.status === 'PENDING' || b.status === 'PENDING_APPROVAL')
-    );
-    const lockedBooking = confirmedBooking;
+  if (serverSlots && serverSlots.length > 0) {
+    serverSlots.forEach(slot => {
+      const slotBox = document.createElement('div');
+      const isPast = slot.is_past;
 
-    const slotBox = document.createElement('div');
+      if (slot.is_booked) {
+        slotBox.className = 'slot-btn booked';
+        slotBox.title = 'Already booked' + (slot.customer_name ? ' by ' + slot.customer_name : '');
+        slotBox.innerHTML = `
+          <div class="time-text">${slot.start_time}</div>
+          <div class="duration-text">– ${slot.end_time}</div>
+          <span class="slot-badge-pill booked">✗ Booked</span>
+        `;
+      } else if (slot.is_pending) {
+        slotBox.className = 'slot-btn pending';
+        slotBox.title = 'Booking pending owner approval (temporarily reserved)';
+        slotBox.innerHTML = `
+          <div class="time-text">${slot.start_time}</div>
+          <div class="duration-text">– ${slot.end_time}</div>
+          <span class="slot-badge-pill">⏳ Pending</span>
+        `;
+      } else if (isPast) {
+        slotBox.className = 'slot-btn past';
+        slotBox.title = 'This slot time has already passed';
+        slotBox.innerHTML = `
+          <div class="time-text">${slot.start_time}</div>
+          <div class="duration-text">– ${slot.end_time}</div>
+          <span class="slot-badge-pill">Past</span>
+        `;
+      } else {
+        slotBox.className = 'slot-btn vacant';
+        slotBox.title = 'Available for booking';
+        slotBox.innerHTML = `
+          <span class="tap-badge">TAP</span>
+          <div class="time-text">${slot.start_time}</div>
+          <div class="duration-text">– ${slot.end_time}</div>
+          <span class="slot-badge-pill">✓ Vacant</span>
+        `;
+        slotBox.onclick = function() {
+          openBookingModal(slot.start_time, slot.end_time, '1', facData.name, dateStr, facData.rate);
+        };
+      }
 
-    if (lockedBooking) {
-      slotBox.className = 'slot-btn booked';
-      slotBox.title = 'Already booked by ' + (lockedBooking.customer_name || 'player');
-      slotBox.innerHTML = `
-        <div class="time-text">${slot.start}</div>
-        <div class="duration-text">– ${slot.end}</div>
-        <span class="slot-badge-pill booked">✗ Booked</span>
-      `;
-    } else if (pendingBooking) {
-      slotBox.className = 'slot-btn pending';
-      slotBox.title = 'Booking pending owner approval (temporarily reserved)';
-      slotBox.innerHTML = `
-        <div class="time-text">${slot.start}</div>
-        <div class="duration-text">– ${slot.end}</div>
-        <span class="slot-badge-pill">⏳ Pending</span>
-      `;
-    } else if (isPast) {
-      slotBox.className = 'slot-btn past';
-      slotBox.title = 'This slot time has already passed';
-      slotBox.innerHTML = `
-        <div class="time-text">${slot.start}</div>
-        <div class="duration-text">– ${slot.end}</div>
-        <span class="slot-badge-pill">Past</span>
-      `;
-    } else {
-      slotBox.className = 'slot-btn vacant';
-      slotBox.title = 'Available for booking';
-      slotBox.innerHTML = `
-        <span class="tap-badge">TAP</span>
-        <div class="time-text">${slot.start}</div>
-        <div class="duration-text">– ${slot.end}</div>
-        <span class="slot-badge-pill">✓ Vacant</span>
-      `;
-      slotBox.onclick = function() {
-        openBookingModal(slot.start, slot.end, '1', facData.name, dateStr, facData.rate);
-      };
-    }
+      matrix.appendChild(slotBox);
+    });
 
-    matrix.appendChild(slotBox);
-  });
+    const badge = document.getElementById('availableSlotsBadge');
+    if (badge) badge.textContent = availableCount;
+    const legendCount = document.getElementById('legendVacantCount');
+    if (legendCount) legendCount.textContent = availableCount;
 
-  // Dynamically update available slots count badge and legend
-  const vacantCount = matrix.querySelectorAll('.slot-btn.vacant').length;
-  const badge = document.getElementById('availableSlotsBadge');
-  if (badge) badge.textContent = vacantCount;
-  const legendCount = document.getElementById('legendVacantCount');
-  if (legendCount) legendCount.textContent = vacantCount;
+  } else {
+    // Fallback to static slot list
+    ALL_TIME_SLOTS.forEach(slot => {
+      const isPast = isSlotExpired(dateStr, slot.start);
+      const slotBox = document.createElement('div');
+
+      if (isPast) {
+        slotBox.className = 'slot-btn past';
+        slotBox.title = 'This slot time has already passed';
+        slotBox.innerHTML = `
+          <div class="time-text">${slot.start}</div>
+          <div class="duration-text">– ${slot.end}</div>
+          <span class="slot-badge-pill">Past</span>
+        `;
+      } else {
+        slotBox.className = 'slot-btn vacant';
+        slotBox.title = 'Available for booking';
+        slotBox.innerHTML = `
+          <span class="tap-badge">TAP</span>
+          <div class="time-text">${slot.start}</div>
+          <div class="duration-text">– ${slot.end}</div>
+          <span class="slot-badge-pill">✓ Vacant</span>
+        `;
+        slotBox.onclick = function() {
+          openBookingModal(slot.start, slot.end, '1', facData.name, dateStr, facData.rate);
+        };
+      }
+      matrix.appendChild(slotBox);
+    });
+    const vacantCount = matrix.querySelectorAll('.slot-btn.vacant').length;
+    const badge = document.getElementById('availableSlotsBadge');
+    if (badge) badge.textContent = vacantCount;
+    const legendCount = document.getElementById('legendVacantCount');
+    if (legendCount) legendCount.textContent = vacantCount;
+  }
 }
 window.renderSlots = renderSlots;
 
@@ -1776,7 +1816,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const dateInput = document.getElementById('slotDatePicker');
   if (dateInput) {
     dateInput.value = currentSelectedDate;
-    dateInput.min = new Date().toISOString().split('T')[0];
+    dateInput.min = getLocalTodayString();
     dateInput.addEventListener('change', function(e) {
       e.preventDefault();
       handleDateChange(this.value);
