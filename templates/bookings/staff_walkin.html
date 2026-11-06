@@ -4,24 +4,24 @@
 {% block title %}Walk-in Ground Booking | Friends Sports Hub Staff{% endblock %}
 
 {% block content %}
-<div class="py-5" style="background-color: #070d09;">
+<div class="py-5" style="background-color: #F4FAF6; min-height: 80vh;">
     <div class="container" style="max-width: 680px;">
         
         <div class="mb-3">
-            <a href="{% url 'staff_dashboard' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+            <a href="{% url 'staff_dashboard' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3" style="border-color: #E5EEE8; color: #172B21; background-color: #FFFFFF;">
                 <i class="bi bi-arrow-left me-1"></i> Back to Staff Dashboard
             </a>
         </div>
 
-        <div class="card bg-black border border-success border-opacity-40 rounded-4 p-4 p-md-5 shadow-lg">
+        <div class="card bg-white border rounded-4 p-4 p-md-5 shadow-sm" style="border-color: #E5EEE8 !important;">
             <div class="d-flex align-items-center gap-3 mb-4">
-                <div class="badge bg-success p-3 rounded-circle shadow">
-                    <i class="bi bi-person-badge fs-3 text-white"></i>
+                <div class="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width: 54px; height: 54px; background-color: #E8F7EE; color: #079B55;">
+                    <i class="bi bi-person-badge fs-3"></i>
                 </div>
                 <div>
-                    <span class="badge bg-warning text-dark px-2 py-1 rounded small fw-bold">Ground Staff Action</span>
-                    <h3 class="text-white fw-bold mb-0">Record Walk-in / Phone Booking</h3>
-                    <small class="text-secondary">Instant slot lock for counter customers or phone callers</small>
+                    <span class="badge px-2 py-1 rounded small fw-bold mb-1" style="background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">Ground Staff Action</span>
+                    <h3 class="fw-bold mb-0" style="color: #172B21;">Record Walk-in / Phone Booking</h3>
+                    <small style="color: #64746B;">Instant slot lock for counter customers or phone callers</small>
                 </div>
             </div>
 
@@ -30,8 +30,8 @@
                 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label text-secondary small fw-semibold">Sport Facility *</label>
-                        <select name="facility_id" class="form-select bg-dark text-white border-secondary" required>
+                        <label class="form-label small fw-semibold" style="color: #64746B;">Sport Facility *</label>
+                        <select name="facility_id" class="form-select border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required>
                             {% for f in facilities %}
                                 <option value="{{ f.id }}" {% if request.GET.facility_id == f.id|stringformat:"s" %}selected{% endif %}>
                                     {{ f.name }} (₹{{ f.price_per_hour|floatformat:0 }}/hr)
@@ -41,15 +41,15 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label text-secondary small fw-semibold">Match Date *</label>
-                        <input type="date" name="booking_date" class="form-control bg-dark text-white border-secondary" required 
+                        <label class="form-label small fw-semibold" style="color: #64746B;">Match Date *</label>
+                        <input type="date" name="booking_date" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required 
                                value="{{ request.GET.date|default:today_str }}">
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label text-secondary small fw-semibold">Slot Start Time *</label>
-                    <select name="start_time" class="form-select bg-dark text-white border-secondary" required>
+                    <label class="form-label small fw-semibold" style="color: #64746B;">Slot Start Time *</label>
+                    <select name="start_time" class="form-select border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required>
                         <option value="">-- Choose Slot --</option>
                         <option value="06:00" {% if request.GET.start_time == '06:00' %}selected{% endif %}>06:00 AM - 07:00 AM</option>
                         <option value="07:00" {% if request.GET.start_time == '07:00' %}selected{% endif %}>07:00 AM - 08:00 AM</option>
@@ -71,29 +71,29 @@
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label text-secondary small fw-semibold">Customer / Team Name *</label>
-                        <input type="text" name="customer_name" class="form-control" required placeholder="e.g. Kulukkallur Warriors">
+                        <label class="form-label small fw-semibold" style="color: #64746B;">Customer / Team Name *</label>
+                        <input type="text" name="customer_name" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required placeholder="e.g. Kulukkallur Warriors">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label text-secondary small fw-semibold">Player Mobile Number *</label>
-                        <input type="tel" name="customer_phone" class="form-control" required placeholder="10-digit phone number">
+                        <label class="form-label small fw-semibold" style="color: #64746B;">Player Mobile Number *</label>
+                        <input type="tel" name="customer_phone" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required placeholder="10-digit phone number">
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label text-secondary small fw-semibold">Payment Collection Status *</label>
-                    <select name="payment_status" class="form-select bg-dark text-white border-secondary" required>
+                    <label class="form-label small fw-semibold" style="color: #64746B;">Payment Collection Status *</label>
+                    <select name="payment_status" class="form-select border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required>
                         <option value="PAID">Cash / UPI Paid at Counter</option>
                         <option value="PAY_AT_VENUE">Pay Later at Match Time</option>
                     </select>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label text-secondary small fw-semibold">Staff Notes (Optional)</label>
-                    <textarea name="staff_notes" class="form-control" rows="2" placeholder="e.g. Phone reservation by captain Jaleel, requested football"></textarea>
+                    <label class="form-label small fw-semibold" style="color: #64746B;">Staff Notes (Optional)</label>
+                    <textarea name="staff_notes" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" rows="2" placeholder="e.g. Phone reservation by captain Jaleel, requested football"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow">
+                <button type="submit" class="btn btn-emerald w-100 py-3 rounded-pill fw-bold shadow-sm">
                     <i class="bi bi-check-circle-fill me-1"></i> Lock & Confirm Walk-in Slot
                 </button>
             </form>

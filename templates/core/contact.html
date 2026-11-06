@@ -5,107 +5,107 @@
 
 {% block content %}
 <!-- Page Header -->
-<section class="py-5 bg-black border-bottom border-secondary border-opacity-25">
+<section class="py-5 border-bottom" style="background-color: #F4FAF6; border-color: #E5EEE8 !important;">
     <div class="container text-center">
-        <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">Get in Touch</span>
-        <h1 class="display-5 fw-extrabold text-white mb-2 font-heading">Contact Friends Sports Hub</h1>
-        <p class="text-secondary mx-auto" style="max-width: 650px;">
+        <span class="badge px-3 py-1 rounded-pill mb-2 fw-bold" style="background-color: #E8F7EE; color: #079B55; border: 1px solid #C6ECD4;">Get in Touch</span>
+        <h1 class="display-5 fw-extrabold mb-2 font-heading" style="color: #172B21;">Contact Friends Sports Hub</h1>
+        <p class="mx-auto" style="max-width: 650px; color: #64746B;">
             Reach out for turf bookings, tournament reservations, swimming batch timings, or location guidance.
         </p>
     </div>
 </section>
 
 <!-- Contact Info & Form -->
-<section class="py-5" style="background-color: #070d09;">
+<section class="py-5" style="background-color: #FFFFFF;">
     <div class="container py-3">
         <div class="row g-4 g-lg-5">
             <!-- Left Column: Contact Cards -->
             <div class="col-lg-5">
-                <h3 class="text-white fw-bold mb-4">Direct Contact Numbers</h3>
+                <h3 class="fw-bold mb-4" style="color: #172B21;">Direct Contact Numbers</h3>
                 
                 <div class="d-flex flex-column gap-3 mb-4">
-                    <div class="card sports-card p-4">
+                    <div class="card sports-card p-4 rounded-4 shadow-sm border" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="badge bg-success p-3 rounded-circle fs-4 text-white">
+                            <div class="brand-logo-icon flex-shrink-0" style="width: 48px; height: 48px; font-size: 1.4rem;">
                                 <i class="bi bi-telephone-fill"></i>
                             </div>
                             <div>
-                                <div class="text-secondary small">Owner Helpline</div>
-                                <a href="tel:6238006820" class="text-white fw-bold fs-5 text-decoration-none hover-white">
+                                <div class="small fw-semibold" style="color: #64746B;">Owner Helpline</div>
+                                <a href="tel:6238006820" class="fw-bold fs-5 text-decoration-none" style="color: #172B21;">
                                     +91 6238006820
                                 </a>
-                                <small class="text-success d-block">Available 6:00 AM - 11:00 PM</small>
+                                <small class="d-block fw-bold" style="color: #079B55;">Available 6:00 AM - 11:00 PM</small>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card sports-card p-4">
+                    <div class="card sports-card p-4 rounded-4 shadow-sm border" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="badge bg-success p-3 rounded-circle fs-4 text-white">
+                            <div class="brand-logo-icon flex-shrink-0" style="width: 48px; height: 48px; font-size: 1.4rem; background-color: #DEF4E6;">
                                 <i class="bi bi-whatsapp"></i>
                             </div>
                             <div>
-                                <div class="text-secondary small">WhatsApp Booking Support</div>
-                                <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20want%20to%20inquire%20about%20booking." target="_blank" rel="noopener" class="text-success fw-bold fs-5 text-decoration-none">
+                                <div class="small fw-semibold" style="color: #64746B;">WhatsApp Booking Support</div>
+                                <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20want%20to%20inquire%20about%20booking." target="_blank" rel="noopener" class="fw-bold fs-5 text-decoration-none" style="color: #079B55;">
                                     Chat on WhatsApp (6238006820)
                                 </a>
-                                <small class="text-secondary d-block">Instant response for slot inquiries</small>
+                                <small class="d-block" style="color: #64746B;">Instant response for slot inquiries</small>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card sports-card p-4">
+                    <div class="card sports-card p-4 rounded-4 shadow-sm border" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="badge bg-success p-3 rounded-circle fs-4 text-white">
+                            <div class="brand-logo-icon flex-shrink-0" style="width: 48px; height: 48px; font-size: 1.4rem;">
                                 <i class="bi bi-geo-alt-fill"></i>
                             </div>
                             <div>
-                                <div class="text-secondary small">Venue Address</div>
-                                <div class="text-white fw-bold">Kulukkallur, Palakkad</div>
-                                <small class="text-secondary">Mulayankavu, Kerala, India</small>
+                                <div class="small fw-semibold" style="color: #64746B;">Venue Address</div>
+                                <div class="fw-bold" style="color: #172B21;">Kulukkallur, Palakkad</div>
+                                <small style="color: #64746B;">Mulayankavu, Kerala, India</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-4">
-                    <a href="{{ google_maps_url }}" target="_blank" rel="noopener" class="btn btn-outline-success w-100 py-3 rounded-pill fw-bold">
-                        <i class="bi bi-pin-map-fill me-2"></i> View Exact Google Maps Location
+                    <a href="{{ google_maps_url }}" target="_blank" rel="noopener" class="btn btn-outline-emerald w-100 py-3 rounded-pill fw-bold">
+                        <i class="bi bi-pin-map-fill me-2 text-success"></i> View Exact Google Maps Location
                     </a>
                 </div>
             </div>
 
             <!-- Right Column: Inquiry Message Form -->
             <div class="col-lg-7">
-                <div class="card glass-panel p-4 p-md-5 shadow-lg">
-                    <h4 class="text-white fw-bold mb-2">Send an Inquiry Message</h4>
-                    <p class="text-secondary small mb-4">Have questions about ground availability, bulk bookings, or special events? Leave your message below.</p>
+                <div class="card p-4 p-md-5 shadow-sm border rounded-4" style="background-color: #F4FAF6; border-color: #E5EEE8 !important;">
+                    <h4 class="fw-bold mb-2" style="color: #172B21;">Send an Inquiry Message</h4>
+                    <p class="small mb-4" style="color: #64746B;">Have questions about ground availability, bulk bookings, or special events? Leave your message below.</p>
 
                     <form method="POST">
                         {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label text-secondary small fw-semibold">Your Name *</label>
+                                <label class="form-label small fw-bold" style="color: #172B21;">Your Name *</label>
                                 {{ form.name }}
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-secondary small fw-semibold">Your Phone Number *</label>
+                                <label class="form-label small fw-bold" style="color: #172B21;">Your Phone Number *</label>
                                 {{ form.phone }}
                             </div>
                             <div class="col-12">
-                                <label class="form-label text-secondary small fw-semibold">Email Address (Optional)</label>
+                                <label class="form-label small fw-bold" style="color: #172B21;">Email Address (Optional)</label>
                                 {{ form.email }}
                             </div>
                             <div class="col-12">
-                                <label class="form-label text-secondary small fw-semibold">Subject / Purpose *</label>
+                                <label class="form-label small fw-bold" style="color: #172B21;">Subject / Purpose *</label>
                                 {{ form.subject }}
                             </div>
                             <div class="col-12">
-                                <label class="form-label text-secondary small fw-semibold">Your Message *</label>
+                                <label class="form-label small fw-bold" style="color: #172B21;">Your Message *</label>
                                 {{ form.message }}
                             </div>
                             <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow">
+                                <button type="submit" class="btn btn-emerald w-100 py-3 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
                                     <i class="bi bi-send-fill me-1"></i> Send Inquiry Message
                                 </button>
                             </div>

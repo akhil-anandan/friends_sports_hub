@@ -25,18 +25,20 @@
     
 <style>
   :root {
-    --hub-bg: #070d09;
-    --hub-card-bg: #0e1712;
-    --hub-card-border: #1e2e22;
-    --hub-accent: #16a34a;
-    --hub-accent-bright: #22c55e;
-    --hub-text-muted: #8aab92;
-    --hub-text-subtle: #4d6854;
+    --hub-bg: #FFFFFF;
+    --hub-card-bg: #FFFFFF;
+    --hub-card-border: #E5EEE8;
+    --hub-accent: #079B55;
+    --hub-accent-bright: #079B55;
+    --hub-text-heading: #172B21;
+    --hub-text-muted: #64746B;
+    --hub-text-subtle: #8F9E96;
+    --hub-light-bg: #F4FAF6;
   }
 
   body {
     background-color: var(--hub-bg);
-    color: #e5e7eb;
+    color: var(--hub-text-heading);
     font-family: 'Plus Jakarta Sans', sans-serif;
   }
 
@@ -60,51 +62,52 @@
 
   .facility-tab-pill {
     flex-shrink: 0;
-    background: #111a14;
+    background: var(--hub-light-bg);
     border: 1.5px solid var(--hub-card-border);
     border-radius: 999px;
-    padding: 9px 18px;
+    padding: 9px 20px;
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--hub-text-muted);
+    color: var(--hub-text-heading);
     text-decoration: none;
-    transition: all .15s ease;
+    transition: all .18s ease;
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
   }
   .facility-tab-pill:hover {
     border-color: var(--hub-accent);
-    color: #fff;
+    color: var(--hub-accent);
+    background: #E8F7EE;
   }
   .facility-tab-pill.active {
     background: var(--hub-accent);
     border-color: var(--hub-accent);
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+    color: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(7, 155, 85, 0.28);
   }
 
   /* ── Turf Info Card (Left Column on Desktop) ── */
   .turf-showcase-card {
     background: var(--hub-card-bg);
     border: 1px solid var(--hub-card-border);
-    border-radius: 20px;
+    border-radius: 22px;
     overflow: hidden;
     position: sticky;
-    top: 80px;
+    top: 84px;
+    box-shadow: 0 4px 20px -2px rgba(23, 43, 33, 0.05);
   }
 
   .turf-photo-box {
     position: relative;
     height: 220px;
-    background: #000;
+    background: var(--hub-light-bg);
     overflow: hidden;
   }
   .turf-photo-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.88;
     transition: transform .3s ease;
   }
   .turf-photo-box:hover img { transform: scale(1.03); }
@@ -113,51 +116,52 @@
     position: absolute;
     top: 12px;
     left: 12px;
-    background: rgba(14, 23, 18, 0.85);
+    background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(34, 197, 94, 0.4);
+    border: 1px solid var(--hub-card-border);
     border-radius: 999px;
-    padding: 5px 12px;
+    padding: 5px 14px;
     font-size: 0.72rem;
     font-weight: 700;
-    color: var(--hub-accent-bright);
+    color: var(--hub-accent);
   }
 
   .turf-rate-tag {
     position: absolute;
     bottom: 12px;
     right: 12px;
-    background: rgba(0, 0, 0, 0.88);
+    background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(8px);
-    border: 1px solid #22c55e;
-    border-radius: 12px;
+    border: 1px solid #C6ECD4;
+    border-radius: 14px;
     padding: 6px 14px;
     text-align: right;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
   .turf-rate-tag .amount {
-    font-size: 1.15rem;
+    font-size: 1.18rem;
     font-weight: 800;
-    color: #22c55e;
+    color: var(--hub-accent);
     line-height: 1;
   }
   .turf-rate-tag .unit {
     font-size: 0.65rem;
-    color: #9ca3af;
+    color: var(--hub-text-subtle);
     text-transform: uppercase;
   }
 
   .turf-info-body {
-    padding: 20px;
+    padding: 22px;
   }
   .turf-title {
     font-size: 1.3rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--hub-text-heading);
     margin-bottom: 6px;
     line-height: 1.2;
   }
   .turf-sub {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--hub-text-muted);
     margin-bottom: 16px;
   }
@@ -170,34 +174,35 @@
     margin-bottom: 18px;
   }
   .feature-item {
-    background: #121c15;
+    background: var(--hub-light-bg);
     border: 1px solid var(--hub-card-border);
     border-radius: 12px;
     padding: 9px 11px;
     font-size: 0.75rem;
-    color: #d1d5db;
+    color: var(--hub-text-heading);
     display: flex;
     align-items: center;
     gap: 7px;
+    font-weight: 600;
   }
   .feature-item i {
-    color: var(--hub-accent-bright);
+    color: var(--hub-accent);
     font-size: 0.95rem;
     flex-shrink: 0;
   }
 
   /* ── Ground Rules & Info Banner ── */
   .ground-rules-box {
-    background: #101913;
-    border-left: 3px solid var(--hub-accent-bright);
+    background: var(--hub-light-bg);
+    border-left: 3.5px solid var(--hub-accent);
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 11px 13px;
     margin-bottom: 16px;
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     color: var(--hub-text-muted);
     line-height: 1.5;
   }
-  .ground-rules-box strong { color: #fff; }
+  .ground-rules-box strong { color: var(--hub-text-heading); }
 
   /* ── Contact Callout in Left Column ── */
   .turf-contact-strip {
@@ -206,11 +211,11 @@
   }
   .btn-quick-call {
     flex: 1;
-    background: #141f17;
+    background: #FFFFFF;
     border: 1.5px solid var(--hub-card-border);
     border-radius: 12px;
     padding: 10px;
-    color: #fff;
+    color: var(--hub-text-heading);
     font-size: 0.82rem;
     font-weight: 700;
     text-align: center;
@@ -221,15 +226,15 @@
     gap: 6px;
     transition: all .15s;
   }
-  .btn-quick-call:hover { border-color: #22c55e; color: #fff; }
+  .btn-quick-call:hover { border-color: var(--hub-accent); color: var(--hub-accent); }
 
   .btn-quick-wa {
     flex: 1.2;
-    background: #16a34a;
+    background: var(--hub-accent);
     border: none;
     border-radius: 12px;
     padding: 10px;
-    color: #fff;
+    color: #FFFFFF;
     font-size: 0.82rem;
     font-weight: 700;
     text-align: center;
@@ -240,29 +245,31 @@
     gap: 6px;
     transition: background .15s;
   }
-  .btn-quick-wa:hover { background: #15803d; color: #fff; }
+  .btn-quick-wa:hover { background: #068448; color: #FFFFFF; }
 
   /* ── Booking Engine Card (Right Column) ── */
   .booking-engine-card {
     background: var(--hub-card-bg);
     border: 1px solid var(--hub-card-border);
-    border-radius: 20px;
-    padding: 22px;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 4px 20px -2px rgba(23, 43, 33, 0.05);
   }
 
   .engine-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: gap-2;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-bottom: 18px;
     padding-bottom: 14px;
     border-bottom: 1px solid var(--hub-card-border);
   }
   .engine-title {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--hub-text-heading);
     margin: 0;
     display: flex;
     align-items: center;
@@ -270,7 +277,7 @@
   }
   .engine-date-label {
     font-size: 0.8rem;
-    color: var(--hub-accent-bright);
+    color: var(--hub-accent);
     font-weight: 700;
   }
 
@@ -280,40 +287,45 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 16px;
-    background: #121c15;
+    background: var(--hub-light-bg);
     border: 1.5px solid var(--hub-card-border);
     border-radius: 14px;
-    padding: 6px 12px;
+    padding: 8px 14px;
   }
   .date-picker-wrap i {
-    color: var(--hub-accent-bright);
+    color: var(--hub-accent);
     font-size: 1.1rem;
   }
   .date-picker-input {
     flex: 1;
     background: transparent;
     border: none;
-    color: #fff;
+    color: var(--hub-text-heading);
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
     outline: none;
-    padding: 6px 0;
+    padding: 4px 0;
   }
 
   /* ── Status Legend ── */
   .slot-legend-strip {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 16px;
-    font-size: 0.74rem;
+    font-size: 0.76rem;
     color: var(--hub-text-muted);
-    margin-bottom: 16px;
+    margin-bottom: 18px;
+    padding: 8px 12px;
+    background: var(--hub-light-bg);
+    border-radius: 10px;
   }
-  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
-  .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
-  .legend-dot.vacant { background: #22c55e; }
-  .legend-dot.booked { background: #ef4444; }
-  .legend-dot.past   { background: #4b5563; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .legend-dot.vacant { background: var(--hub-accent); }
+  .legend-dot.pending { background: #D97706; }
+  .legend-dot.booked { background: #DC2626; }
+  .legend-dot.past   { background: #9CA3AF; }
 
   /* ── Responsive Slots Grid ── */
   .slots-matrix {
@@ -333,51 +345,53 @@
 
   .slot-btn {
     border-radius: 14px;
-    padding: 13px 10px;
-    border: 1.5px solid transparent;
+    padding: 12px 10px;
+    border: 1.5px solid var(--hub-card-border);
     text-align: center;
     position: relative;
-    transition: all .15s ease;
+    transition: all .18s ease;
     user-select: none;
+    background: #FFFFFF;
   }
 
   .slot-btn.vacant {
-    background: #0d1f12;
-    border-color: #16a34a;
+    background: #E8F7EE;
+    border-color: #C6ECD4;
     cursor: pointer;
   }
   .slot-btn.vacant:hover {
-    background: #112817;
-    border-color: #22c55e;
+    background: #DEF4E6;
+    border-color: var(--hub-accent);
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.22);
+    box-shadow: 0 6px 16px rgba(7, 155, 85, 0.16);
   }
-  .slot-btn.vacant:active { transform: scale(0.97); }
+  .slot-btn.vacant:active { transform: scale(0.98); }
 
   .slot-btn.booked {
-    background: #1a0e0e;
-    border-color: #3b1717;
+    background: #FEE2E2;
+    border-color: #FECACA;
+    cursor: not-allowed;
+    opacity: 0.85;
+  }
+
+  .slot-btn.past {
+    background: #F3F4F6;
+    border-color: #E5E7EB;
     cursor: not-allowed;
     opacity: 0.65;
   }
 
-  .slot-btn.past {
-    background: #111412;
-    border-color: #1f2421;
-    cursor: not-allowed;
-    opacity: 0.4;
-  }
-
   .slot-btn .time-text {
-    font-size: 0.98rem;
+    font-size: 0.96rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--hub-text-heading);
     line-height: 1.1;
   }
   .slot-btn .duration-text {
     font-size: 0.68rem;
     color: var(--hub-text-muted);
     margin-top: 3px;
+    font-weight: 600;
   }
 
   .slot-badge-pill {
@@ -390,30 +404,30 @@
     margin-top: 6px;
   }
   .slot-btn.vacant .slot-badge-pill {
-    background: rgba(34, 197, 94, 0.15);
-    color: #22c55e;
-    border: 1px solid rgba(34, 197, 94, 0.4);
+    background: #FFFFFF;
+    color: var(--hub-accent);
+    border: 1px solid #C6ECD4;
   }
   .slot-btn.booked .slot-badge-pill {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
-    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: #FFFFFF;
+    color: #DC2626;
+    border: 1px solid #FECACA;
   }
   .slot-btn.pending {
-    background: #1c1500;
-    border-color: #78580a;
+    background: #FEF3C7;
+    border-color: #FDE68A;
     cursor: not-allowed;
-    opacity: 0.9;
+    opacity: 0.95;
   }
   .slot-btn.pending .slot-badge-pill {
-    background: rgba(255, 193, 7, 0.18);
-    color: #ffc107;
-    border: 1px solid rgba(255, 193, 7, 0.4);
+    background: #FFFFFF;
+    color: #B45309;
+    border: 1px solid #FDE68A;
   }
   .slot-btn.past .slot-badge-pill {
-    background: rgba(107, 114, 128, 0.15);
-    color: #9ca3af;
-    border: 1px solid rgba(107, 114, 128, 0.3);
+    background: #FFFFFF;
+    color: #9CA3AF;
+    border: 1px solid #E5E7EB;
   }
 
   .tap-badge {
@@ -422,9 +436,8 @@
     right: 8px;
     font-size: 0.58rem;
     font-weight: 800;
-    color: #22c55e;
+    color: var(--hub-accent);
     letter-spacing: 0.5px;
-    opacity: 0.8;
   }
 
   /* ── Booking Bottom Sheet / Modal ── */
@@ -432,7 +445,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(23, 43, 33, 0.45);
     backdrop-filter: blur(4px);
     z-index: 998;
   }
@@ -441,13 +454,12 @@
   .booking-modal-box {
     position: fixed;
     z-index: 999;
-    background: #0e1712;
-    border: 1.5px solid var(--hub-accent-bright);
-    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.85);
+    background: #FFFFFF;
+    border: 1.5px solid var(--hub-card-border);
+    box-shadow: 0 20px 48px rgba(23, 43, 33, 0.16);
     box-sizing: border-box;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: #1e2e22 transparent;
   }
 
   /* Desktop & Tablet: Centered directly in middle of viewport */
@@ -460,8 +472,8 @@
       width: 92%;
       max-width: 480px;
       max-height: 88vh;
-      border-radius: 20px;
-      padding: 22px 24px;
+      border-radius: 22px;
+      padding: 24px 26px;
       transform: translate(-50%, -46%) scale(0.96);
       opacity: 0;
       pointer-events: none;
@@ -485,7 +497,7 @@
       width: 100%;
       max-height: 85vh;
       border-radius: 22px 22px 0 0;
-      padding: 16px 18px 26px;
+      padding: 16px 20px 28px;
       transform: translateY(115%);
       transition: transform 0.28s cubic-bezier(0.32, 1, 0.23, 1);
     }
@@ -497,7 +509,7 @@
     .modal-drag-handle {
       width: 42px;
       height: 4px;
-      background: #1e2e22;
+      background: var(--hub-card-border);
       border-radius: 99px;
       margin: 0 auto 12px;
     }
@@ -507,18 +519,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
   .modal-title-text {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--hub-text-heading);
     margin: 0;
   }
   .modal-close-x {
-    background: #141f17;
+    background: var(--hub-light-bg);
     border: 1px solid var(--hub-card-border);
-    color: #8aab92;
+    color: var(--hub-text-heading);
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -527,77 +539,88 @@
     justify-content: center;
     cursor: pointer;
     font-size: 0.9rem;
+    transition: all .15s ease;
+  }
+  .modal-close-x:hover {
+    background: #E8F7EE;
+    color: var(--hub-accent);
   }
 
   .modal-slot-meta {
-    font-size: 0.82rem;
-    color: var(--hub-accent-bright);
+    font-size: 0.85rem;
+    color: var(--hub-accent);
     font-weight: 700;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }
 
-  .field-group { margin-bottom: 10px; }
+  .field-group { margin-bottom: 12px; }
   .field-label {
     display: block;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    color: var(--hub-text-muted);
+    color: var(--hub-text-heading);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
   }
   .field-input {
     width: 100%;
-    background: #121c15;
+    background: #FFFFFF;
     border: 1.5px solid var(--hub-card-border);
     border-radius: 12px;
-    color: #fff;
-    padding: 10px 14px;
+    color: var(--hub-text-heading);
+    padding: 11px 14px;
     font-size: 0.92rem;
     outline: none;
     box-sizing: border-box;
-    transition: border-color .15s;
+    transition: border-color .15s, box-shadow .15s;
   }
-  .field-input:focus { border-color: var(--hub-accent-bright); }
-  .field-input::placeholder { color: #374c3e; }
+  .field-input:focus {
+    border-color: var(--hub-accent);
+    box-shadow: 0 0 0 3px rgba(7, 155, 85, 0.15);
+  }
+  .field-input::placeholder { color: var(--hub-text-subtle); }
 
   .btn-submit-wa {
     width: 100%;
-    background: #16a34a;
+    background: var(--hub-accent);
     border: none;
     border-radius: 14px;
-    color: #fff;
+    color: #FFFFFF;
     font-size: 0.95rem;
     font-weight: 800;
-    padding: 12px;
-    margin-top: 4px;
+    padding: 13px;
+    margin-top: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     cursor: pointer;
-    transition: background .15s;
-    letter-spacing: 0.2px;
+    transition: background .15s, transform .15s;
   }
-  .btn-submit-wa:hover, .btn-submit-wa:active { background: #15803d; }
+  .btn-submit-wa:hover, .btn-submit-wa:active {
+    background: #068448;
+    transform: translateY(-1px);
+  }
 
   .btn-admin-direct {
     width: 100%;
-    background: transparent;
-    border: 1.5px solid #3b82f6;
+    background: #FFFFFF;
+    border: 1.5px solid var(--hub-accent);
     border-radius: 14px;
-    color: #93c5fd;
-    font-size: 0.82rem;
+    color: var(--hub-accent);
+    font-size: 0.85rem;
     font-weight: 700;
     padding: 10px;
-    margin-top: 6px;
+    margin-top: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     cursor: pointer;
+    transition: all .15s;
   }
-  .btn-admin-direct:hover { background: rgba(59, 130, 246, 0.12); }
+  .btn-admin-direct:hover { background: #E8F7EE; }
 
   /* ── Mobile Sticky Call Bar (phones only) ── */
   .mobile-call-dock {
@@ -605,13 +628,14 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(10, 15, 13, 0.95);
+    background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(10px);
     border-top: 1px solid var(--hub-card-border);
     padding: 10px 16px 14px;
     display: flex;
     gap: 10px;
     z-index: 100;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
   }
   @media (min-width: 992px) {
     .mobile-call-dock { display: none; }
@@ -629,28 +653,35 @@
     justify-content: center;
     gap: 6px;
   }
-  .mobile-call-dock .btn-dock-call { background: #141f17; border: 1.5px solid var(--hub-card-border); color: #fff; }
-  .mobile-call-dock .btn-dock-wa   { background: #16a34a; color: #fff; }
+  .mobile-call-dock .btn-dock-call {
+    background: #FFFFFF;
+    border: 1.5px solid var(--hub-card-border);
+    color: var(--hub-text-heading);
+  }
+  .mobile-call-dock .btn-dock-wa {
+    background: var(--hub-accent);
+    color: #FFFFFF;
+  }
 </style>
 
 </head>
-<body class="bg-dark text-light min-vh-100 d-flex flex-column">
+<body class="min-vh-100 d-flex flex-column" style="background-color: #FFFFFF; color: #64746B;">
 
     <!-- Top Info Bar -->
-    <div class="top-bar py-1 px-3 border-bottom border-success border-opacity-10 small">
+    <div class="top-bar py-1 px-3 border-bottom small">
         <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div class="d-flex align-items-center gap-3">
-                <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="text-secondary text-decoration-none hover-white">
+                <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="text-decoration-none" style="color: #64746B;">
                     <i class="bi bi-geo-alt-fill text-success me-1"></i> Kulukkallur, Palakkad, Kerala
                 </a>
-                <span class="text-secondary d-none d-md-inline">|</span>
-                <span class="text-secondary d-none d-md-inline">
+                <span class="d-none d-md-inline" style="color: #E5EEE8;">|</span>
+                <span class="d-none d-md-inline" style="color: #64746B;">
                     <i class="bi bi-telephone-fill text-success me-1"></i>
-                    <a href="tel:6238006820" class="text-light text-decoration-none">6238006820</a>
+                    <a href="tel:6238006820" class="text-decoration-none fw-semibold" style="color: #172B21;">6238006820</a>
                 </span>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20would%20like%20to%20inquire%20about%20booking%20a%20slot." target="_blank" rel="noopener" class="badge bg-success text-white text-decoration-none px-2 py-1">
+                <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20would%20like%20to%20inquire%20about%20booking%20a%20slot." target="_blank" rel="noopener" class="badge rounded-pill text-white text-decoration-none px-3 py-1 fw-bold" style="background-color: #079B55;">
                     <i class="bi bi-whatsapp me-1"></i> WhatsApp Booking
                 </a>
             </div>
@@ -658,7 +689,7 @@
     </div>
 
     <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top border-bottom border-success border-opacity-25 shadow-sm py-2">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top border-bottom navbar-custom">
         <div class="container">
             <a class="navbar-brand fw-extrabold d-flex align-items-center gap-2" href="index.html">
                 <div class="brand-logo-icon">
@@ -666,7 +697,7 @@
                 </div>
                 <div>
                     <div class="brand-text lh-1">FRIENDS <span class="text-success">SPORTS HUB</span></div>
-                    <small class="text-secondary d-block tracking-wider" style="font-size: 0.65rem; letter-spacing: 2px;">MULAYANKAVU &bull; KULUKKALLUR</small>
+                    <small class="brand-sub d-block tracking-wider">MULAYANKAVU &bull; KULUKKALLUR</small>
                 </div>
             </a>
             
@@ -694,12 +725,12 @@
                 </ul>
 
                 <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-                    <a href="book.html" class="btn btn-success fw-bold px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2">
+                    <a href="book.html" class="btn btn-emerald fw-bold px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2">
                         <i class="bi bi-calendar2-check-fill"></i> Book a Slot
                     </a>
 
                     
-                        <a href="login.html" class="btn btn-outline-light rounded-pill px-3 py-2 fw-semibold">
+                        <a href="login.html" class="btn btn-outline-emerald rounded-pill px-3 py-2 fw-semibold">
                             <i class="bi bi-shield-lock text-success me-1"></i> Admin
                         </a>
                     
@@ -722,7 +753,7 @@
   <div class="mb-3">
     <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
       <div>
-        <h1 class="h5 fw-extrabold text-white mb-0">
+        <h1 class="h5 fw-extrabold mb-0" style="color: #172B21;">
           <i class="bi bi-shield-shaded text-success me-1"></i> Friends Sports Hub
         </h1>
         <small class="text-secondary">Mulayankavu, Kulukkallur, Palakkad · Open 6:00 AM – 11:00 PM</small>
@@ -789,7 +820,7 @@
             <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-30 rounded-pill px-3 py-1 small fw-bold">
               <i class="bi bi-dribbble me-1"></i> Football & Sports Arena
             </span>
-            <span class="badge bg-secondary bg-opacity-25 text-light small">
+            <span class="badge small" style="background-color: #F4FAF6; color: #64746B; border: 1px solid #E5EEE8;">
               <i class="bi bi-geo-alt-fill text-success me-1"></i> Mulayankavu, Palakkad
             </span>
           </div>
@@ -797,7 +828,7 @@
           <h2 class="turf-title">Football &amp; Cricket Turf</h2>
 
           <!-- About Turf Section -->
-          <div class="about-turf-section mb-3 p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25" id="about">
+          <div class="about-turf-section mb-3 p-3 rounded-3" style="background-color: #F4FAF6; border: 1px solid #E5EEE8;" id="about">
             <h6 class="text-white fw-bold mb-1 small d-flex align-items-center gap-1">
               <i class="bi bi-info-circle-fill text-success"></i> About Friends Sports Hub
             </h6>
@@ -827,7 +858,7 @@
           </div>
 
           <!-- Location Information Box -->
-          <div class="location-info-section mb-3 p-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
+          <div class="location-info-section mb-3 p-3 rounded-3" style="background-color: #F4FAF6; border: 1px solid #E5EEE8;">
             <div class="d-flex align-items-start gap-2">
               <i class="bi bi-geo-alt-fill text-success fs-5 mt-1"></i>
               <div>
@@ -870,7 +901,7 @@
               Live Slot Schedule
             </h3>
             <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill fw-bold">
-              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">9</span> Slots Available
+              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">8</span> Slots Available
             </span>
           </div>
           <div class="engine-date-label">
@@ -893,7 +924,7 @@
 
         <!-- Status Legend -->
         <div class="slot-legend-strip">
-          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">9</span> Available)</div>
+          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">8</span> Available)</div>
           <div class="legend-item"><span class="legend-dot pending"></span> Pending Approval</div>
           <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
           <div class="legend-item"><span class="legend-dot past"></span> Past</div>
@@ -968,12 +999,10 @@
             
           
             
-              <div class="slot-btn vacant"
-                   onclick="openBookingModal('14:00', '15:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
-                <span class="tap-badge">TAP</span>
+              <div class="slot-btn past" title="This slot time has already passed">
                 <div class="time-text">14:00</div>
                 <div class="duration-text">– 15:00</div>
-                <span class="slot-badge-pill">✓ Vacant</span>
+                <span class="slot-badge-pill">Past</span>
               </div>
             
           
@@ -1125,66 +1154,68 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="footer-custom bg-black text-secondary py-5 mt-auto border-top border-secondary border-opacity-25">
+    <!-- Footer (Clean Very Light Green) -->
+    <footer class="footer-custom py-5 mt-auto">
         <div class="container">
             <div class="row g-4 justify-content-between">
                 <div class="col-lg-4">
                     <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-shield-shaded text-success fs-3"></i>
-                        <span class="fs-4 fw-extrabold text-white">FRIENDS <span class="text-success">SPORTS HUB</span></span>
+                        <div class="brand-logo-icon" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                            <i class="bi bi-shield-shaded text-success"></i>
+                        </div>
+                        <span class="fs-4 fw-extrabold" style="color: #172B21;">FRIENDS <span class="text-success">SPORTS HUB</span></span>
                     </div>
-                    <p class="small text-secondary mb-3">
+                    <p class="small mb-3" style="color: #64746B; line-height: 1.6;">
                         Premier multi-sports venue in Kulukkallur, Palakkad. Featuring all-weather FIFA-grade turf for football and cricket, hygienic covered swimming pool, and dedicated children's play park.
                     </p>
                     <div class="d-flex gap-2">
-                        <a href="https://wa.me/916238006820" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success rounded-circle social-icon"><i class="bi bi-whatsapp"></i></a>
-                        <a href="tel:6238006820" class="btn btn-sm btn-outline-light rounded-circle social-icon"><i class="bi bi-telephone-fill"></i></a>
-                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-sm btn-outline-light rounded-circle social-icon"><i class="bi bi-geo-alt-fill"></i></a>
+                        <a href="https://wa.me/916238006820" target="_blank" rel="noopener" class="social-icon" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+                        <a href="tel:6238006820" class="social-icon" title="Call Helpline"><i class="bi bi-telephone-fill"></i></a>
+                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="social-icon" title="Google Maps"><i class="bi bi-geo-alt-fill"></i></a>
                     </div>
                 </div>
 
                 <div class="col-6 col-lg-2">
-                    <h6 class="text-white fw-bold mb-3">Quick Links</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2">
-                        <li><a href="index.html" class="text-secondary text-decoration-none hover-white">Home</a></li>
-                        <li><a href="about.html" class="text-secondary text-decoration-none hover-white">About the Club</a></li>
-                        <li><a href="facilities.html" class="text-secondary text-decoration-none hover-white">Facilities & Turf</a></li>
-                        <li><a href="pricing.html" class="text-secondary text-decoration-none hover-white">Pricing & Slots</a></li>
-                        <li><a href="contact.html" class="text-secondary text-decoration-none hover-white">Contact & Location</a></li>
+                    <h6 class="fw-bold mb-3" style="color: #172B21;">Quick Links</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+                        <li><a href="index.html" class="text-decoration-none">Home</a></li>
+                        <li><a href="about.html" class="text-decoration-none">About the Club</a></li>
+                        <li><a href="facilities.html" class="text-decoration-none">Facilities & Turf</a></li>
+                        <li><a href="pricing.html" class="text-decoration-none">Pricing & Slots</a></li>
+                        <li><a href="contact.html" class="text-decoration-none">Contact & Location</a></li>
                     </ul>
                 </div>
 
                 <div class="col-6 col-lg-2">
-                    <h6 class="text-white fw-bold mb-3">Facilities</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2">
-                        <li><span class="text-light">&bull; Football / Cricket Turf</span></li>
-                        <li><span class="text-light">&bull; Swimming Pool</span></li>
-                        <li><span class="text-light">&bull; Children's Park</span></li>
-                        <li><span class="text-light">&bull; Floodlight Night Matches</span></li>
-                        <li><span class="text-light">&bull; Tournament Bookings</span></li>
+                    <h6 class="fw-bold mb-3" style="color: #172B21;">Facilities</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0" style="color: #64746B;">
+                        <li><span class="fw-semibold" style="color: #172B21;">&bull; Football / Cricket Turf</span></li>
+                        <li><span class="fw-semibold" style="color: #172B21;">&bull; Swimming Pool</span></li>
+                        <li><span class="fw-semibold" style="color: #172B21;">&bull; Children's Park</span></li>
+                        <li><span>&bull; Floodlight Night Matches</span></li>
+                        <li><span>&bull; Tournament Bookings</span></li>
                     </ul>
                 </div>
 
                 <div class="col-lg-3">
-                    <h6 class="text-white fw-bold mb-3">Location & Booking Help</h6>
-                    <p class="small mb-1 text-light"><i class="bi bi-geo-alt-fill text-success me-2"></i>Kulukkallur, Palakkad, Kerala, India</p>
-                    <p class="small mb-2 text-secondary">Mulayankavu region</p>
-                    <p class="small mb-1 text-light">
+                    <h6 class="fw-bold mb-3" style="color: #172B21;">Location & Booking Help</h6>
+                    <p class="small mb-1 fw-semibold" style="color: #172B21;"><i class="bi bi-geo-alt-fill text-success me-2"></i>Kulukkallur, Palakkad, Kerala</p>
+                    <p class="small mb-2" style="color: #64746B;">Mulayankavu region</p>
+                    <p class="small mb-2">
                         <i class="bi bi-telephone-fill text-success me-2"></i>
-                        <a href="tel:6238006820" class="text-light text-decoration-none fw-bold">+91 6238006820</a>
+                        <a href="tel:6238006820" class="text-decoration-none fw-bold" style="color: #079B55; font-size: 1rem;">+91 6238006820</a>
                     </p>
                     <div class="mt-3">
-                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success w-100">
-                            <i class="bi bi-map-fill me-1"></i> Open in Google Maps
+                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-sm btn-outline-emerald w-100">
+                            <i class="bi bi-map-fill me-1 text-success"></i> Open in Google Maps
                         </a>
                     </div>
                 </div>
             </div>
 
-            <hr class="border-secondary border-opacity-25 my-4">
+            <hr class="my-4" style="border-color: #E5EEE8;">
 
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-secondary">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small" style="color: #8F9E96;">
                 <p class="mb-2 mb-md-0">&copy; 2026 Friends Sports Hub Mulayankavu. All Rights Reserved.</p>
                 <p class="mb-0">Powered by Django &bull; Instant Slot Booking Engine</p>
             </div>
@@ -1703,15 +1734,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (adminLink) {
       adminLink.outerHTML = `
         <div class="dropdown">
-          <button class="btn btn-outline-light dropdown-toggle rounded-pill px-3 py-2 fw-semibold" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-shield-lock-fill me-1 text-success"></i> Admin
+          <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-3 py-2 fw-semibold" style="border-color: #E5EEE8; color: #172B21; background-color: #FFFFFF;" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-shield-lock-fill me-1 text-emerald"></i> Admin
           </button>
-          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow-lg">
-            <li><a class="dropdown-item fw-bold text-success" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
-            <li><a class="dropdown-item" href="walk-in.html"><i class="bi bi-plus-circle-fill me-2 text-success"></i> Direct Booking</a></li>
-            <li><a class="dropdown-item" href="reports.html"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
-            <li><a class="dropdown-item" href="employees.html"><i class="bi bi-people-fill me-2 text-warning"></i> Manage Staff</a></li>
-            <li><hr class="dropdown-divider border-secondary"></li>
+          <ul class="dropdown-menu dropdown-menu-end border shadow-sm rounded-3" style="border-color: #E5EEE8; background-color: #FFFFFF;">
+            <li><a class="dropdown-item fw-bold text-emerald" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
+            <li><a class="dropdown-item" href="walk-in.html" style="color: #172B21;"><i class="bi bi-plus-circle-fill me-2 text-emerald"></i> Direct Booking</a></li>
+            <li><a class="dropdown-item" href="reports.html" style="color: #172B21;"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
+            <li><a class="dropdown-item" href="employees.html" style="color: #172B21;"><i class="bi bi-people-fill me-2 text-warning"></i> Manage Staff</a></li>
+            <li><hr class="dropdown-divider" style="border-color: #E5EEE8;"></li>
             <li><a class="dropdown-item text-danger" href="#" onclick="logoutAdmin()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
           </ul>
         </div>

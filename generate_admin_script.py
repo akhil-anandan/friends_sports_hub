@@ -7,18 +7,18 @@ admin_script = """
 <!-- Quick Walk-in Modal -->
 <div class="modal fade" id="quickWalkinModal" tabindex="-1" aria-labelledby="quickWalkinModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-black border border-success border-opacity-40 text-light rounded-4 p-3 shadow-lg">
+    <div class="modal-content bg-white border rounded-4 p-3 shadow-lg" style="border-color: #E5EEE8 !important;">
       <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title fw-bold text-white d-flex align-items-center gap-2" id="quickWalkinModalLabel">
-          <i class="bi bi-person-plus-fill text-success"></i> Direct Walk-in / Phone Booking
+        <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="quickWalkinModalLabel" style="color: #172B21;">
+          <i class="bi bi-person-plus-fill text-emerald"></i> Direct Walk-in / Phone Booking
         </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body pt-3">
         <form id="modalWalkinForm" onsubmit="event.preventDefault(); submitQuickWalkin();">
           <div class="mb-3">
-            <label class="form-label text-secondary small fw-semibold">Sport Facility *</label>
-            <select id="modalFacility" class="form-select bg-dark text-white border-secondary" required onchange="updateModalPrice()">
+            <label class="form-label small fw-semibold" style="color: #64746B;">Sport Facility *</label>
+            <select id="modalFacility" class="form-select border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required onchange="updateModalPrice()">
               <option value="turf" data-name="Football & Cricket Turf" data-price="900">Football & Cricket Turf (₹900/hr)</option>
               <option value="swimming-pool" data-name="Covered Swimming Pool" data-price="150">Swimming Pool (₹150/hr)</option>
               <option value="childrens-park" data-name="Children's Park" data-price="50">Children's Park (₹50/hr)</option>
@@ -27,12 +27,12 @@ admin_script = """
 
           <div class="row g-2 mb-3">
             <div class="col-6">
-              <label class="form-label text-secondary small fw-semibold">Match Date *</label>
-              <input type="date" id="modalDate" class="form-control bg-dark text-white border-secondary" required>
+              <label class="form-label small fw-semibold" style="color: #64746B;">Match Date *</label>
+              <input type="date" id="modalDate" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required>
             </div>
             <div class="col-6">
-              <label class="form-label text-secondary small fw-semibold">Time Slot *</label>
-              <select id="modalSlot" class="form-select bg-dark text-white border-secondary" required>
+              <label class="form-label small fw-semibold" style="color: #64746B;">Time Slot *</label>
+              <select id="modalSlot" class="form-select border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required>
                 <option value="06:00">06:00 AM - 07:00 AM</option>
                 <option value="07:00">07:00 AM - 08:00 AM</option>
                 <option value="08:00">08:00 AM - 09:00 AM</option>
@@ -56,27 +56,27 @@ admin_script = """
 
           <div class="row g-2 mb-3">
             <div class="col-6">
-              <label class="form-label text-secondary small fw-semibold">Customer Name *</label>
-              <input type="text" id="modalCustomerName" class="form-control bg-dark text-white border-secondary" placeholder="e.g. Ashiq" required>
+              <label class="form-label small fw-semibold" style="color: #64746B;">Customer Name *</label>
+              <input type="text" id="modalCustomerName" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" placeholder="e.g. Ashiq" required>
             </div>
             <div class="col-6">
-              <label class="form-label text-secondary small fw-semibold">Customer Mobile (WhatsApp) *</label>
-              <input type="tel" id="modalCustomerPhone" class="form-control bg-dark text-white border-secondary" placeholder="10-digit number" required>
+              <label class="form-label small fw-semibold" style="color: #64746B;">Customer Mobile (WhatsApp) *</label>
+              <input type="tel" id="modalCustomerPhone" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" placeholder="10-digit number" required>
             </div>
           </div>
 
           <div class="row g-2 mb-3">
             <div class="col-4">
-              <label class="form-label text-secondary small fw-semibold">Total Fee (₹)</label>
-              <input type="number" id="modalTotalPrice" class="form-control bg-dark text-white border-secondary" value="900" required>
+              <label class="form-label small fw-semibold" style="color: #64746B;">Total Fee (₹)</label>
+              <input type="number" id="modalTotalPrice" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" value="900" required>
             </div>
             <div class="col-4">
-              <label class="form-label text-secondary small fw-semibold">Advance (₹)</label>
-              <input type="number" id="modalAdvance" class="form-control bg-dark text-white border-secondary" value="0" oninput="calculateModalBalance()">
+              <label class="form-label small fw-semibold" style="color: #64746B;">Advance (₹)</label>
+              <input type="number" id="modalAdvance" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" value="0" oninput="calculateModalBalance()">
             </div>
             <div class="col-4">
-              <label class="form-label text-secondary small fw-semibold">Payment Status</label>
-              <select id="modalPaymentStatus" class="form-select bg-dark text-white border-secondary">
+              <label class="form-label small fw-semibold" style="color: #64746B;">Payment Status</label>
+              <select id="modalPaymentStatus" class="form-select border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;">
                 <option value="PAID">Full Paid</option>
                 <option value="ADVANCE_PAID">Advance Paid</option>
                 <option value="UNPAID">Pay at Counter</option>
@@ -84,7 +84,7 @@ admin_script = """
             </div>
           </div>
 
-          <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold py-2 shadow">
+          <button type="submit" class="btn btn-emerald w-100 rounded-pill fw-bold py-2 shadow-sm">
             <i class="bi bi-check-circle-fill me-1"></i> Confirm & Lock Slot
           </button>
         </form>
@@ -180,7 +180,7 @@ async function fetchCloudBookings() {
 
 async function syncAndRefreshDashboard() {
   const btn = document.getElementById('btnManualRefresh');
-  if (btn) btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1 spin"></i> Syncing...';
+  if (btn) btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Syncing...';
   renderDashboard();
   setTimeout(() => {
     if (btn) btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Refresh';
@@ -244,14 +244,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 10000);
 });
 
-async function syncAndRefreshDashboard() {
-  const btn = document.getElementById('btnManualRefresh');
-  if (btn) btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Syncing...';
-  await fetchCloudBookings();
-  renderDashboard();
-  if (btn) btn.innerHTML = '<i class="bi bi-arrow-clockwise me-1"></i> Refresh';
-}
-
 function renderDashboard() {
   const allBookings = getBookings();
   const dateInput = document.querySelector('input[name="date"]');
@@ -276,17 +268,17 @@ function renderDashboard() {
   }
 
   // 2. Update KPI Metrics
-  const confirmed = dayBookings.filter(b => b.status === 'CONFIRMED');
-  const pending = dayBookings.filter(b => b.status === 'PENDING');
+  const confirmed = dayBookings.filter(b => b.status === 'CONFIRMED' || b.status === 'APPROVED');
+  const pending = dayBookings.filter(b => b.status === 'PENDING' || b.status === 'PENDING_APPROVAL');
   const completed = dayBookings.filter(b => b.status === 'COMPLETED');
   const cancelled = dayBookings.filter(b => b.status === 'CANCELLED');
 
   let revenuePaid = 0;
   let revenuePending = 0;
   dayBookings.forEach(b => {
-    if (b.status !== 'CANCELLED') {
+    if (b.status !== 'CANCELLED' && b.status !== 'REJECTED') {
       revenuePaid += (b.payment_status === 'PAID') ? Number(b.total_price) : Number(b.advance_amount || 0);
-      if (b.status === 'CONFIRMED') {
+      if (b.status === 'CONFIRMED' || b.status === 'APPROVED') {
         revenuePending += Number(b.balance_amount || 0);
       }
     }
@@ -306,14 +298,14 @@ function renderDashboard() {
   }
 
   // Update timeline header
-  const facilityHeadingSpan = document.querySelector('h5.text-white.fw-bold.mb-0 span.text-success');
+  const facilityHeadingSpan = document.querySelector('h5.fw-bold span.text-emerald, h5.fw-bold span.text-success, h5 span.text-emerald');
   if (facilityHeadingSpan) {
     facilityHeadingSpan.textContent = FACILITY_NAMES[selectedFacility] || 'Football & Cricket Turf';
   }
 
-  const timelineSmall = document.querySelector('h5.text-white.fw-bold.mb-0 + small.text-secondary');
+  const timelineSmall = document.querySelector('h5.fw-bold + small, h5 + small');
   if (timelineSmall) {
-    timelineSmall.innerHTML = `Timeline for ${selectedDate} &bull; Open 6:00 AM to 11:00 PM <span class="badge bg-success bg-opacity-25 text-success ms-2"><i class="bi bi-broadcast me-1"></i> Live Cloud Synced</span>`;
+    timelineSmall.innerHTML = `Timeline for ${selectedDate} &bull; Open 6:00 AM to 11:00 PM <span class="badge rounded-pill ms-2" style="background-color: #E8F7EE; color: #075B36; border: 1px solid #A7F3D0;"><i class="bi bi-broadcast me-1"></i> Live Cloud Synced</span>`;
   }
 
   // 3. Render Hourly Pitch Schedule (Section 1)
@@ -324,11 +316,10 @@ function renderDashboard() {
 
     TIME_SLOTS.forEach(slot => {
       // Find active (non-cancelled) booking
-      const booking = dayBookings.find(b => b.start_time === slot.start && b.status !== 'CANCELLED');
+      const booking = dayBookings.find(b => b.start_time === slot.start && b.status !== 'CANCELLED' && b.status !== 'REJECTED');
       const isPast = isSlotExpired(selectedDate, slot.start);
 
       // If there is NO active booking and the slot has expired / time has already passed:
-      // Remove it! Do not display expired unbooked slots.
       if (!booking && isPast) {
         return;
       }
@@ -346,9 +337,6 @@ function renderDashboard() {
         } else if (booking.status === 'PENDING' || booking.status === 'PENDING_APPROVAL') {
           badgeClass = 'bg-warning text-dark';
           badgeText = 'PENDING APPROVAL';
-        } else if (booking.status === 'REJECTED') {
-          badgeClass = 'bg-danger';
-          badgeText = 'REJECTED';
         } else if (booking.payment_status === 'PAID') {
           badgeClass = 'bg-success';
           badgeText = 'PAID';
@@ -357,55 +345,55 @@ function renderDashboard() {
           badgeText = 'ADVANCE PAID';
         }
 
-        const cardBorder = booking.status === 'COMPLETED' ? 'border-info' : ((booking.status === 'PENDING' || booking.status === 'PENDING_APPROVAL') ? 'border-warning' : 'border-success');
+        const cardBorder = booking.status === 'COMPLETED' ? 'border: 1.5px solid #0284C7 !important;' : ((booking.status === 'PENDING' || booking.status === 'PENDING_APPROVAL') ? 'border: 1.5px solid #F59E0B !important;' : 'border: 1.5px solid #079B55 !important;');
 
         col.innerHTML = `
-          <div class="card h-100 rounded-3 p-3 border ${cardBorder} bg-dark bg-opacity-75 shadow-sm">
+          <div class="card h-100 rounded-3 p-3 shadow-sm" style="background-color: #F4FAF6; ${cardBorder}">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="fw-bold text-white fs-6">${slot.display}</span>
+              <span class="fw-bold fs-6" style="color: #172B21;">${slot.display}</span>
               <span class="badge ${badgeClass} small">${badgeText}</span>
             </div>
             <div class="mb-2">
-              <div class="text-light fw-bold text-truncate">${escapeHtml(booking.customer_name)}</div>
-              <div class="small text-secondary">
-                <i class="bi bi-telephone text-success me-1"></i>
-                <a href="tel:${booking.customer_phone}" class="text-secondary text-decoration-none">${booking.customer_phone}</a>
+              <div class="fw-bold text-truncate" style="color: #172B21;">${escapeHtml(booking.customer_name)}</div>
+              <div class="small" style="color: #64746B;">
+                <i class="bi bi-telephone text-emerald me-1"></i>
+                <a href="tel:${booking.customer_phone}" class="text-decoration-none" style="color: #64746B;">${booking.customer_phone}</a>
               </div>
-              <div class="small text-success fw-bold mt-1">Fee: ₹${booking.total_price}</div>
+              <div class="small fw-bold mt-1" style="color: #079B55;">Fee: ₹${booking.total_price}</div>
               ${booking.payment_status === 'ADVANCE_PAID' && (booking.status === 'CONFIRMED' || booking.status === 'APPROVED') ? `
-                <div class="small text-info"><i class="bi bi-qr-code text-success me-1"></i>Adv: ₹${booking.advance_amount}</div>
+                <div class="small text-info"><i class="bi bi-qr-code text-emerald me-1"></i>Adv: ₹${booking.advance_amount}</div>
                 <div class="small text-warning fw-bold">Bal: ₹${booking.balance_amount}</div>
               ` : ''}
             </div>
-            <div class="d-flex gap-1 mt-auto pt-2 border-top border-secondary border-opacity-25 flex-wrap">
+            <div class="d-flex gap-1 mt-auto pt-2 border-top flex-wrap" style="border-color: #E5EEE8 !important;">
               ${(booking.status === 'PENDING' || booking.status === 'PENDING_APPROVAL') ? `
-                <button type="button" class="btn btn-xs btn-warning rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="approveBooking('${booking.id}')">
+                <button type="button" class="btn btn-xs btn-emerald rounded-pill px-2 py-1" style="font-size: 0.72rem;" onclick="approveBooking('${booking.id}')">
                   <i class="bi bi-check-circle-fill"></i> Approve
                 </button>
-                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="rejectBooking('${booking.id}')">
+                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.72rem;" onclick="rejectBooking('${booking.id}')">
                   <i class="bi bi-x-circle"></i> Reject
                 </button>
-                <button type="button" class="btn btn-xs btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="cancelBooking('${booking.id}')">
+                <button type="button" class="btn btn-xs btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.72rem; border-color: #E5EEE8; color: #64746B;" onclick="cancelBooking('${booking.id}')">
                   Cancel
                 </button>
               ` : (booking.status === 'CONFIRMED' || booking.status === 'APPROVED') ? `
                 ${booking.payment_status !== 'PAID' ? `
-                  <button type="button" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="collectBalance('${booking.id}')">
+                  <button type="button" class="btn btn-xs btn-emerald rounded-pill px-2 py-1" style="font-size: 0.72rem;" onclick="collectBalance('${booking.id}')">
                     <i class="bi bi-cash-coin"></i> Collect ₹${booking.balance_amount}
                   </button>
                 ` : ''}
-                <button type="button" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="markCompleted('${booking.id}')">
+                <button type="button" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.72rem;" onclick="markCompleted('${booking.id}')">
                   <i class="bi bi-check-all"></i> Complete
                 </button>
-                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.75rem;" onclick="cancelBooking('${booking.id}')">
+                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.72rem;" onclick="cancelBooking('${booking.id}')">
                   Cancel
                 </button>
               ` : `
-                <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.75rem;">
+                <span class="badge py-1 px-2" style="font-size: 0.72rem; background-color: #E5EEE8; color: #172B21;">
                   <i class="bi bi-check2"></i> Match Finished
                 </span>
               `}
-              <button type="button" class="btn btn-xs btn-outline-success rounded-pill px-2 py-1 ms-auto" style="font-size: 0.75rem;" onclick="sendWhatsAppVoucher('${booking.id}')" title="Send WhatsApp Voucher">
+              <button type="button" class="btn btn-xs btn-outline-emerald rounded-pill px-2 py-1 ms-auto" style="font-size: 0.72rem;" onclick="sendWhatsAppVoucher('${booking.id}')" title="Send WhatsApp Voucher">
                 <i class="bi bi-whatsapp"></i> Voucher
               </button>
             </div>
@@ -413,13 +401,13 @@ function renderDashboard() {
         `;
       } else {
         col.innerHTML = `
-          <div class="card h-100 rounded-3 p-3 border border-secondary border-opacity-25 bg-dark">
+          <div class="card h-100 rounded-3 p-3 shadow-sm" style="background-color: #FFFFFF; border: 1.5px solid #E5EEE8 !important;">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="fw-bold text-white fs-6">${slot.display}</span>
-              <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+              <span class="fw-bold fs-6" style="color: #172B21;">${slot.display}</span>
+              <span class="badge rounded-pill small" style="background-color: #E8F7EE; color: #075B36; border: 1px solid #A7F3D0;">FREE / OPEN</span>
             </div>
             <div class="mt-auto pt-3">
-              <button type="button" class="btn btn-outline-success btn-sm w-100 rounded-pill" onclick="openQuickWalkinModal('${selectedFacility}', '${selectedDate}', '${slot.start}')">
+              <button type="button" class="btn btn-outline-emerald btn-sm w-100 rounded-pill" onclick="openQuickWalkinModal('${selectedFacility}', '${selectedDate}', '${slot.start}')">
                 <i class="bi bi-plus-circle me-1"></i> Book Slot
               </button>
             </div>
@@ -431,10 +419,10 @@ function renderDashboard() {
 
     if (visibleSlotCount === 0) {
       scheduleRow.innerHTML = `
-        <div class="col-12 w-100 text-center py-5 text-secondary">
-          <i class="bi bi-clock-history fs-1 mb-2 d-block text-secondary opacity-50"></i>
-          <h6 class="text-white fw-bold mb-1">No Active Slots to Display</h6>
-          <p class="small text-secondary mb-0">All earlier slots for this date have passed and been removed.</p>
+        <div class="col-12 w-100 text-center py-5" style="color: #64746B;">
+          <i class="bi bi-clock-history fs-1 mb-2 d-block" style="color: #A7F3D0;"></i>
+          <h6 class="fw-bold mb-1" style="color: #172B21;">No Active Slots to Display</h6>
+          <p class="small mb-0" style="color: #64746B;">All earlier slots for this date have passed and been removed.</p>
         </div>
       `;
     }
@@ -442,20 +430,20 @@ function renderDashboard() {
 
   // 4. Render Section 2: Detailed Bookings Table (Desktop Table + Mobile Cards)
   const section2Card = document.getElementById('reservationsSection') || 
-                       document.querySelector('.card.bg-black.border.border-secondary.border-opacity-25.rounded-4.p-4.shadow');
+                       document.querySelector('.card.border.rounded-4.p-4');
   if (section2Card) {
     if (dayBookings.length === 0) {
       section2Card.innerHTML = `
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="text-white fw-bold mb-0">All Scheduled Reservations (0)</h5>
+          <h5 class="fw-bold mb-0" style="color: #172B21;">All Scheduled Reservations (0)</h5>
           <div class="d-flex align-items-center gap-2">
-            <span class="small text-secondary">${selectedDate}</span>
-            <button id="btnManualRefresh" class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="syncAndRefreshDashboard()">
+            <span class="small" style="color: #64746B;">${selectedDate}</span>
+            <button id="btnManualRefresh" class="btn btn-sm btn-outline-emerald rounded-pill px-3" onclick="syncAndRefreshDashboard()">
               <i class="bi bi-arrow-clockwise me-1"></i> Refresh
             </button>
           </div>
         </div>
-        <div class="text-center py-4 text-secondary">
+        <div class="text-center py-4" style="color: #64746B;">
           <i class="bi bi-inbox fs-2 mb-2 d-block"></i>
           No bookings found for the selected date or search filter.
         </div>
@@ -467,24 +455,24 @@ function renderDashboard() {
       dayBookings.forEach(b => {
         const isPaid = b.payment_status === 'PAID';
         const payBadgeClass = isPaid ? 'bg-success' : (b.payment_status === 'ADVANCE_PAID' ? 'bg-info text-dark' : 'bg-warning text-dark');
-        const statusBadgeClass = b.status === 'CONFIRMED' ? 'bg-primary' : (b.status === 'PENDING' ? 'bg-warning text-dark' : (b.status === 'COMPLETED' ? 'bg-info text-dark' : 'bg-danger'));
+        const statusBadgeClass = (b.status === 'CONFIRMED' || b.status === 'APPROVED') ? 'bg-primary' : (b.status === 'PENDING' || b.status === 'PENDING_APPROVAL' ? 'bg-warning text-dark' : (b.status === 'COMPLETED' ? 'bg-info text-dark' : 'bg-danger'));
 
         // Desktop Table Row
         rowsHtml += `
-          <tr>
-            <td class="font-monospace small text-success fw-bold">${b.id}</td>
+          <tr style="border-bottom: 1px solid #E5EEE8;">
+            <td class="font-monospace small fw-bold" style="color: #079B55;">${b.id}</td>
             <td>
-              <div class="fw-bold text-white">${escapeHtml(b.customer_name)}</div>
-              <div class="small text-secondary"><i class="bi bi-telephone text-success me-1"></i><a href="tel:${b.customer_phone}" class="text-secondary text-decoration-none">${b.customer_phone}</a></div>
+              <div class="fw-bold" style="color: #172B21;">${escapeHtml(b.customer_name)}</div>
+              <div class="small" style="color: #64746B;"><i class="bi bi-telephone text-emerald me-1"></i><a href="tel:${b.customer_phone}" class="text-decoration-none" style="color: #64746B;">${b.customer_phone}</a></div>
             </td>
-            <td class="text-light">${escapeHtml(b.facility_name || FACILITY_NAMES[b.facility_slug])}</td>
+            <td style="color: #172B21;">${escapeHtml(b.facility_name || FACILITY_NAMES[b.facility_slug])}</td>
             <td>
-              <div class="text-warning fw-semibold">${b.display_time || b.start_time}</div>
-              <small class="text-secondary">${b.date}</small>
+              <div class="fw-semibold" style="color: #172B21;">${b.display_time || b.start_time}</div>
+              <small style="color: #64746B;">${b.date}</small>
             </td>
             <td>
-              <div class="fw-bold text-success">₹${b.total_price}</div>
-              ${b.payment_status === 'ADVANCE_PAID' && b.status === 'CONFIRMED' ? `
+              <div class="fw-bold text-emerald">₹${b.total_price}</div>
+              ${b.payment_status === 'ADVANCE_PAID' && (b.status === 'CONFIRMED' || b.status === 'APPROVED') ? `
                 <div class="small text-info">Adv: ₹${b.advance_amount}</div>
                 <div class="small text-warning fw-bold">Bal: ₹${b.balance_amount}</div>
               ` : ''}
@@ -494,18 +482,18 @@ function renderDashboard() {
             <td class="text-end">
               <div class="d-inline-flex gap-1 flex-wrap justify-content-end">
                 ${(b.status === 'PENDING' || b.status === 'PENDING_APPROVAL') ? `
-                  <button type="button" class="btn btn-sm btn-warning rounded-pill px-2 py-1" title="Approve Booking" onclick="approveBooking('${b.id}')">
+                  <button type="button" class="btn btn-sm btn-emerald rounded-pill px-2 py-1" title="Approve Booking" onclick="approveBooking('${b.id}')">
                     <i class="bi bi-check-circle-fill"></i> Approve
                   </button>
                   <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" title="Reject Booking" onclick="rejectBooking('${b.id}')">
                     <i class="bi bi-x-circle"></i> Reject
                   </button>
-                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-1" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
+                  <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-2 py-1" style="border-color: #E5EEE8; color: #64746B;" title="Cancel Booking" onclick="cancelBooking('${b.id}')">
                     Cancel
                   </button>
                 ` : (b.status === 'CONFIRMED' || b.status === 'APPROVED') ? `
                   ${b.payment_status !== 'PAID' ? `
-                    <button type="button" class="btn btn-sm btn-success rounded-pill px-2 py-1" title="Collect Balance" onclick="collectBalance('${b.id}')">
+                    <button type="button" class="btn btn-sm btn-emerald rounded-pill px-2 py-1" title="Collect Balance" onclick="collectBalance('${b.id}')">
                       <i class="bi bi-cash-stack"></i> Collect ₹${b.balance_amount}
                     </button>
                   ` : ''}
@@ -516,11 +504,11 @@ function renderDashboard() {
                     <i class="bi bi-x-circle"></i> Cancel
                   </button>
                 ` : `
-                  <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.75rem;">
+                  <span class="badge py-1 px-2" style="font-size: 0.72rem; background-color: #E5EEE8; color: #172B21;">
                     ${b.status === 'COMPLETED' ? '<i class="bi bi-check2"></i> Finished' : (b.status === 'REJECTED' ? '<i class="bi bi-x-circle"></i> Rejected' : '<i class="bi bi-x-circle"></i> Cancelled')}
                   </span>
                 `}
-                <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1" title="WhatsApp Confirmation" onclick="sendWhatsAppVoucher('${b.id}')">
+                <button type="button" class="btn btn-sm btn-outline-emerald rounded-pill px-2 py-1" title="WhatsApp Confirmation" onclick="sendWhatsAppVoucher('${b.id}')">
                   <i class="bi bi-whatsapp"></i>
                 </button>
               </div>
@@ -530,9 +518,9 @@ function renderDashboard() {
 
         // Mobile Responsive Card
         cardsHtml += `
-          <div class="card bg-dark border border-secondary border-opacity-30 rounded-3 p-3 mb-3 shadow-sm">
+          <div class="card bg-white border rounded-3 p-3 mb-3 shadow-sm" style="border-color: #E5EEE8 !important;">
             <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="font-monospace small text-success fw-bold">${b.id}</span>
+              <span class="font-monospace small fw-bold" style="color: #079B55;">${b.id}</span>
               <div class="d-flex gap-1">
                 <span class="badge ${payBadgeClass} small">${b.payment_status.replace('_', ' ')}</span>
                 <span class="badge ${statusBadgeClass} small">${b.status}</span>
@@ -540,35 +528,35 @@ function renderDashboard() {
             </div>
             <div class="row g-2 mb-2">
               <div class="col-7">
-                <div class="fw-bold text-white fs-6">${escapeHtml(b.customer_name)}</div>
-                <div class="small text-secondary">
-                  <i class="bi bi-telephone text-success me-1"></i>
-                  <a href="tel:${b.customer_phone}" class="text-light text-decoration-none">${b.customer_phone}</a>
+                <div class="fw-bold fs-6" style="color: #172B21;">${escapeHtml(b.customer_name)}</div>
+                <div class="small" style="color: #64746B;">
+                  <i class="bi bi-telephone text-emerald me-1"></i>
+                  <a href="tel:${b.customer_phone}" class="text-decoration-none" style="color: #64746B;">${b.customer_phone}</a>
                 </div>
               </div>
               <div class="col-5 text-end">
-                <div class="fw-bold text-success fs-6">₹${b.total_price}</div>
+                <div class="fw-bold fs-6" style="color: #079B55;">₹${b.total_price}</div>
                 ${b.payment_status === 'ADVANCE_PAID' ? `<div class="small text-warning">Bal: ₹${b.balance_amount}</div>` : ''}
               </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center text-secondary small py-1 border-top border-secondary border-opacity-25 mb-2">
-              <span><i class="bi bi-geo-alt me-1 text-success"></i>${escapeHtml(b.facility_name || FACILITY_NAMES[b.facility_slug])}</span>
-              <span class="text-warning fw-semibold"><i class="bi bi-clock me-1"></i>${b.display_time || b.start_time}</span>
+            <div class="d-flex justify-content-between align-items-center small py-1 border-top mb-2" style="border-color: #E5EEE8 !important; color: #64746B;">
+              <span><i class="bi bi-geo-alt me-1 text-emerald"></i>${escapeHtml(b.facility_name || FACILITY_NAMES[b.facility_slug])}</span>
+              <span class="fw-semibold" style="color: #172B21;"><i class="bi bi-clock me-1 text-emerald"></i>${b.display_time || b.start_time}</span>
             </div>
             <div class="d-flex gap-1 flex-wrap pt-1">
               ${(b.status === 'PENDING' || b.status === 'PENDING_APPROVAL') ? `
-                <button type="button" class="btn btn-sm btn-warning rounded-pill px-3 flex-grow-1" onclick="approveBooking('${b.id}')">
+                <button type="button" class="btn btn-sm btn-emerald rounded-pill px-3 flex-grow-1" onclick="approveBooking('${b.id}')">
                   <i class="bi bi-check-circle-fill me-1"></i> Approve
                 </button>
                 <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3 flex-grow-1" onclick="rejectBooking('${b.id}')">
                   <i class="bi bi-x-circle me-1"></i> Reject
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 flex-grow-1" onclick="cancelBooking('${b.id}')">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 flex-grow-1" style="border-color: #E5EEE8; color: #64746B;" onclick="cancelBooking('${b.id}')">
                   Cancel
                 </button>
               ` : (b.status === 'CONFIRMED' || b.status === 'APPROVED') ? `
                 ${b.payment_status !== 'PAID' ? `
-                  <button type="button" class="btn btn-sm btn-success rounded-pill px-3 flex-grow-1" onclick="collectBalance('${b.id}')">
+                  <button type="button" class="btn btn-sm btn-emerald rounded-pill px-3 flex-grow-1" onclick="collectBalance('${b.id}')">
                     <i class="bi bi-cash-stack me-1"></i> Collect ₹${b.balance_amount}
                   </button>
                 ` : ''}
@@ -579,11 +567,11 @@ function renderDashboard() {
                   <i class="bi bi-x-circle me-1"></i> Cancel
                 </button>
               ` : `
-                <span class="badge bg-secondary bg-opacity-50 text-light py-2 px-3 w-100 text-center">
+                <span class="badge py-2 px-3 w-100 text-center" style="background-color: #E5EEE8; color: #172B21;">
                   ${b.status === 'COMPLETED' ? '<i class="bi bi-check2 me-1"></i> Match Finished' : (b.status === 'REJECTED' ? '<i class="bi bi-x-circle me-1"></i> Reservation Rejected' : '<i class="bi bi-x-circle me-1"></i> Reservation Cancelled')}
                 </span>
               `}
-              <button type="button" class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="sendWhatsAppVoucher('${b.id}')">
+              <button type="button" class="btn btn-sm btn-outline-emerald rounded-pill px-3" onclick="sendWhatsAppVoucher('${b.id}')">
                 <i class="bi bi-whatsapp"></i> Voucher
               </button>
             </div>
@@ -593,10 +581,10 @@ function renderDashboard() {
 
       section2Card.innerHTML = `
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-          <h5 class="text-white fw-bold mb-0">All Scheduled Reservations (${dayBookings.length})</h5>
+          <h5 class="fw-bold mb-0" style="color: #172B21;">All Scheduled Reservations (${dayBookings.length})</h5>
           <div class="d-flex align-items-center gap-2">
-            <span class="small text-secondary">${selectedDate}</span>
-            <button id="btnManualRefresh" class="btn btn-sm btn-outline-success rounded-pill px-3" onclick="syncAndRefreshDashboard()">
+            <span class="small" style="color: #64746B;">${selectedDate}</span>
+            <button id="btnManualRefresh" class="btn btn-sm btn-outline-emerald rounded-pill px-3" onclick="syncAndRefreshDashboard()">
               <i class="bi bi-arrow-clockwise me-1"></i> Refresh
             </button>
           </div>
@@ -609,17 +597,17 @@ function renderDashboard() {
 
         <!-- Desktop Table View (>= 768px) -->
         <div class="table-responsive d-none d-md-block">
-          <table class="table table-dark table-hover mb-0 align-middle">
-            <thead class="border-secondary text-secondary small">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="small" style="background-color: #F4FAF6; color: #64746B; border-bottom: 2px solid #E5EEE8;">
               <tr>
-                <th>Ref ID</th>
-                <th>Player / Customer</th>
-                <th>Facility</th>
-                <th>Slot Timing</th>
-                <th>Fee</th>
-                <th>Payment</th>
-                <th>Match Status</th>
-                <th class="text-end">Quick Actions</th>
+                <th class="py-3">Ref ID</th>
+                <th class="py-3">Player / Customer</th>
+                <th class="py-3">Facility</th>
+                <th class="py-3">Slot Timing</th>
+                <th class="py-3">Fee</th>
+                <th class="py-3">Payment</th>
+                <th class="py-3">Match Status</th>
+                <th class="py-3 text-end">Quick Actions</th>
               </tr>
             </thead>
             <tbody>

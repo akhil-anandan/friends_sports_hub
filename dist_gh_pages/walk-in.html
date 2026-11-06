@@ -24,23 +24,23 @@
     <link rel="stylesheet" href="static/css/style.css">
     
 </head>
-<body class="bg-dark text-light min-vh-100 d-flex flex-column">
+<body class="min-vh-100 d-flex flex-column" style="background-color: #FFFFFF; color: #64746B;">
 
     <!-- Top Info Bar -->
-    <div class="top-bar py-1 px-3 border-bottom border-success border-opacity-10 small">
+    <div class="top-bar py-1 px-3 border-bottom small">
         <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div class="d-flex align-items-center gap-3">
-                <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="text-secondary text-decoration-none hover-white">
+                <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="text-decoration-none" style="color: #64746B;">
                     <i class="bi bi-geo-alt-fill text-success me-1"></i> Kulukkallur, Palakkad, Kerala
                 </a>
-                <span class="text-secondary d-none d-md-inline">|</span>
-                <span class="text-secondary d-none d-md-inline">
+                <span class="d-none d-md-inline" style="color: #E5EEE8;">|</span>
+                <span class="d-none d-md-inline" style="color: #64746B;">
                     <i class="bi bi-telephone-fill text-success me-1"></i>
-                    <a href="tel:6238006820" class="text-light text-decoration-none">6238006820</a>
+                    <a href="tel:6238006820" class="text-decoration-none fw-semibold" style="color: #172B21;">6238006820</a>
                 </span>
             </div>
             <div class="d-flex align-items-center gap-3">
-                <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20would%20like%20to%20inquire%20about%20booking%20a%20slot." target="_blank" rel="noopener" class="badge bg-success text-white text-decoration-none px-2 py-1">
+                <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20would%20like%20to%20inquire%20about%20booking%20a%20slot." target="_blank" rel="noopener" class="badge rounded-pill text-white text-decoration-none px-3 py-1 fw-bold" style="background-color: #079B55;">
                     <i class="bi bi-whatsapp me-1"></i> WhatsApp Booking
                 </a>
             </div>
@@ -48,7 +48,7 @@
     </div>
 
     <!-- Main Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top border-bottom border-success border-opacity-25 shadow-sm py-2">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top border-bottom navbar-custom">
         <div class="container">
             <a class="navbar-brand fw-extrabold d-flex align-items-center gap-2" href="index.html">
                 <div class="brand-logo-icon">
@@ -56,7 +56,7 @@
                 </div>
                 <div>
                     <div class="brand-text lh-1">FRIENDS <span class="text-success">SPORTS HUB</span></div>
-                    <small class="text-secondary d-block tracking-wider" style="font-size: 0.65rem; letter-spacing: 2px;">MULAYANKAVU &bull; KULUKKALLUR</small>
+                    <small class="brand-sub d-block tracking-wider">MULAYANKAVU &bull; KULUKKALLUR</small>
                 </div>
             </a>
             
@@ -84,21 +84,21 @@
                 </ul>
 
                 <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-                    <a href="book.html" class="btn btn-success fw-bold px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2">
+                    <a href="book.html" class="btn btn-emerald fw-bold px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2">
                         <i class="bi bi-calendar2-check-fill"></i> Book a Slot
                     </a>
 
                     
                         <div class="dropdown">
-                            <button class="btn btn-outline-light dropdown-toggle rounded-pill px-3 py-2 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-outline-emerald dropdown-toggle rounded-pill px-3 py-2 fw-semibold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-shield-lock-fill me-1 text-success"></i> Admin
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow-lg">
+                            <ul class="dropdown-menu dropdown-menu-end border shadow-lg" style="border-color: #E5EEE8;">
                                 <li><a class="dropdown-item fw-bold text-success" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
                                 <li><a class="dropdown-item" href="walk-in.html"><i class="bi bi-plus-circle-fill me-2 text-success"></i> Direct Booking</a></li>
                                 <li><a class="dropdown-item" href="reports.html"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
                                 <li><a class="dropdown-item" href="admin.html"><i class="bi bi-gear-fill me-2 text-warning"></i> Advanced Settings</a></li>
-                                <li><hr class="dropdown-divider border-secondary"></li>
+                                <li><hr class="dropdown-divider" style="border-color: #E5EEE8;"></li>
                                 <li><a class="dropdown-item text-danger" href="#" onclick="logoutAdmin()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
                             </ul>
                         </div>
@@ -117,34 +117,34 @@
     <!-- Main Content Block -->
     <main class="flex-grow-1">
         
-<div class="py-5" style="background-color: #070d09;">
+<div class="py-5" style="background-color: #F4FAF6; min-height: 80vh;">
     <div class="container" style="max-width: 680px;">
         
         <div class="mb-3">
-            <a href="admin.html" class="btn btn-outline-light btn-sm rounded-pill px-3">
+            <a href="admin.html" class="btn btn-outline-secondary btn-sm rounded-pill px-3" style="border-color: #E5EEE8; color: #172B21; background-color: #FFFFFF;">
                 <i class="bi bi-arrow-left me-1"></i> Back to Staff Dashboard
             </a>
         </div>
 
-        <div class="card bg-black border border-success border-opacity-40 rounded-4 p-4 p-md-5 shadow-lg">
+        <div class="card bg-white border rounded-4 p-4 p-md-5 shadow-sm" style="border-color: #E5EEE8 !important;">
             <div class="d-flex align-items-center gap-3 mb-4">
-                <div class="badge bg-success p-3 rounded-circle shadow">
-                    <i class="bi bi-person-badge fs-3 text-white"></i>
+                <div class="d-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width: 54px; height: 54px; background-color: #E8F7EE; color: #079B55;">
+                    <i class="bi bi-person-badge fs-3"></i>
                 </div>
                 <div>
-                    <span class="badge bg-warning text-dark px-2 py-1 rounded small fw-bold">Ground Staff Action</span>
-                    <h3 class="text-white fw-bold mb-0">Record Walk-in / Phone Booking</h3>
-                    <small class="text-secondary">Instant slot lock for counter customers or phone callers</small>
+                    <span class="badge px-2 py-1 rounded small fw-bold mb-1" style="background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">Ground Staff Action</span>
+                    <h3 class="fw-bold mb-0" style="color: #172B21;">Record Walk-in / Phone Booking</h3>
+                    <small style="color: #64746B;">Instant slot lock for counter customers or phone callers</small>
                 </div>
             </div>
 
             <form method="POST">
-                <input type="hidden" name="csrfmiddlewaretoken" value="XRMhhJyvMCCFXM9mIywpGum9S4tPGzRYG77Cb9xXum8OGwcP2XqASXLIHdsFvXKe">
+                <input type="hidden" name="csrfmiddlewaretoken" value="waYjOeLYLVkWRd5Kz06iiAkSl7cfwmiQrkXH8w0GzRYoorWFYJQJWeyswWnCSxhE">
                 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label text-secondary small fw-semibold">Sport Facility *</label>
-                        <select name="facility_id" class="form-select bg-dark text-white border-secondary" required>
+                        <label class="form-label small fw-semibold" style="color: #64746B;">Sport Facility *</label>
+                        <select name="facility_id" class="form-select border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required>
                             
                                 <option value="3" >
                                     Children&#x27;s Park (₹50/hr)
@@ -162,15 +162,15 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label text-secondary small fw-semibold">Match Date *</label>
-                        <input type="date" name="booking_date" class="form-control bg-dark text-white border-secondary" required 
+                        <label class="form-label small fw-semibold" style="color: #64746B;">Match Date *</label>
+                        <input type="date" name="booking_date" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required 
                                value="2026-11-06">
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label text-secondary small fw-semibold">Slot Start Time *</label>
-                    <select name="start_time" class="form-select bg-dark text-white border-secondary" required>
+                    <label class="form-label small fw-semibold" style="color: #64746B;">Slot Start Time *</label>
+                    <select name="start_time" class="form-select border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required>
                         <option value="">-- Choose Slot --</option>
                         <option value="06:00" >06:00 AM - 07:00 AM</option>
                         <option value="07:00" >07:00 AM - 08:00 AM</option>
@@ -192,29 +192,29 @@
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label text-secondary small fw-semibold">Customer / Team Name *</label>
-                        <input type="text" name="customer_name" class="form-control" required placeholder="e.g. Kulukkallur Warriors">
+                        <label class="form-label small fw-semibold" style="color: #64746B;">Customer / Team Name *</label>
+                        <input type="text" name="customer_name" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required placeholder="e.g. Kulukkallur Warriors">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label text-secondary small fw-semibold">Player Mobile Number *</label>
-                        <input type="tel" name="customer_phone" class="form-control" required placeholder="10-digit phone number">
+                        <label class="form-label small fw-semibold" style="color: #64746B;">Player Mobile Number *</label>
+                        <input type="tel" name="customer_phone" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required placeholder="10-digit phone number">
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label text-secondary small fw-semibold">Payment Collection Status *</label>
-                    <select name="payment_status" class="form-select bg-dark text-white border-secondary" required>
+                    <label class="form-label small fw-semibold" style="color: #64746B;">Payment Collection Status *</label>
+                    <select name="payment_status" class="form-select border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" required>
                         <option value="PAID">Cash / UPI Paid at Counter</option>
                         <option value="PAY_AT_VENUE">Pay Later at Match Time</option>
                     </select>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label text-secondary small fw-semibold">Staff Notes (Optional)</label>
-                    <textarea name="staff_notes" class="form-control" rows="2" placeholder="e.g. Phone reservation by captain Jaleel, requested football"></textarea>
+                    <label class="form-label small fw-semibold" style="color: #64746B;">Staff Notes (Optional)</label>
+                    <textarea name="staff_notes" class="form-control border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" rows="2" placeholder="e.g. Phone reservation by captain Jaleel, requested football"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow">
+                <button type="submit" class="btn btn-emerald w-100 py-3 rounded-pill fw-bold shadow-sm">
                     <i class="bi bi-check-circle-fill me-1"></i> Lock & Confirm Walk-in Slot
                 </button>
             </form>
@@ -224,66 +224,68 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="footer-custom bg-black text-secondary py-5 mt-auto border-top border-secondary border-opacity-25">
+    <!-- Footer (Clean Very Light Green) -->
+    <footer class="footer-custom py-5 mt-auto">
         <div class="container">
             <div class="row g-4 justify-content-between">
                 <div class="col-lg-4">
                     <div class="d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-shield-shaded text-success fs-3"></i>
-                        <span class="fs-4 fw-extrabold text-white">FRIENDS <span class="text-success">SPORTS HUB</span></span>
+                        <div class="brand-logo-icon" style="width: 36px; height: 36px; font-size: 1.1rem;">
+                            <i class="bi bi-shield-shaded text-success"></i>
+                        </div>
+                        <span class="fs-4 fw-extrabold" style="color: #172B21;">FRIENDS <span class="text-success">SPORTS HUB</span></span>
                     </div>
-                    <p class="small text-secondary mb-3">
+                    <p class="small mb-3" style="color: #64746B; line-height: 1.6;">
                         Premier multi-sports venue in Kulukkallur, Palakkad. Featuring all-weather FIFA-grade turf for football and cricket, hygienic covered swimming pool, and dedicated children's play park.
                     </p>
                     <div class="d-flex gap-2">
-                        <a href="https://wa.me/916238006820" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success rounded-circle social-icon"><i class="bi bi-whatsapp"></i></a>
-                        <a href="tel:6238006820" class="btn btn-sm btn-outline-light rounded-circle social-icon"><i class="bi bi-telephone-fill"></i></a>
-                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-sm btn-outline-light rounded-circle social-icon"><i class="bi bi-geo-alt-fill"></i></a>
+                        <a href="https://wa.me/916238006820" target="_blank" rel="noopener" class="social-icon" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+                        <a href="tel:6238006820" class="social-icon" title="Call Helpline"><i class="bi bi-telephone-fill"></i></a>
+                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="social-icon" title="Google Maps"><i class="bi bi-geo-alt-fill"></i></a>
                     </div>
                 </div>
 
                 <div class="col-6 col-lg-2">
-                    <h6 class="text-white fw-bold mb-3">Quick Links</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2">
-                        <li><a href="index.html" class="text-secondary text-decoration-none hover-white">Home</a></li>
-                        <li><a href="about.html" class="text-secondary text-decoration-none hover-white">About the Club</a></li>
-                        <li><a href="facilities.html" class="text-secondary text-decoration-none hover-white">Facilities & Turf</a></li>
-                        <li><a href="pricing.html" class="text-secondary text-decoration-none hover-white">Pricing & Slots</a></li>
-                        <li><a href="contact.html" class="text-secondary text-decoration-none hover-white">Contact & Location</a></li>
+                    <h6 class="fw-bold mb-3" style="color: #172B21;">Quick Links</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
+                        <li><a href="index.html" class="text-decoration-none">Home</a></li>
+                        <li><a href="about.html" class="text-decoration-none">About the Club</a></li>
+                        <li><a href="facilities.html" class="text-decoration-none">Facilities & Turf</a></li>
+                        <li><a href="pricing.html" class="text-decoration-none">Pricing & Slots</a></li>
+                        <li><a href="contact.html" class="text-decoration-none">Contact & Location</a></li>
                     </ul>
                 </div>
 
                 <div class="col-6 col-lg-2">
-                    <h6 class="text-white fw-bold mb-3">Facilities</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2">
-                        <li><span class="text-light">&bull; Football / Cricket Turf</span></li>
-                        <li><span class="text-light">&bull; Swimming Pool</span></li>
-                        <li><span class="text-light">&bull; Children's Park</span></li>
-                        <li><span class="text-light">&bull; Floodlight Night Matches</span></li>
-                        <li><span class="text-light">&bull; Tournament Bookings</span></li>
+                    <h6 class="fw-bold mb-3" style="color: #172B21;">Facilities</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0" style="color: #64746B;">
+                        <li><span class="fw-semibold" style="color: #172B21;">&bull; Football / Cricket Turf</span></li>
+                        <li><span class="fw-semibold" style="color: #172B21;">&bull; Swimming Pool</span></li>
+                        <li><span class="fw-semibold" style="color: #172B21;">&bull; Children's Park</span></li>
+                        <li><span>&bull; Floodlight Night Matches</span></li>
+                        <li><span>&bull; Tournament Bookings</span></li>
                     </ul>
                 </div>
 
                 <div class="col-lg-3">
-                    <h6 class="text-white fw-bold mb-3">Location & Booking Help</h6>
-                    <p class="small mb-1 text-light"><i class="bi bi-geo-alt-fill text-success me-2"></i>Kulukkallur, Palakkad, Kerala, India</p>
-                    <p class="small mb-2 text-secondary">Mulayankavu region</p>
-                    <p class="small mb-1 text-light">
+                    <h6 class="fw-bold mb-3" style="color: #172B21;">Location & Booking Help</h6>
+                    <p class="small mb-1 fw-semibold" style="color: #172B21;"><i class="bi bi-geo-alt-fill text-success me-2"></i>Kulukkallur, Palakkad, Kerala</p>
+                    <p class="small mb-2" style="color: #64746B;">Mulayankavu region</p>
+                    <p class="small mb-2">
                         <i class="bi bi-telephone-fill text-success me-2"></i>
-                        <a href="tel:6238006820" class="text-light text-decoration-none fw-bold">+91 6238006820</a>
+                        <a href="tel:6238006820" class="text-decoration-none fw-bold" style="color: #079B55; font-size: 1rem;">+91 6238006820</a>
                     </p>
                     <div class="mt-3">
-                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-sm btn-outline-success w-100">
-                            <i class="bi bi-map-fill me-1"></i> Open in Google Maps
+                        <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-sm btn-outline-emerald w-100">
+                            <i class="bi bi-map-fill me-1 text-success"></i> Open in Google Maps
                         </a>
                     </div>
                 </div>
             </div>
 
-            <hr class="border-secondary border-opacity-25 my-4">
+            <hr class="my-4" style="border-color: #E5EEE8;">
 
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-secondary">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small" style="color: #8F9E96;">
                 <p class="mb-2 mb-md-0">&copy; 2026 Friends Sports Hub Mulayankavu. All Rights Reserved.</p>
                 <p class="mb-0">Powered by Django &bull; Instant Slot Booking Engine</p>
             </div>

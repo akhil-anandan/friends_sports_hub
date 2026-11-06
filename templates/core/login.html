@@ -5,7 +5,7 @@
 
 {% block extra_css %}
 <style>
-  body { background: #070d09; }
+  body { background: #FFFFFF; }
 
   .admin-login-wrap {
     max-width: 440px;
@@ -14,26 +14,25 @@
   }
 
   .admin-login-card {
-    background: #0e1712;
-    border: 1.5px solid #1e2e22;
+    background: #FFFFFF;
+    border: 1.5px solid #E5EEE8;
     border-radius: 22px;
-    padding: 32px 26px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    padding: 34px 28px;
+    box-shadow: 0 12px 36px rgba(23, 43, 33, 0.08);
   }
 
   .shield-icon-badge {
-    width: 60px;
-    height: 60px;
-    background: #112817;
-    border: 2px solid #22c55e;
+    width: 64px;
+    height: 64px;
+    background: #E8F7EE;
+    border: 1.5px solid #C6ECD4;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     font-size: 1.8rem;
-    color: #22c55e;
+    color: #079B55;
     margin-bottom: 14px;
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.25);
   }
 
   .login-field-group { margin-bottom: 16px; }
@@ -41,32 +40,32 @@
     display: block;
     font-size: 0.72rem;
     font-weight: 700;
-    color: #8aab92;
+    color: #172B21;
     text-transform: uppercase;
     letter-spacing: 0.6px;
     margin-bottom: 6px;
   }
   .login-field-input {
     width: 100%;
-    background: #121c15;
-    border: 1.5px solid #1e2e22;
+    background: #FFFFFF;
+    border: 1.5px solid #E5EEE8;
     border-radius: 12px;
-    color: #fff;
+    color: #172B21;
     padding: 13px 16px;
     font-size: 0.95rem;
     outline: none;
     box-sizing: border-box;
-    transition: border-color .15s;
+    transition: border-color .15s, box-shadow .15s;
   }
   .login-field-input:focus {
-    border-color: #22c55e;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+    border-color: #079B55;
+    box-shadow: 0 0 0 3px rgba(7, 155, 85, 0.15);
   }
-  .login-field-input::placeholder { color: #374c3e; }
+  .login-field-input::placeholder { color: #8F9E96; }
 
   .btn-admin-login {
     width: 100%;
-    background: #16a34a;
+    background: #079B55;
     border: none;
     border-radius: 14px;
     color: #fff;
@@ -79,27 +78,30 @@
     justify-content: center;
     gap: 8px;
     cursor: pointer;
-    transition: background .15s;
+    transition: background .15s, transform .15s;
   }
-  .btn-admin-login:hover:not(:disabled) { background: #15803d; }
+  .btn-admin-login:hover:not(:disabled) {
+    background: #068448;
+    transform: translateY(-1px);
+  }
   .btn-admin-login:disabled {
-    background: #1f2922;
-    color: #6b7280;
+    background: #E5EEE8;
+    color: #8F9E96;
     cursor: not-allowed;
   }
 
   .security-notice-box {
-    background: #101913;
-    border: 1px solid #1e2e22;
+    background: #F4FAF6;
+    border: 1px solid #C6ECD4;
     border-radius: 12px;
     padding: 12px 14px;
     margin-top: 22px;
-    font-size: 0.72rem;
-    color: #6b8c73;
+    font-size: 0.74rem;
+    color: #64746B;
     line-height: 1.5;
     text-align: center;
   }
-  .security-notice-box strong { color: #fff; }
+  .security-notice-box strong { color: #172B21; }
 </style>
 {% endblock %}
 
@@ -113,8 +115,8 @@
       <div class="shield-icon-badge">
         <i class="bi bi-shield-lock-fill"></i>
       </div>
-      <h2 class="h4 fw-bold text-white mb-1">Administrator Access</h2>
-      <p class="small text-secondary mb-0">Authorized Ground Owner / Admin Only</p>
+      <h2 class="h4 fw-bold mb-1" style="color: #172B21;">Administrator Access</h2>
+      <p class="small mb-0" style="color: #64746B;">Authorized Ground Owner / Admin Only</p>
     </div>
 
     <!-- Login Form -->
@@ -150,7 +152,7 @@
     </div>
 
     <div class="text-center mt-3">
-      <a href="{% url 'home' %}" class="small text-secondary text-decoration-none">
+      <a href="{% url 'home' %}" class="small text-decoration-none" style="color: #64746B;">
         ← Back to Friends Sports Hub
       </a>
     </div>

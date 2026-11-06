@@ -188,15 +188,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (adminLink) {
       adminLink.outerHTML = `
         <div class="dropdown">
-          <button class="btn btn-outline-light dropdown-toggle rounded-pill px-3 py-2 fw-semibold" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-shield-lock-fill me-1 text-success"></i> Admin
+          <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-3 py-2 fw-semibold" style="border-color: #E5EEE8; color: #172B21; background-color: #FFFFFF;" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-shield-lock-fill me-1 text-emerald"></i> Admin
           </button>
-          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow-lg">
-            <li><a class="dropdown-item fw-bold text-success" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
-            <li><a class="dropdown-item" href="walk-in.html"><i class="bi bi-plus-circle-fill me-2 text-success"></i> Direct Booking</a></li>
-            <li><a class="dropdown-item" href="reports.html"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
-            <li><a class="dropdown-item" href="employees.html"><i class="bi bi-people-fill me-2 text-warning"></i> Manage Staff</a></li>
-            <li><hr class="dropdown-divider border-secondary"></li>
+          <ul class="dropdown-menu dropdown-menu-end border shadow-sm rounded-3" style="border-color: #E5EEE8; background-color: #FFFFFF;">
+            <li><a class="dropdown-item fw-bold text-emerald" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
+            <li><a class="dropdown-item" href="walk-in.html" style="color: #172B21;"><i class="bi bi-plus-circle-fill me-2 text-emerald"></i> Direct Booking</a></li>
+            <li><a class="dropdown-item" href="reports.html" style="color: #172B21;"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
+            <li><a class="dropdown-item" href="employees.html" style="color: #172B21;"><i class="bi bi-people-fill me-2 text-warning"></i> Manage Staff</a></li>
+            <li><hr class="dropdown-divider" style="border-color: #E5EEE8;"></li>
             <li><a class="dropdown-item text-danger" href="#" onclick="logoutAdmin()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
           </ul>
         </div>
@@ -231,15 +231,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (adminLink) {
       adminLink.outerHTML = `
         <div class="dropdown">
-          <button class="btn btn-outline-light dropdown-toggle rounded-pill px-3 py-2 fw-semibold" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-shield-lock-fill me-1 text-success"></i> Admin
+          <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-3 py-2 fw-semibold" style="border-color: #E5EEE8; color: #172B21; background-color: #FFFFFF;" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-shield-lock-fill me-1 text-emerald"></i> Admin
           </button>
-          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow-lg">
-            <li><a class="dropdown-item fw-bold text-success" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
-            <li><a class="dropdown-item" href="walk-in.html"><i class="bi bi-plus-circle-fill me-2 text-success"></i> Direct Booking</a></li>
-            <li><a class="dropdown-item" href="reports.html"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
-            <li><a class="dropdown-item" href="employees.html"><i class="bi bi-people-fill me-2 text-warning"></i> Manage Staff</a></li>
-            <li><hr class="dropdown-divider border-secondary"></li>
+          <ul class="dropdown-menu dropdown-menu-end border shadow-sm rounded-3" style="border-color: #E5EEE8; background-color: #FFFFFF;">
+            <li><a class="dropdown-item fw-bold text-emerald" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
+            <li><a class="dropdown-item" href="walk-in.html" style="color: #172B21;"><i class="bi bi-plus-circle-fill me-2 text-emerald"></i> Direct Booking</a></li>
+            <li><a class="dropdown-item" href="reports.html" style="color: #172B21;"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
+            <li><a class="dropdown-item" href="employees.html" style="color: #172B21;"><i class="bi bi-people-fill me-2 text-warning"></i> Manage Staff</a></li>
+            <li><hr class="dropdown-divider" style="border-color: #E5EEE8;"></li>
             <li><a class="dropdown-item text-danger" href="#" onclick="logoutAdmin()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
           </ul>
         </div>
@@ -579,15 +579,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (adminLink) {
       adminLink.outerHTML = `
         <div class="dropdown">
-          <button class="btn btn-outline-light dropdown-toggle rounded-pill px-3 py-2 fw-semibold" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-shield-lock-fill me-1 text-success"></i> Admin
+          <button class="btn btn-outline-secondary dropdown-toggle rounded-pill px-3 py-2 fw-semibold" style="border-color: #E5EEE8; color: #172B21; background-color: #FFFFFF;" type="button" data-bs-toggle="dropdown">
+            <i class="bi bi-shield-lock-fill me-1 text-emerald"></i> Admin
           </button>
-          <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow-lg">
-            <li><a class="dropdown-item fw-bold text-success" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
-            <li><a class="dropdown-item" href="walk-in.html"><i class="bi bi-plus-circle-fill me-2 text-success"></i> Direct Booking</a></li>
-            <li><a class="dropdown-item" href="reports.html"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
-            <li><a class="dropdown-item" href="employees.html"><i class="bi bi-people-fill me-2 text-warning"></i> Manage Staff</a></li>
-            <li><hr class="dropdown-divider border-secondary"></li>
+          <ul class="dropdown-menu dropdown-menu-end border shadow-sm rounded-3" style="border-color: #E5EEE8; background-color: #FFFFFF;">
+            <li><a class="dropdown-item fw-bold text-emerald" href="admin.html"><i class="bi bi-speedometer2 me-2"></i> Owner Dashboard</a></li>
+            <li><a class="dropdown-item" href="walk-in.html" style="color: #172B21;"><i class="bi bi-plus-circle-fill me-2 text-emerald"></i> Direct Booking</a></li>
+            <li><a class="dropdown-item" href="reports.html" style="color: #172B21;"><i class="bi bi-graph-up-arrow me-2 text-info"></i> Financial Reports</a></li>
+            <li><a class="dropdown-item" href="employees.html" style="color: #172B21;"><i class="bi bi-people-fill me-2 text-warning"></i> Manage Staff</a></li>
+            <li><hr class="dropdown-divider" style="border-color: #E5EEE8;"></li>
             <li><a class="dropdown-item text-danger" href="#" onclick="logoutAdmin()"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
           </ul>
         </div>

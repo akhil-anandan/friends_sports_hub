@@ -5,7 +5,7 @@
 
 {% block extra_css %}
 <style>
-  body { background: #0a0f0d; }
+  body { background: #FFFFFF; }
 
   .ticket-wrap {
     max-width: 480px;
@@ -15,8 +15,8 @@
 
   /* ── Success banner ── */
   .status-banner {
-    background: #0d1f12;
-    border: 1.5px solid #16a34a;
+    background: #E8F7EE;
+    border: 1.5px solid #C6ECD4;
     border-radius: 18px;
     padding: 20px 16px;
     text-align: center;
@@ -24,30 +24,30 @@
   }
   .status-icon {
     width: 52px; height: 52px;
-    background: #16a34a;
+    background: #079B55;
     border-radius: 50%;
     display: inline-flex;
     align-items: center; justify-content: center;
     font-size: 1.6rem; color: #fff;
     margin-bottom: 10px;
   }
-  .status-title { font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0 0 4px; }
-  .status-sub   { font-size: 0.8rem; color: #8aab92; margin: 0; }
+  .status-title { font-size: 1.25rem; font-weight: 800; color: #075B36; margin: 0 0 4px; }
+  .status-sub   { font-size: 0.82rem; color: #079B55; margin: 0; font-weight: 600; }
 
   /* ── WhatsApp action box ── */
   .wa-action-box {
-    background: #131e16;
-    border: 1.5px solid #22c55e;
+    background: #F4FAF6;
+    border: 1.5px solid #C6ECD4;
     border-radius: 18px;
-    padding: 16px;
+    padding: 18px;
     margin-bottom: 16px;
     text-align: center;
   }
   .wa-action-title {
-    font-size: 0.85rem; font-weight: 700; color: #22c55e;
+    font-size: 0.88rem; font-weight: 800; color: #075B36;
     margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;
   }
-  .wa-action-desc { font-size: 0.75rem; color: #6b8c73; margin-bottom: 12px; }
+  .wa-action-desc { font-size: 0.78rem; color: #64746B; margin-bottom: 12px; }
 
   .btn-wa-customer {
     width: 100%;
@@ -64,36 +64,42 @@
     gap: 8px;
     cursor: pointer;
     text-decoration: none;
-    transition: background .15s;
+    transition: background .15s, transform .15s;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
   }
-  .btn-wa-customer:hover, .btn-wa-customer:active { background: #1ebe5d; color: #fff; }
+  .btn-wa-customer:hover, .btn-wa-customer:active {
+    background: #1ebe5d;
+    color: #fff;
+    transform: translateY(-1px);
+  }
 
   .btn-copy-details {
     width: 100%;
-    background: transparent;
-    border: 1.5px solid #1e2e22;
+    background: #FFFFFF;
+    border: 1.5px solid #E5EEE8;
     border-radius: 12px;
-    color: #8aab92;
+    color: #172B21;
     font-size: 0.8rem;
-    font-weight: 600;
-    padding: 9px;
+    font-weight: 700;
+    padding: 10px;
     margin-top: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
     cursor: pointer;
+    transition: all .15s;
   }
-  .btn-copy-details:hover { border-color: #16a34a; color: #22c55e; }
+  .btn-copy-details:hover { border-color: #079B55; color: #079B55; }
 
   .btn-wa-sub {
-    background: #141f17;
-    border: 1px solid #1e2e22;
+    background: #FFFFFF;
+    border: 1.5px solid #E5EEE8;
     border-radius: 10px;
-    color: #8aab92;
+    color: #172B21;
     font-size: 0.78rem;
     font-weight: 700;
-    padding: 8px 10px;
+    padding: 9px 10px;
     text-align: center;
     text-decoration: none;
     display: inline-flex;
@@ -102,14 +108,14 @@
     transition: all .15s;
   }
   .btn-wa-sub:hover, .btn-wa-sub:active {
-    background: #1e2e22;
-    color: #22c55e;
-    border-color: #22c55e;
+    background: #E8F7EE;
+    color: #079B55;
+    border-color: #C6ECD4;
   }
   .copy-alert {
-    background: #0d2818;
-    border: 1px solid #16a34a;
-    color: #22c55e;
+    background: #DEF4E6;
+    border: 1px solid #C6ECD4;
+    color: #075B36;
     font-size: 0.78rem;
     font-weight: 600;
     padding: 8px 12px;
@@ -120,23 +126,24 @@
 
   /* ── Voucher card ── */
   .voucher-card {
-    background: #0e1712;
-    border: 1px solid #1e2e22;
+    background: #FFFFFF;
+    border: 1.5px solid #E5EEE8;
     border-radius: 20px;
     overflow: hidden;
     margin-bottom: 16px;
+    box-shadow: 0 4px 20px -2px rgba(23, 43, 33, 0.05);
   }
   .voucher-header {
-    background: #131e16;
-    border-bottom: 1px dashed #1e2e22;
+    background: #F4FAF6;
+    border-bottom: 1px dashed #E5EEE8;
     padding: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  .voucher-brand { font-size: 1rem; font-weight: 800; color: #fff; }
-  .voucher-loc   { font-size: 0.7rem; color: #6b8c73; }
-  .voucher-ref   { font-family: monospace; font-size: 0.8rem; font-weight: 700; color: #22c55e; }
+  .voucher-brand { font-size: 1rem; font-weight: 800; color: #172B21; }
+  .voucher-loc   { font-size: 0.7rem; color: #64746B; }
+  .voucher-ref   { font-family: monospace; font-size: 0.85rem; font-weight: 800; color: #079B55; }
 
   .voucher-body { padding: 18px 16px; }
 
@@ -144,27 +151,27 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 9px 0;
-    border-bottom: 1px solid rgba(255,255,255,.05);
+    padding: 10px 0;
+    border-bottom: 1px solid #E5EEE8;
   }
   .detail-row:last-child { border-bottom: none; }
-  .detail-label { font-size: 0.75rem; color: #6b8c73; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
-  .detail-val   { font-size: 0.9rem; color: #fff; font-weight: 700; text-align: right; }
-  .detail-val.highlight { color: #22c55e; font-size: 1.1rem; }
-  .detail-sub   { font-size: 0.72rem; color: #8aab92; font-weight: 500; }
+  .detail-label { font-size: 0.75rem; color: #64746B; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+  .detail-val   { font-size: 0.92rem; color: #172B21; font-weight: 700; text-align: right; }
+  .detail-val.highlight { color: #079B55; font-size: 1.15rem; }
+  .detail-sub   { font-size: 0.72rem; color: #64746B; font-weight: 600; }
 
   /* ── Instructions pill ── */
   .rules-box {
-    background: #131e16;
-    border: 1px solid #1e2e22;
+    background: #F4FAF6;
+    border: 1px solid #E5EEE8;
     border-radius: 14px;
     padding: 14px;
     margin-top: 14px;
-    font-size: 0.74rem;
-    color: #6b8c73;
+    font-size: 0.76rem;
+    color: #64746B;
     line-height: 1.5;
   }
-  .rules-box strong { color: #fff; }
+  .rules-box strong { color: #172B21; }
 
   /* ── Quick action buttons ── */
   .action-grid {
@@ -175,7 +182,7 @@
   .btn-action {
     border-radius: 12px;
     padding: 12px;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     font-weight: 700;
     text-align: center;
     text-decoration: none;
@@ -183,19 +190,21 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    transition: all .15s;
   }
-  .btn-action.home  { background: #131e16; border: 1.5px solid #1e2e22; color: #fff; }
-  .btn-action.admin { background: #16a34a; border: none; color: #fff; }
-  .btn-action:hover { opacity: .9; }
+  .btn-action.home  { background: #FFFFFF; border: 1.5px solid #E5EEE8; color: #172B21; }
+  .btn-action.home:hover { border-color: #079B55; color: #079B55; }
+  .btn-action.admin { background: #079B55; border: none; color: #fff; }
+  .btn-action.admin:hover { background: #068448; }
 
   /* ── Auto Send Banner ── */
   .auto-send-card {
-    background: #0d2818;
-    border: 1.5px solid #22c55e;
+    background: #E8F7EE;
+    border: 1.5px solid #C6ECD4;
     border-radius: 16px;
     padding: 12px 16px;
     margin-bottom: 14px;
-    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.25);
+    box-shadow: 0 4px 16px rgba(7, 155, 85, 0.15);
   }
 </style>
 {% endblock %}
@@ -209,7 +218,7 @@
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
       <div class="d-flex align-items-center gap-2">
         <div class="spinner-grow text-success spinner-grow-sm" role="status"></div>
-        <span class="text-white fw-bold small">Sending WhatsApp confirmation automatically...</span>
+        <span class="fw-bold small" style="color: #075B36;">Sending WhatsApp confirmation automatically...</span>
       </div>
       <a href="{{ customer_wa_url }}" class="btn btn-sm btn-success px-3 py-1 rounded-pill fw-bold" id="autoSendNowLink">
         <i class="bi bi-whatsapp me-1"></i> Open Now
@@ -261,8 +270,8 @@
     <div class="mt-3 pt-2 border-top border-secondary border-opacity-25 text-start">
       <div class="small text-secondary mb-1" style="font-size:0.75rem;">Send to different WhatsApp number:</div>
       <div class="input-group input-group-sm">
-        <span class="input-group-text bg-dark text-secondary border-secondary">+91</span>
-        <input type="tel" id="customWaInput" class="form-control bg-dark text-white border-secondary" placeholder="10-digit phone" value="{{ customer_phone_clean|default:booking.customer_phone }}">
+        <span class="input-group-text bg-light text-muted border">+91</span>
+        <input type="tel" id="customWaInput" class="form-control bg-white text-dark border" placeholder="10-digit phone" value="{{ customer_phone_clean|default:booking.customer_phone }}">
         <button class="btn btn-outline-success" type="button" onclick="sendCustomWhatsApp()">
           <i class="bi bi-send-fill me-1"></i> Send
         </button>

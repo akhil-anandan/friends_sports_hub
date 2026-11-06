@@ -5,46 +5,46 @@
 
 {% block content %}
 <!-- Page Header -->
-<section class="py-5 bg-black border-bottom border-secondary border-opacity-25">
+<section class="py-5 border-bottom" style="background-color: #F4FAF6; border-color: #E5EEE8 !important;">
     <div class="container text-center">
-        <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">Sports Facilities</span>
-        <h1 class="display-5 fw-extrabold text-white mb-2 font-heading">Explore Our Sports Infrastructure</h1>
-        <p class="text-secondary mx-auto" style="max-width: 650px;">
+        <span class="badge px-3 py-1 rounded-pill mb-2 fw-bold" style="background-color: #E8F7EE; color: #079B55; border: 1px solid #C6ECD4;">Sports Facilities</span>
+        <h1 class="display-5 fw-extrabold mb-2 font-heading" style="color: #172B21;">Explore Our Sports Infrastructure</h1>
+        <p class="mx-auto" style="max-width: 650px; color: #64746B;">
             Book slots across our premier turf ground, clean swimming pool, and dedicated kids recreation area.
         </p>
     </div>
 </section>
 
 <!-- Facilities Cards Section -->
-<section class="py-5" style="background-color: #070d09;">
+<section class="py-5" style="background-color: #FFFFFF;">
     <div class="container py-3">
         <div class="row g-4 justify-content-center">
             {% for fac in facilities %}
                 <div class="col-lg-4 col-md-6">
-                    <div class="card sports-card h-100 d-flex flex-column shadow">
-                        <div class="card-img-wrapper position-relative">
-                            <img src="{{ fac.image_url }}" alt="{{ fac.name }}">
+                    <div class="card sports-card h-100 d-flex flex-column shadow-sm border rounded-4 overflow-hidden" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
+                        <div class="card-img-wrapper position-relative" style="height: 220px; overflow: hidden; background-color: #F4FAF6;">
+                            <img src="{{ fac.image_url }}" alt="{{ fac.name }}" class="w-100 h-100" style="object-fit: cover;">
                             <div class="position-absolute top-0 end-0 m-3">
-                                <span class="badge bg-black bg-opacity-75 text-success border border-success border-opacity-50 px-3 py-2 rounded-pill fw-bold">
-                                    ₹{{ fac.price_per_hour|floatformat:0 }} <small class="text-white">/ hr</small>
+                                <span class="badge px-3 py-2 rounded-pill fw-bold shadow-sm" style="background: rgba(255, 255, 255, 0.94); color: #079B55; border: 1px solid #C6ECD4;">
+                                    ₹{{ fac.price_per_hour|floatformat:0 }} <small style="color: #64746B;">/ hr</small>
                                 </span>
                             </div>
                         </div>
 
                         <div class="card-body p-4 d-flex flex-column flex-grow-1">
                             <div class="d-flex align-items-center gap-2 mb-2">
-                                <span class="badge bg-success bg-opacity-20 text-success">{{ fac.get_facility_type_display }}</span>
+                                <span class="badge px-2 py-1 rounded small fw-bold" style="background-color: #E8F7EE; color: #079B55; border: 1px solid #C6ECD4;">{{ fac.get_facility_type_display }}</span>
                             </div>
 
-                            <h3 class="card-title text-white fw-bold mb-3 fs-4">{{ fac.name }}</h3>
-                            <p class="text-secondary small mb-3">
+                            <h3 class="card-title fw-bold mb-3 fs-4" style="color: #172B21;">{{ fac.name }}</h3>
+                            <p class="small mb-3" style="color: #64746B;">
                                 {{ fac.description }}
                             </p>
 
                             {% if fac.features %}
                                 <div class="mb-3">
-                                    <h6 class="text-white small fw-bold mb-2">Highlights:</h6>
-                                    <ul class="list-unstyled small text-secondary mb-0">
+                                    <h6 class="small fw-bold mb-2" style="color: #172B21;">Highlights:</h6>
+                                    <ul class="list-unstyled small mb-0" style="color: #64746B;">
                                         {% for feat in fac.features %}
                                             <li class="mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i>{{ feat }}</li>
                                         {% endfor %}
@@ -52,18 +52,18 @@
                                 </div>
                             {% endif %}
 
-                            <div class="p-3 bg-dark rounded-3 border border-secondary border-opacity-25 mb-4 mt-auto">
-                                <div class="d-flex justify-content-between small text-secondary mb-1">
+                            <div class="p-3 rounded-3 mb-4 mt-auto" style="background-color: #F4FAF6; border: 1px solid #E5EEE8;">
+                                <div class="d-flex justify-content-between small mb-1" style="color: #64746B;">
                                     <span>Operating Hours:</span>
-                                    <span class="text-light fw-semibold">{{ fac.open_time|time:"g:i A" }} - {{ fac.close_time|time:"g:i A" }}</span>
+                                    <span class="fw-bold" style="color: #172B21;">{{ fac.open_time|time:"g:i A" }} - {{ fac.close_time|time:"g:i A" }}</span>
                                 </div>
-                                <div class="d-flex justify-content-between small text-secondary">
+                                <div class="d-flex justify-content-between small" style="color: #64746B;">
                                     <span>Slot Duration:</span>
-                                    <span class="text-light fw-semibold">{{ fac.slot_duration_minutes }} Mins</span>
+                                    <span class="fw-bold" style="color: #172B21;">{{ fac.slot_duration_minutes }} Mins</span>
                                 </div>
                             </div>
 
-                            <a href="{% url 'book_facility_slot' fac.slug %}" class="btn btn-success w-100 py-3 rounded-pill fw-bold shadow">
+                            <a href="{% url 'book_facility_slot' fac.slug %}" class="btn btn-emerald w-100 py-3 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
                                 <i class="bi bi-calendar2-check me-1"></i> Book Slot Now
                             </a>
                         </div>
@@ -73,16 +73,16 @@
         </div>
 
         <!-- Callout Banner -->
-        <div class="card glass-panel p-4 p-md-5 mt-5 text-center">
-            <h4 class="text-white fw-bold mb-2">Planning a Tournament or Special Event?</h4>
-            <p class="text-secondary small mb-4 mx-auto" style="max-width: 600px;">
+        <div class="card p-4 p-md-5 mt-5 text-center rounded-4 shadow-sm border" style="background-color: #F4FAF6; border-color: #E5EEE8 !important;">
+            <h4 class="fw-bold mb-2" style="color: #172B21;">Planning a Tournament or Special Event?</h4>
+            <p class="small mb-4 mx-auto" style="max-width: 600px; color: #64746B;">
                 We offer tailored slot packages for club tournaments, corporate friendlies, and school sports days with floodlight support.
             </p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="tel:6238006820" class="btn btn-outline-success rounded-pill px-4">
-                    <i class="bi bi-telephone-fill me-1"></i> Call: 6238006820
+                <a href="tel:6238006820" class="btn btn-outline-emerald rounded-pill px-4">
+                    <i class="bi bi-telephone-fill text-success me-1"></i> Call: 6238006820
                 </a>
-                <a href="https://wa.me/916238006820" target="_blank" rel="noopener" class="btn btn-success rounded-pill px-4">
+                <a href="https://wa.me/916238006820" target="_blank" rel="noopener" class="btn btn-emerald rounded-pill px-4">
                     <i class="bi bi-whatsapp me-1"></i> Chat on WhatsApp
                 </a>
             </div>

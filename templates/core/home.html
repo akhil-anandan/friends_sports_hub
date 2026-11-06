@@ -4,30 +4,30 @@
 {% block title %}Friends Sports Hub Mulayankavu | Turf, Pool & Kids Park Booking{% endblock %}
 
 {% block content %}
-<div class="py-4 py-lg-5" style="background-color: #070d09;">
+<div class="py-4 py-lg-5" style="background-color: #FFFFFF;">
     <div class="container">
 
         <!-- ===================== MINIMAL HERO BAR ===================== -->
-        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 mb-4 shadow-sm">
+        <div class="card border rounded-4 p-4 mb-4 shadow-sm" style="background-color: #F4FAF6; border-color: #E5EEE8 !important;">
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
                 <div>
-                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-success bg-opacity-20 border border-success border-opacity-40 text-success mb-2">
-                        <i class="bi bi-geo-alt-fill text-success small"></i>
-                        <span class="small fw-semibold">Kulukkallur, Palakkad &bull; Mulayankavu</span>
+                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-2" style="background-color: #E8F7EE; border: 1px solid #C6ECD4; color: #079B55;">
+                        <i class="bi bi-geo-alt-fill small"></i>
+                        <span class="small fw-bold">Kulukkallur, Palakkad &bull; Mulayankavu</span>
                     </div>
-                    <h1 class="h2 fw-extrabold text-white mb-1">
-                        FRIENDS <span class="text-success">SPORTS HUB</span>
+                    <h1 class="h2 fw-extrabold mb-1" style="color: #172B21;">
+                        FRIENDS <span class="text-success" style="color: #079B55 !important;">SPORTS HUB</span>
                     </h1>
-                    <p class="text-secondary small mb-0" style="max-width: 600px;">
+                    <p class="small mb-0" style="color: #64746B; max-width: 600px;">
                         Premier sports destination featuring FIFA-standard artificial grass turf, covered swimming pool, and children's amusement park.
                     </p>
                 </div>
 
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="{% url 'book_slot' %}" class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2">
+                    <a href="{% url 'book_slot' %}" class="btn btn-emerald rounded-pill px-4 py-2 fw-bold shadow-sm d-flex align-items-center gap-2">
                         <i class="bi bi-calendar2-check-fill"></i> Check Available Slots
                     </a>
-                    <a href="tel:+916238006820" class="btn btn-outline-light rounded-pill px-3 py-2 d-flex align-items-center gap-2">
+                    <a href="tel:+916238006820" class="btn btn-outline-emerald rounded-pill px-3 py-2 d-flex align-items-center gap-2">
                         <i class="bi bi-telephone-fill text-success"></i> Call: 6238006820
                     </a>
                     <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub!%20I%20want%20to%20inquire%20about%20booking%20a%20slot."
@@ -42,19 +42,19 @@
         <!-- ===================== MAIN TWO-COLUMN SECTION ===================== -->
         <div class="row g-4 mb-5">
             
-            <!-- LEFT: Small Football Turf Showcase (Like on book.html) -->
+            <!-- LEFT: Football Turf Showcase Card -->
             <div class="col-lg-5">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow-lg h-100 d-flex flex-column">
+                <div class="card border rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                     <!-- Photo Header -->
-                    <div class="position-relative" style="height: 220px; overflow: hidden;">
+                    <div class="position-relative" style="height: 220px; overflow: hidden; background-color: #F4FAF6;">
                         <img src="{% static 'images/turf_hero.jpg' %}" alt="Football & Cricket Turf" class="w-100 h-100" style="object-fit: cover;">
                         <div class="position-absolute top-0 start-0 m-3">
-                            <span class="badge bg-black bg-opacity-75 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill small fw-bold">
+                            <span class="badge px-3 py-1 rounded-pill small fw-bold" style="background: rgba(255, 255, 255, 0.94); color: #079B55; border: 1px solid #C6ECD4;">
                                 <i class="bi bi-stars me-1"></i> FIFA Standard 50mm Grass
                             </span>
                         </div>
                         <div class="position-absolute bottom-0 end-0 m-3">
-                            <span class="badge bg-success text-white px-3 py-2 rounded-pill fw-bold shadow">
+                            <span class="badge text-white px-3 py-2 rounded-pill fw-bold shadow-sm" style="background-color: #079B55;">
                                 ₹900 <small class="text-white-50">/ 60 min slot</small>
                             </span>
                         </div>
@@ -64,47 +64,47 @@
                     <div class="p-4 d-flex flex-column flex-grow-1">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <div>
-                                <h4 class="text-white fw-bold mb-1">Football & Cricket Turf</h4>
-                                <small class="text-secondary d-block">
+                                <h4 class="fw-bold mb-1" style="color: #172B21;">Football & Cricket Turf</h4>
+                                <small class="d-block" style="color: #64746B;">
                                     <i class="bi bi-geo-alt-fill text-success me-1"></i> Mulayankavu, Kulukkallur, Palakkad
                                 </small>
                             </div>
-                            <span class="badge bg-success bg-opacity-20 text-success border border-success border-opacity-40 px-2 py-1 rounded small">
+                            <span class="badge px-2 py-1 rounded small fw-bold" style="background-color: #E8F7EE; color: #079B55; border: 1px solid #C6ECD4;">
                                 5s & 7s Ready
                             </span>
                         </div>
 
-                        <p class="text-secondary small mb-3">
+                        <p class="small mb-3" style="color: #64746B;">
                             All-weather shock-absorbing synthetic turf with high-power LED floodlights for seamless day and night matches.
                         </p>
 
                         <!-- Feature highlights -->
                         <div class="row g-2 mb-4">
                             <div class="col-6">
-                                <div class="p-2 bg-dark rounded-3 border border-secondary border-opacity-25 small text-light">
+                                <div class="p-2 rounded-3 small fw-semibold" style="background-color: #F4FAF6; border: 1px solid #E5EEE8; color: #172B21;">
                                     <i class="bi bi-check-circle-fill text-success me-1"></i> 50mm FIFA Grass
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="p-2 bg-dark rounded-3 border border-secondary border-opacity-25 small text-light">
+                                <div class="p-2 rounded-3 small fw-semibold" style="background-color: #F4FAF6; border: 1px solid #E5EEE8; color: #172B21;">
                                     <i class="bi bi-lightning-charge-fill text-warning me-1"></i> Pro LED Floodlights
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="p-2 bg-dark rounded-3 border border-secondary border-opacity-25 small text-light">
+                                <div class="p-2 rounded-3 small fw-semibold" style="background-color: #F4FAF6; border: 1px solid #E5EEE8; color: #172B21;">
                                     <i class="bi bi-shield-check text-success me-1"></i> Full Ball Netting
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="p-2 bg-dark rounded-3 border border-secondary border-opacity-25 small text-light">
-                                    <i class="bi bi-clock-fill text-info me-1"></i> 6:00 AM – 11:00 PM
+                                <div class="p-2 rounded-3 small fw-semibold" style="background-color: #F4FAF6; border: 1px solid #E5EEE8; color: #172B21;">
+                                    <i class="bi bi-clock-fill text-success me-1"></i> 6:00 AM – 11:00 PM
                                 </div>
                             </div>
                         </div>
 
                         <!-- Action Button -->
                         <div class="mt-auto pt-2">
-                            <a href="{% url 'book_slot' %}?facility=turf" class="btn btn-success w-100 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
+                            <a href="{% url 'book_slot' %}?facility=turf" class="btn btn-emerald w-100 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
                                 <i class="bi bi-calendar-plus"></i> View & Book Turf Slots
                             </a>
                         </div>
@@ -112,29 +112,29 @@
                 </div>
             </div>
 
-            <!-- RIGHT: Ground Guidelines & Discussion ("small discussion") -->
+            <!-- RIGHT: Ground Guidelines & Discussion -->
             <div class="col-lg-7">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 shadow-lg h-100 d-flex flex-column justify-content-between">
+                <div class="card border rounded-4 p-4 shadow-sm h-100 d-flex flex-column justify-content-between" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                     <div>
                         <!-- Header -->
-                        <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom border-secondary border-opacity-25">
-                            <h4 class="text-white fw-bold mb-0 d-flex align-items-center gap-2">
-                                <i class="bi bi-chat-quote-fill text-success"></i> Facility Overview & Discussion
+                        <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom" style="border-color: #E5EEE8 !important;">
+                            <h4 class="fw-bold mb-0 d-flex align-items-center gap-2" style="color: #172B21;">
+                                <i class="bi bi-chat-quote-fill text-success"></i> Facility Overview & Guidelines
                             </h4>
-                            <span class="badge bg-secondary bg-opacity-25 text-light small">Ground Info</span>
+                            <span class="badge small" style="background-color: #F4FAF6; color: #64746B; border: 1px solid #E5EEE8;">Ground Info</span>
                         </div>
 
                         <!-- Hub Introduction -->
-                        <p class="text-secondary small leading-relaxed mb-3">
-                            Welcome to <strong class="text-white">Friends Sports Hub Mulayankavu</strong>, Kulukkallur's premier sporting complex in Palakkad District, Kerala. Designed specifically for community clubs, football enthusiasts, and family recreation, our complex brings together top-tier athletic infrastructure with comfortable amenities.
+                        <p class="small mb-3" style="color: #64746B; line-height: 1.6;">
+                            Welcome to <strong style="color: #172B21;">Friends Sports Hub Mulayankavu</strong>, Kulukkallur's premier sporting complex in Palakkad District, Kerala. Designed specifically for community clubs, football enthusiasts, and family recreation, our complex brings together top-tier athletic infrastructure with comfortable amenities.
                         </p>
 
                         <!-- Ground Guidelines Discussion Box -->
-                        <div class="p-3 bg-dark rounded-3 border border-success border-opacity-30 mb-3">
-                            <h6 class="text-success fw-bold mb-2 d-flex align-items-center gap-2">
+                        <div class="p-3 rounded-3 mb-3" style="background-color: #F4FAF6; border: 1px solid #C6ECD4; border-left: 4px solid #079B55;">
+                            <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="color: #075B36;">
                                 <i class="bi bi-shield-exclamation text-warning"></i> Ground Guidelines & Match Etiquette
                             </h6>
-                            <ul class="list-unstyled text-light small mb-0 d-flex flex-column gap-2">
+                            <ul class="list-unstyled small mb-0 d-flex flex-column gap-2" style="color: #172B21;">
                                 <li class="d-flex align-items-start gap-2">
                                     <i class="bi bi-check2 text-success mt-1"></i>
                                     <div><strong>Footwear:</strong> Only turf shoes or rubber molded studs are allowed. Metal studs are strictly prohibited to maintain turf safety.</div>
@@ -149,29 +149,29 @@
                                 </li>
                                 <li class="d-flex align-items-start gap-2">
                                     <i class="bi bi-check2 text-success mt-1"></i>
-                                    <div><strong>Booking & Confirmation:</strong> Reserve your slot online or send an instant WhatsApp request directly to owner phone: <strong class="text-success">6238006820</strong>.</div>
+                                    <div><strong>Booking & Confirmation:</strong> Reserve your slot online or send an instant WhatsApp request directly to owner phone: <strong style="color: #079B55;">6238006820</strong>.</div>
                                 </li>
                             </ul>
                         </div>
 
                         <!-- Facility Chips -->
                         <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-dribbble text-success me-1"></i> 7s & 5s Football</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-trophy text-warning me-1"></i> Box Cricket</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-water text-info me-1"></i> Temperature Pool</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-balloon text-danger me-1"></i> Kids Park</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-p-circle text-primary me-1"></i> Free Parking</span>
-                            <span class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 rounded-pill"><i class="bi bi-cup-hot text-info me-1"></i> Drinking Water</span>
+                            <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background-color: #F4FAF6; color: #172B21; border: 1px solid #E5EEE8;"><i class="bi bi-dribbble text-success me-1"></i> 7s & 5s Football</span>
+                            <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background-color: #F4FAF6; color: #172B21; border: 1px solid #E5EEE8;"><i class="bi bi-trophy text-warning me-1"></i> Box Cricket</span>
+                            <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background-color: #F4FAF6; color: #172B21; border: 1px solid #E5EEE8;"><i class="bi bi-water text-info me-1"></i> Temperature Pool</span>
+                            <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background-color: #F4FAF6; color: #172B21; border: 1px solid #E5EEE8;"><i class="bi bi-balloon text-danger me-1"></i> Kids Park</span>
+                            <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background-color: #F4FAF6; color: #172B21; border: 1px solid #E5EEE8;"><i class="bi bi-p-circle text-primary me-1"></i> Free Parking</span>
+                            <span class="badge px-3 py-2 rounded-pill fw-semibold" style="background-color: #F4FAF6; color: #172B21; border: 1px solid #E5EEE8;"><i class="bi bi-cup-hot text-info me-1"></i> Drinking Water</span>
                         </div>
                     </div>
 
                     <!-- Direct Contact Banner -->
-                    <div class="pt-3 border-top border-secondary border-opacity-25 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
-                        <div class="small text-secondary">
+                    <div class="pt-3 border-top d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3" style="border-color: #E5EEE8 !important;">
+                        <div class="small" style="color: #64746B;">
                             <i class="bi bi-info-circle text-success me-1"></i> Need custom tournament booking or coaching sessions?
                         </div>
-                        <a href="tel:6238006820" class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold text-nowrap">
-                            <i class="bi bi-telephone-fill me-1"></i> Contact Hub: 6238006820
+                        <a href="tel:6238006820" class="btn btn-sm btn-outline-emerald rounded-pill px-3 fw-bold text-nowrap">
+                            <i class="bi bi-telephone-fill me-1 text-success"></i> Contact Hub: 6238006820
                         </a>
                     </div>
                 </div>
@@ -179,37 +179,37 @@
 
         </div>
 
-        <!-- ===================== PHOTO SHOWCASE & FACILITIES ("a few images and things like that") ===================== -->
-        <div class="mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- ===================== AMENITIES & PHOTO GALLERY ===================== -->
+        <div class="mb-5 p-4 rounded-4" style="background-color: #F4FAF6; border: 1px solid #E5EEE8;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h4 class="text-white fw-bold mb-0">
+                    <h4 class="fw-bold mb-1" style="color: #172B21;">
                         <i class="bi bi-images text-success me-2"></i> Amenities & Photo Gallery
                     </h4>
-                    <small class="text-secondary">Complete sports & recreation facilities at Mulayankavu</small>
+                    <small style="color: #64746B;">Complete sports & recreation facilities at Mulayankavu</small>
                 </div>
-                <a href="{% url 'facilities' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                <a href="{% url 'facilities' %}" class="btn btn-sm btn-outline-emerald rounded-pill px-3">
                     View All Details <i class="bi bi-arrow-right ms-1"></i>
                 </a>
             </div>
 
-            <div class="row g-3">
+            <div class="row g-4">
                 <!-- Facility 1: Turf -->
                 <div class="col-md-4">
-                    <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column">
-                        <div class="position-relative" style="height: 180px; overflow: hidden;">
+                    <div class="card border rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
+                        <div class="position-relative" style="height: 180px; overflow: hidden; background-color: #F4FAF6;">
                             <img src="{% static 'images/turf_hero.jpg' %}" alt="Football Turf Ground" class="w-100 h-100" style="object-fit: cover;">
-                            <span class="badge bg-black bg-opacity-75 text-success position-absolute top-0 end-0 m-2 border border-success border-opacity-50 px-2 py-1 rounded-pill small">
+                            <span class="badge position-absolute top-0 end-0 m-2 px-3 py-1 rounded-pill small fw-bold" style="background: rgba(255, 255, 255, 0.94); color: #079B55; border: 1px solid #C6ECD4;">
                                 ₹900 / hr
                             </span>
                         </div>
                         <div class="p-3 d-flex flex-column flex-grow-1">
-                            <h5 class="text-white fw-bold mb-1">Football & Cricket Turf</h5>
-                            <p class="text-secondary small mb-3 flex-grow-1">
+                            <h5 class="fw-bold mb-1" style="color: #172B21;">Football & Cricket Turf</h5>
+                            <p class="small mb-3 flex-grow-1" style="color: #64746B;">
                                 Synthetic shock-absorbing artificial grass with high mast LED floodlights. Suitable for 5s/7s matches and box cricket.
                             </p>
-                            <a href="{% url 'book_slot' %}?facility=turf" class="btn btn-outline-success btn-sm rounded-pill w-100 fw-semibold mt-auto">
-                                <i class="bi bi-calendar-plus me-1"></i> Book Turf Slot
+                            <a href="{% url 'book_slot' %}?facility=turf" class="btn btn-outline-emerald btn-sm rounded-pill w-100 fw-bold mt-auto">
+                                <i class="bi bi-calendar-plus me-1 text-success"></i> Book Turf Slot
                             </a>
                         </div>
                     </div>
@@ -217,20 +217,20 @@
 
                 <!-- Facility 2: Swimming Pool -->
                 <div class="col-md-4">
-                    <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column">
-                        <div class="position-relative" style="height: 180px; overflow: hidden;">
+                    <div class="card border rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
+                        <div class="position-relative" style="height: 180px; overflow: hidden; background-color: #F4FAF6;">
                             <img src="{% static 'images/hub_banner.jpg' %}" alt="Covered Swimming Pool" class="w-100 h-100" style="object-fit: cover;">
-                            <span class="badge bg-black bg-opacity-75 text-info position-absolute top-0 end-0 m-2 border border-info border-opacity-50 px-2 py-1 rounded-pill small">
+                            <span class="badge position-absolute top-0 end-0 m-2 px-3 py-1 rounded-pill small fw-bold" style="background: rgba(255, 255, 255, 0.94); color: #079B55; border: 1px solid #C6ECD4;">
                                 ₹150 / hr
                             </span>
                         </div>
                         <div class="p-3 d-flex flex-column flex-grow-1">
-                            <h5 class="text-white fw-bold mb-1">Covered Swimming Pool</h5>
-                            <p class="text-secondary small mb-3 flex-grow-1">
+                            <h5 class="fw-bold mb-1" style="color: #172B21;">Covered Swimming Pool</h5>
+                            <p class="small mb-3 flex-grow-1" style="color: #64746B;">
                                 All-weather roof covered hygienic swimming pool with filtration system, clean changing rooms, and showers.
                             </p>
-                            <a href="{% url 'book_slot' %}?facility=swimming-pool" class="btn btn-outline-info btn-sm rounded-pill w-100 fw-semibold mt-auto">
-                                <i class="bi bi-calendar-plus me-1"></i> Book Pool Session
+                            <a href="{% url 'book_slot' %}?facility=swimming-pool" class="btn btn-outline-emerald btn-sm rounded-pill w-100 fw-bold mt-auto">
+                                <i class="bi bi-calendar-plus me-1 text-success"></i> Book Pool Session
                             </a>
                         </div>
                     </div>
@@ -238,20 +238,20 @@
 
                 <!-- Facility 3: Children's Park -->
                 <div class="col-md-4">
-                    <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column">
-                        <div class="position-relative" style="height: 180px; overflow: hidden;">
+                    <div class="card border rounded-4 overflow-hidden shadow-sm h-100 d-flex flex-column" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
+                        <div class="position-relative" style="height: 180px; overflow: hidden; background-color: #F4FAF6;">
                             <img src="{% static 'images/hub_banner.jpg' %}" alt="Children's Park" class="w-100 h-100" style="object-fit: cover;">
-                            <span class="badge bg-black bg-opacity-75 text-warning position-absolute top-0 end-0 m-2 border border-warning border-opacity-50 px-2 py-1 rounded-pill small">
+                            <span class="badge position-absolute top-0 end-0 m-2 px-3 py-1 rounded-pill small fw-bold" style="background: rgba(255, 255, 255, 0.94); color: #079B55; border: 1px solid #C6ECD4;">
                                 ₹50 entry
                             </span>
                         </div>
                         <div class="p-3 d-flex flex-column flex-grow-1">
-                            <h5 class="text-white fw-bold mb-1">Children's Amusement Park</h5>
-                            <p class="text-secondary small mb-3 flex-grow-1">
+                            <h5 class="fw-bold mb-1" style="color: #172B21;">Children's Amusement Park</h5>
+                            <p class="small mb-3 flex-grow-1" style="color: #64746B;">
                                 Safe and colorful amusement zone with slides, swings, soft turf ground, and shaded seating for parents.
                             </p>
-                            <a href="{% url 'book_slot' %}?facility=childrens-park" class="btn btn-outline-warning btn-sm rounded-pill w-100 fw-semibold mt-auto">
-                                <i class="bi bi-calendar-plus me-1"></i> View Park
+                            <a href="{% url 'book_slot' %}?facility=childrens-park" class="btn btn-outline-emerald btn-sm rounded-pill w-100 fw-bold mt-auto">
+                                <i class="bi bi-calendar-plus me-1 text-success"></i> View Park
                             </a>
                         </div>
                     </div>
@@ -260,24 +260,24 @@
         </div>
 
         <!-- ===================== LOCATION & GOOGLE MAPS ===================== -->
-        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 shadow-sm">
+        <div class="card border rounded-4 p-4 shadow-sm" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
             <div class="row align-items-center g-3">
                 <div class="col-md-8">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="badge bg-success bg-opacity-20 text-success p-3 rounded-circle fs-4">
-                            <i class="bi bi-geo-alt-fill"></i>
+                        <div class="brand-logo-icon" style="width: 48px; height: 48px; font-size: 1.5rem;">
+                            <i class="bi bi-geo-alt-fill text-success"></i>
                         </div>
                         <div>
-                            <h5 class="text-white fw-bold mb-1">Kulukkallur, Mulayankavu, Palakkad</h5>
-                            <p class="text-secondary small mb-0">
-                                Open 7 days a week from 6:00 AM to 11:00 PM &bull; Direct Helpline: <strong class="text-white">6238006820</strong>
+                            <h5 class="fw-bold mb-1" style="color: #172B21;">Kulukkallur, Mulayankavu, Palakkad</h5>
+                            <p class="small mb-0" style="color: #64746B;">
+                                Open 7 days a week from 6:00 AM to 11:00 PM &bull; Direct Helpline: <strong style="color: #079B55;">6238006820</strong>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-outline-success rounded-pill px-4 py-2 fw-semibold">
-                        <i class="bi bi-box-arrow-up-right me-1"></i> Open Google Maps
+                    <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-outline-emerald rounded-pill px-4 py-2 fw-bold">
+                        <i class="bi bi-box-arrow-up-right me-1 text-success"></i> Open Google Maps
                     </a>
                 </div>
             </div>

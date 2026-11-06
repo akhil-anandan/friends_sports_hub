@@ -16,3 +16,9 @@ postgres.log
 *.latest_backup
 .neon
 .env.neon
+
+.env.local_backup
+.agents/
+skills-lock.json
+scratch/
+database_backups/neon_preclaim_backup*

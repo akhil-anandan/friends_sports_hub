@@ -4,36 +4,36 @@
 {% block title %}Owner & Staff Operations Portal | Friends Sports Hub{% endblock %}
 
 {% block content %}
-<div class="py-4" style="background-color: #070d09;">
+<div class="py-4" style="background-color: #F4FAF6; min-height: 80vh;">
     <div class="container-fluid px-lg-5">
         
         <!-- Staff Top Navigation Bar -->
-        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 mb-4 shadow-sm">
+        <div class="card bg-white border rounded-4 p-3 mb-4 shadow-sm" style="border-color: #E5EEE8 !important;">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold">
+                    <span class="badge px-3 py-2 rounded-pill fw-bold" style="background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A;">
                         <i class="bi bi-shield-lock-fill me-1"></i> 
                         {% if is_owner %}Owner / Director Portal{% else %}Ground Staff Desk{% endif %}
                     </span>
-                    <span class="text-white fw-bold d-none d-sm-inline">Friends Sports Hub Mulayankavu</span>
+                    <span class="fw-bold d-none d-sm-inline" style="color: #172B21;">Friends Sports Hub Mulayankavu</span>
                 </div>
 
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="{% url 'staff_dashboard' %}" class="btn btn-sm btn-success rounded-pill px-3 fw-bold">
+                    <a href="{% url 'staff_dashboard' %}" class="btn btn-sm btn-emerald rounded-pill px-3 fw-bold">
                         <i class="bi bi-speedometer2 me-1"></i> Dashboard
                     </a>
-                    <a href="{% url 'staff_walkin_booking' %}" class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold">
+                    <a href="{% url 'staff_walkin_booking' %}" class="btn btn-sm btn-outline-emerald rounded-pill px-3 fw-bold">
                         <i class="bi bi-plus-circle-fill me-1"></i> New Walk-in Booking
                     </a>
                     {% if is_owner %}
-                        <a href="{% url 'staff_manage_employees' %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
-                            <i class="bi bi-people-fill me-1 text-warning"></i> Manage Staff
+                        <a href="{% url 'staff_manage_employees' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3" style="border-color: #E5EEE8; color: #172B21;">
+                            <i class="bi bi-people-fill me-1" style="color: #079B55;"></i> Manage Staff
                         </a>
-                        <a href="{% url 'staff_reports' %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
-                            <i class="bi bi-graph-up-arrow me-1 text-info"></i> Revenue Reports
+                        <a href="{% url 'staff_reports' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3" style="border-color: #E5EEE8; color: #172B21;">
+                            <i class="bi bi-graph-up-arrow me-1" style="color: #0284C7;"></i> Revenue Reports
                         </a>
                     {% endif %}
-                    <a href="/admin/" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                    <a href="/admin/" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-3" style="border-color: #E5EEE8; color: #64746B;">
                         <i class="bi bi-gear-fill me-1"></i> Django Admin
                     </a>
                 </div>
@@ -41,15 +41,15 @@
         </div>
 
         <!-- Filter & Search Toolbar -->
-        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 mb-4 shadow">
+        <div class="card bg-white border rounded-4 p-3 mb-4 shadow-sm" style="border-color: #E5EEE8 !important;">
             <form method="GET" class="row g-2 align-items-center">
                 <div class="col-md-3">
-                    <label class="small text-secondary fw-semibold mb-1"><i class="bi bi-calendar3 me-1 text-success"></i> Match Date</label>
-                    <input type="date" name="date" class="form-control form-control-sm bg-dark text-white border-secondary" value="{{ date_str }}">
+                    <label class="small fw-semibold mb-1" style="color: #64746B;"><i class="bi bi-calendar3 me-1 text-emerald"></i> Match Date</label>
+                    <input type="date" name="date" class="form-control form-control-sm border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" value="{{ date_str }}">
                 </div>
                 <div class="col-md-3">
-                    <label class="small text-secondary fw-semibold mb-1"><i class="bi bi-dribbble me-1 text-success"></i> Facility</label>
-                    <select name="facility" class="form-select form-select-sm bg-dark text-white border-secondary">
+                    <label class="small fw-semibold mb-1" style="color: #64746B;"><i class="bi bi-dribbble me-1 text-emerald"></i> Facility</label>
+                    <select name="facility" class="form-select form-select-sm border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;">
                         <option value="">All Facilities</option>
                         {% for f in facilities %}
                             <option value="{{ f.slug }}" {% if facility_slug == f.slug %}selected{% endif %}>{{ f.name }}</option>
@@ -57,11 +57,11 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="small text-secondary fw-semibold mb-1"><i class="bi bi-search me-1 text-success"></i> Search Customer / Phone</label>
-                    <input type="text" name="q" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Search phone, name, or booking ref..." value="{{ search_query }}">
+                    <label class="small fw-semibold mb-1" style="color: #64746B;"><i class="bi bi-search me-1 text-emerald"></i> Search Customer / Phone</label>
+                    <input type="text" name="q" class="form-control form-control-sm border" style="border-color: #E5EEE8; background-color: #FFFFFF; color: #172B21;" placeholder="Search phone, name, or booking ref..." value="{{ search_query }}">
                 </div>
                 <div class="col-md-2 d-flex align-items-end pt-md-4">
-                    <button type="submit" class="btn btn-success btn-sm w-100 rounded-pill fw-bold">
+                    <button type="submit" class="btn btn-emerald btn-sm w-100 rounded-pill fw-bold">
                         Filter Schedule
                     </button>
                 </div>
@@ -71,50 +71,50 @@
         <!-- KPI Metrics Row -->
         <div class="row g-3 mb-4">
             <div class="col-6 col-lg-3">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
-                    <div class="text-secondary small fw-semibold">Confirmed Matches</div>
-                    <div class="fs-2 fw-extrabold text-white mt-1">{{ total_confirmed_count }}</div>
-                    <small class="text-success"><i class="bi bi-calendar-check me-1"></i>{{ selected_date|date:"D, d M" }}</small>
+                <div class="card bg-white border rounded-4 p-3 shadow-sm" style="border-color: #E5EEE8 !important;">
+                    <div class="small fw-semibold" style="color: #64746B;">Confirmed Matches</div>
+                    <div class="fs-2 fw-extrabold mt-1" style="color: #172B21;">{{ total_confirmed_count }}</div>
+                    <small class="text-emerald fw-semibold"><i class="bi bi-calendar-check me-1"></i>{{ selected_date|date:"D, d M" }}</small>
                 </div>
             </div>
 
             <div class="col-6 col-lg-3">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
-                    <div class="text-secondary small fw-semibold">Revenue Collected</div>
-                    <div class="fs-2 fw-extrabold text-success mt-1">₹{{ total_revenue_paid|floatformat:0 }}</div>
-                    <small class="text-light"><i class="bi bi-check2-circle text-success me-1"></i>Paid at counter/UPI</small>
+                <div class="card bg-white border rounded-4 p-3 shadow-sm" style="border-color: #E5EEE8 !important;">
+                    <div class="small fw-semibold" style="color: #64746B;">Revenue Collected</div>
+                    <div class="fs-2 fw-extrabold mt-1" style="color: #079B55;">₹{{ total_revenue_paid|floatformat:0 }}</div>
+                    <small style="color: #64746B;"><i class="bi bi-check2-circle text-emerald me-1"></i>Paid at counter/UPI</small>
                 </div>
             </div>
 
             <div class="col-6 col-lg-3">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
-                    <div class="text-secondary small fw-semibold">Cash Pending at Venue</div>
-                    <div class="fs-2 fw-extrabold text-warning mt-1">₹{{ total_revenue_pending|floatformat:0 }}</div>
-                    <small class="text-secondary">To be collected upon arrival</small>
+                <div class="card bg-white border rounded-4 p-3 shadow-sm" style="border-color: #E5EEE8 !important;">
+                    <div class="small fw-semibold" style="color: #64746B;">Cash Pending at Venue</div>
+                    <div class="fs-2 fw-extrabold mt-1" style="color: #D97706;">₹{{ total_revenue_pending|floatformat:0 }}</div>
+                    <small style="color: #64746B;">To be collected upon arrival</small>
                 </div>
             </div>
 
             <div class="col-6 col-lg-3">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
-                    <div class="text-secondary small fw-semibold">Matches Completed</div>
-                    <div class="fs-2 fw-extrabold text-info mt-1">{{ total_completed_count }}</div>
-                    <small class="text-secondary">Cancelled: {{ total_cancelled_count }}</small>
+                <div class="card bg-white border rounded-4 p-3 shadow-sm" style="border-color: #E5EEE8 !important;">
+                    <div class="small fw-semibold" style="color: #64746B;">Matches Completed</div>
+                    <div class="fs-2 fw-extrabold mt-1" style="color: #0284C7;">{{ total_completed_count }}</div>
+                    <small style="color: #64746B;">Cancelled: {{ total_cancelled_count }}</small>
                 </div>
             </div>
         </div>
 
         <!-- Section 1: Visual Match Timeline for Selected Facility -->
-        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 mb-5 shadow">
+        <div class="card bg-white border rounded-4 p-4 mb-5 shadow-sm" style="border-color: #E5EEE8 !important;">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                 <div>
-                    <h5 class="text-white fw-bold mb-0">
-                        <i class="bi bi-clock-history text-success me-2"></i>
-                        Hourly Pitch Schedule: <span class="text-success">{{ selected_facility.name }}</span>
+                    <h5 class="fw-bold mb-0" style="color: #172B21;">
+                        <i class="bi bi-clock-history text-emerald me-2"></i>
+                        Hourly Pitch Schedule: <span class="text-emerald">{{ selected_facility.name }}</span>
                     </h5>
-                    <small class="text-secondary">Timeline for {{ selected_date|date:"l, d F Y" }} &bull; Open {{ selected_facility.open_time|time:"g:i A" }} to {{ selected_facility.close_time|time:"g:i A" }}</small>
+                    <small style="color: #64746B;">Timeline for {{ selected_date|date:"l, d F Y" }} &bull; Open {{ selected_facility.open_time|time:"g:i A" }} to {{ selected_facility.close_time|time:"g:i A" }}</small>
                 </div>
                 <div>
-                    <a href="{% url 'staff_walkin_booking' %}?facility_id={{ selected_facility.id }}&date={{ date_str }}" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                    <a href="{% url 'staff_walkin_booking' %}?facility_id={{ selected_facility.id }}&date={{ date_str }}" class="btn btn-outline-emerald btn-sm rounded-pill px-3">
                         <i class="bi bi-plus-lg me-1"></i> Add Walk-in to This Pitch
                     </a>
                 </div>
@@ -123,9 +123,9 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-3">
                 {% for slot in schedule_slots %}
                     <div class="col">
-                        <div class="card h-100 rounded-3 p-3 border {% if slot.booking %}border-success bg-dark bg-opacity-75{% elif slot.is_past %}border-secondary border-opacity-25 bg-black bg-opacity-50 opacity-75{% else %}border-secondary border-opacity-25 bg-dark{% endif %}">
+                        <div class="card h-100 rounded-3 p-3 {% if slot.booking %}shadow-sm{% elif slot.is_past %}{% else %}shadow-sm{% endif %}" style="{% if slot.booking %}background-color: #F4FAF6; border: 1.5px solid #079B55 !important;{% elif slot.is_past %}background-color: #F9FAF9; border: 1px solid #E5EEE8 !important; opacity: 0.65;{% else %}background-color: #FFFFFF; border: 1.5px solid #E5EEE8 !important;{% endif %}">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="fw-bold text-white fs-6">{{ slot.display_time }}</span>
+                                <span class="fw-bold fs-6" style="color: {% if slot.is_past and not slot.booking %}#9CA3AF{% else %}#172B21{% endif %};">{{ slot.display_time }}</span>
                                 {% if slot.booking %}
                                     {% if slot.booking.status == 'PENDING_APPROVAL' %}
                                         <span class="badge bg-warning text-dark small"><i class="bi bi-hourglass-split"></i> PENDING APPROVAL</span>
@@ -143,25 +143,25 @@
                                         <span class="badge bg-warning text-dark small">ADVANCE PAID</span>
                                     {% endif %}
                                 {% elif slot.is_past %}
-                                    <span class="badge bg-secondary bg-opacity-50 small">EXPIRED</span>
+                                    <span class="badge rounded-pill small" style="background-color: #E5EEE8; color: #64746B;">EXPIRED</span>
                                 {% else %}
-                                    <span class="badge bg-success bg-opacity-25 text-success small">FREE / OPEN</span>
+                                    <span class="badge rounded-pill small" style="background-color: #E8F7EE; color: #075B36; border: 1px solid #A7F3D0;">FREE / OPEN</span>
                                 {% endif %}
                             </div>
 
                             {% if slot.booking %}
                                 <div class="mb-2">
-                                    <div class="text-light fw-bold text-truncate">{{ slot.booking.customer_name }}</div>
-                                    <div class="small text-secondary">
-                                        <i class="bi bi-telephone text-success me-1"></i>
-                                        <a href="tel:{{ slot.booking.customer_phone }}" class="text-secondary text-decoration-none">{{ slot.booking.customer_phone }}</a>
+                                    <div class="fw-bold text-truncate" style="color: #172B21;">{{ slot.booking.customer_name }}</div>
+                                    <div class="small" style="color: #64746B;">
+                                        <i class="bi bi-telephone text-emerald me-1"></i>
+                                        <a href="tel:{{ slot.booking.customer_phone }}" class="text-decoration-none" style="color: #64746B;">{{ slot.booking.customer_phone }}</a>
                                     </div>
-                                    <div class="small text-success fw-bold mt-1">Fee: ₹{{ slot.booking.total_price|floatformat:0 }}</div>
+                                    <div class="small fw-bold mt-1" style="color: #079B55;">Fee: ₹{{ slot.booking.total_price|floatformat:0 }}</div>
                                     {% if slot.booking.payment_status == 'ADVANCE_PAID' %}
-                                        <div class="small text-info"><i class="bi bi-qr-code text-success me-1"></i>Adv: ₹{{ slot.booking.advance_amount|floatformat:0 }}</div>
+                                        <div class="small text-info"><i class="bi bi-qr-code text-emerald me-1"></i>Adv: ₹{{ slot.booking.advance_amount|floatformat:0 }}</div>
                                         <div class="small text-warning fw-bold">Bal to Collect: ₹{{ slot.booking.balance_amount|floatformat:0 }}</div>
                                         {% if slot.booking.upi_transaction_id %}
-                                            <div class="small text-secondary font-monospace" style="font-size: 0.65rem;">Ref: {{ slot.booking.upi_transaction_id }}</div>
+                                            <div class="small font-monospace" style="font-size: 0.65rem; color: #64746B;">Ref: {{ slot.booking.upi_transaction_id }}</div>
                                         {% endif %}
                                     {% endif %}
                                     {% if slot.booking.created_by_staff %}
@@ -169,13 +169,13 @@
                                     {% endif %}
                                 </div>
 
-                                <div class="d-flex gap-1 mt-auto pt-2 border-top border-secondary border-opacity-25 flex-wrap">
+                                <div class="d-flex gap-1 mt-auto pt-2 border-top flex-wrap" style="border-color: #E5EEE8 !important;">
                                     {% if slot.booking.status == 'PENDING_APPROVAL' %}
                                         <form method="POST" action="{% url 'staff_update_booking_status' slot.booking.booking_id %}" class="d-inline">
                                             {% csrf_token %}
                                             <input type="hidden" name="action" value="approve">
                                             <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                            <button type="submit" class="btn btn-xs btn-warning rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                            <button type="submit" class="btn btn-xs btn-emerald rounded-pill px-2 py-1" style="font-size: 0.72rem;">
                                                 <i class="bi bi-check-circle-fill"></i> Approve
                                             </button>
                                         </form>
@@ -184,7 +184,7 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="action" value="reject">
                                             <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                            <button type="submit" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                            <button type="submit" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.72rem;">
                                                 <i class="bi bi-x-circle"></i> Reject
                                             </button>
                                         </form>
@@ -194,7 +194,7 @@
                                                 {% csrf_token %}
                                                 <input type="hidden" name="action" value="collect_balance">
                                                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                                <button type="submit" class="btn btn-xs btn-success rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                                <button type="submit" class="btn btn-xs btn-emerald rounded-pill px-2 py-1" style="font-size: 0.72rem;">
                                                     <i class="bi bi-cash-coin"></i> {% if slot.booking.balance_amount > 0 %}Collect Bal ₹{{ slot.booking.balance_amount|floatformat:0 }}{% else %}Mark Paid{% endif %}
                                                 </button>
                                             </form>
@@ -204,7 +204,7 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="action" value="mark_completed">
                                             <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                            <button type="submit" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                            <button type="submit" class="btn btn-xs btn-outline-info rounded-pill px-2 py-1" style="font-size: 0.72rem;">
                                                 <i class="bi bi-check-all"></i> Complete
                                             </button>
                                         </form>
@@ -213,30 +213,30 @@
                                             {% csrf_token %}
                                             <input type="hidden" name="action" value="cancel_booking">
                                             <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                            <button type="submit" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                            <button type="submit" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.72rem;">
                                                 Cancel
                                             </button>
                                         </form>
                                     {% endif %}
 
                                     {% if slot.booking.status == 'COMPLETED' %}
-                                        <span class="badge bg-secondary bg-opacity-50 text-light py-1 px-2" style="font-size: 0.7rem;">
+                                        <span class="badge py-1 px-2" style="font-size: 0.72rem; background-color: #E5EEE8; color: #172B21;">
                                             <i class="bi bi-check2"></i> Match Finished
                                         </span>
                                     {% endif %}
 
-                                    <a href="{% url 'booking_detail' slot.booking.booking_id %}" target="_blank" class="btn btn-xs btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.7rem;">
+                                    <a href="{% url 'booking_detail' slot.booking.booking_id %}" target="_blank" class="btn btn-xs btn-outline-secondary rounded-pill px-2 py-1" style="font-size: 0.72rem; border-color: #E5EEE8; color: #64746B;">
                                         Receipt
                                     </a>
                                 </div>
                             {% elif slot.is_available %}
                                 <div class="mt-auto pt-3">
-                                    <a href="{% url 'staff_walkin_booking' %}?facility_id={{ selected_facility.id }}&date={{ date_str }}&start_time={{ slot.start_time }}" class="btn btn-outline-success btn-sm w-100 rounded-pill">
+                                    <a href="{% url 'staff_walkin_booking' %}?facility_id={{ selected_facility.id }}&date={{ date_str }}&start_time={{ slot.start_time }}" class="btn btn-outline-emerald btn-sm w-100 rounded-pill">
                                         <i class="bi bi-plus-circle me-1"></i> Book Slot
                                     </a>
                                 </div>
                             {% else %}
-                                <div class="mt-auto pt-3 text-secondary small text-center">
+                                <div class="mt-auto pt-3 small text-center" style="color: #9CA3AF;">
                                     <i class="bi bi-clock"></i> Hour Passed
                                 </div>
                             {% endif %}
@@ -247,44 +247,44 @@
         </div>
 
         <!-- Section 2: Detailed Bookings Table -->
-        <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-4 shadow" id="reservationsSection">
-            <h5 class="text-white fw-bold mb-3 d-flex align-items-center justify-content-between">
+        <div class="card bg-white border rounded-4 p-4 shadow-sm" style="border-color: #E5EEE8 !important;" id="reservationsSection">
+            <h5 class="fw-bold mb-3 d-flex align-items-center justify-content-between" style="color: #172B21;">
                 <span>All Scheduled Reservations ({{ bookings.count }})</span>
-                <span class="small text-secondary">{{ selected_date|date:"D, d M Y" }}</span>
+                <span class="small" style="color: #64746B;">{{ selected_date|date:"D, d M Y" }}</span>
             </h5>
 
             {% if bookings %}
                 <div class="table-responsive">
-                    <table class="table table-dark table-hover mb-0 align-middle">
-                        <thead class="border-secondary text-secondary small">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="small" style="background-color: #F4FAF6; color: #64746B; border-bottom: 2px solid #E5EEE8;">
                             <tr>
-                                <th>Ref ID</th>
-                                <th>Player / Customer</th>
-                                <th>Facility</th>
-                                <th>Slot Timing</th>
-                                <th>Fee</th>
-                                <th>Payment</th>
-                                <th>Match Status</th>
-                                <th class="text-end">Quick Actions</th>
+                                <th class="py-3">Ref ID</th>
+                                <th class="py-3">Player / Customer</th>
+                                <th class="py-3">Facility</th>
+                                <th class="py-3">Slot Timing</th>
+                                <th class="py-3">Fee</th>
+                                <th class="py-3">Payment</th>
+                                <th class="py-3">Match Status</th>
+                                <th class="py-3 text-end">Quick Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for b in bookings %}
-                                <tr>
-                                    <td class="font-monospace small text-success fw-bold">{{ b.booking_id }}</td>
+                                <tr style="border-bottom: 1px solid #E5EEE8;">
+                                    <td class="font-monospace small fw-bold" style="color: #079B55;">{{ b.booking_id }}</td>
                                     <td>
-                                        <div class="fw-bold text-white">{{ b.customer_name }}</div>
-                                        <div class="small text-secondary"><i class="bi bi-telephone text-success me-1"></i>{{ b.customer_phone }}</div>
+                                        <div class="fw-bold" style="color: #172B21;">{{ b.customer_name }}</div>
+                                        <div class="small" style="color: #64746B;"><i class="bi bi-telephone text-emerald me-1"></i>{{ b.customer_phone }}</div>
                                     </td>
-                                    <td class="text-light">{{ b.facility.name }}</td>
+                                    <td style="color: #172B21;">{{ b.facility.name }}</td>
                                     <td>
-                                        <div class="text-warning fw-semibold">{{ b.start_time|time:"g:i A" }} - {{ b.end_time|time:"g:i A" }}</div>
-                                        <small class="text-secondary">{{ b.booking_date|date:"d M Y" }}</small>
+                                        <div class="fw-semibold" style="color: #172B21;">{{ b.start_time|time:"g:i A" }} - {{ b.end_time|time:"g:i A" }}</div>
+                                        <small style="color: #64746B;">{{ b.booking_date|date:"d M Y" }}</small>
                                     </td>
                                     <td>
-                                        <div class="fw-bold text-success">₹{{ b.total_price|floatformat:0 }}</div>
+                                        <div class="fw-bold text-emerald">₹{{ b.total_price|floatformat:0 }}</div>
                                         {% if b.payment_status == 'ADVANCE_PAID' %}
-                                            <div class="small text-info"><i class="bi bi-qr-code text-success me-1"></i>Adv: ₹{{ b.advance_amount|floatformat:0 }}</div>
+                                            <div class="small text-info"><i class="bi bi-qr-code text-emerald me-1"></i>Adv: ₹{{ b.advance_amount|floatformat:0 }}</div>
                                             <div class="small text-warning fw-bold">Bal: ₹{{ b.balance_amount|floatformat:0 }}</div>
                                         {% endif %}
                                     </td>
@@ -305,7 +305,7 @@
                                                     {% csrf_token %}
                                                     <input type="hidden" name="action" value="collect_balance">
                                                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                                                    <button type="submit" class="btn btn-sm btn-success rounded-pill px-2" title="Collect Balance">
+                                                    <button type="submit" class="btn btn-sm btn-emerald rounded-pill px-2" title="Collect Balance">
                                                         <i class="bi bi-cash-stack"></i> {% if b.balance_amount > 0 %}Collect ₹{{ b.balance_amount|floatformat:0 }}{% else %}Mark Paid{% endif %}
                                                     </button>
                                                 </form>
@@ -332,7 +332,7 @@
                                                 </form>
                                             {% endif %}
 
-                                            <a href="{% url 'booking_detail' b.booking_id %}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-2">
+                                            <a href="{% url 'booking_detail' b.booking_id %}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-2" style="border-color: #E5EEE8; color: #64746B;">
                                                 <i class="bi bi-printer"></i>
                                             </a>
                                         </div>
@@ -343,7 +343,7 @@
                     </table>
                 </div>
             {% else %}
-                <div class="text-center py-4 text-secondary">
+                <div class="text-center py-4" style="color: #64746B;">
                     <i class="bi bi-inbox fs-2 mb-2 d-block"></i>
                     No bookings found for the selected date or search filter.
                 </div>

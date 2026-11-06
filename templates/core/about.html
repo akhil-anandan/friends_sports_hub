@@ -5,99 +5,99 @@
 
 {% block content %}
 <!-- Page Header -->
-<section class="py-5 bg-black border-bottom border-secondary border-opacity-25">
+<section class="py-5 border-bottom" style="background-color: #F4FAF6; border-color: #E5EEE8 !important;">
     <div class="container text-center">
-        <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">About Friends Sports Hub</span>
-        <h1 class="display-5 fw-extrabold text-white mb-2 font-heading">Our Passion for Sports & Community</h1>
-        <p class="text-secondary mx-auto" style="max-width: 650px;">
+        <span class="badge px-3 py-1 rounded-pill mb-2 fw-bold" style="background-color: #E8F7EE; color: #079B55; border: 1px solid #C6ECD4;">About Friends Sports Hub</span>
+        <h1 class="display-5 fw-extrabold mb-2 font-heading" style="color: #172B21;">Our Passion for Sports & Community</h1>
+        <p class="mx-auto" style="max-width: 650px; color: #64746B;">
             Located in Mulayankavu, Kulukkallur, Palakkad &mdash; built to bring athletes, sports enthusiasts, and families together.
         </p>
     </div>
 </section>
 
 <!-- Content Section -->
-<section class="py-5" style="background-color: #070d09;">
+<section class="py-5" style="background-color: #FFFFFF;">
     <div class="container py-4">
         <div class="row align-items-center g-4 g-lg-5 mb-5">
             <div class="col-lg-6">
-                <span class="badge bg-success bg-opacity-25 text-success mb-2 px-3 py-1 rounded-pill">Kulukkallur, Palakkad</span>
-                <h2 class="display-6 fw-bold text-white mb-3">A Modern Sports Destination for Every Player</h2>
-                <p class="text-secondary mb-3">
-                    <strong>Friends Sports Hub Mulayankavu</strong> was created to deliver an unparalleled sporting experience in the Palakkad district. Whether you are playing late-night football under tournament-grade LED floodlights or training for weekend cricket, our synthetic grass pitch offers optimum bounce and reduced injury risk.
+                <span class="badge px-3 py-1 rounded-pill mb-2 fw-bold" style="background-color: #E8F7EE; color: #079B55; border: 1px solid #C6ECD4;">Kulukkallur, Palakkad</span>
+                <h2 class="display-6 fw-bold mb-3" style="color: #172B21;">A Modern Sports Destination for Every Player</h2>
+                <p class="mb-3" style="color: #64746B; line-height: 1.6;">
+                    <strong style="color: #172B21;">Friends Sports Hub Mulayankavu</strong> was created to deliver an unparalleled sporting experience in the Palakkad district. Whether you are playing late-night football under tournament-grade LED floodlights or training for weekend cricket, our synthetic grass pitch offers optimum bounce and reduced injury risk.
                 </p>
-                <p class="text-secondary mb-4">
+                <p class="mb-4" style="color: #64746B; line-height: 1.6;">
                     In addition to our full-size enclosed turf, we feature a covered, hygienically maintained swimming pool with dedicated change cabins, plus a lively outdoor amusement park for children.
                 </p>
 
                 <div class="row g-3 mb-4">
                     <div class="col-sm-6">
-                        <div class="p-3 bg-dark rounded-3 border border-secondary border-opacity-25">
-                            <h5 class="text-success fw-bold mb-1">FIFA Grade Turf</h5>
-                            <small class="text-secondary">All-weather synthetic grass for smooth passing and ball control.</small>
+                        <div class="p-3 rounded-3" style="background-color: #F4FAF6; border: 1px solid #E5EEE8;">
+                            <h5 class="fw-bold mb-1" style="color: #079B55;">FIFA Grade Turf</h5>
+                            <small style="color: #64746B;">All-weather synthetic grass for smooth passing and ball control.</small>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="p-3 bg-dark rounded-3 border border-secondary border-opacity-25">
-                            <h5 class="text-success fw-bold mb-1">High Mast Lights</h5>
-                            <small class="text-secondary">Bright shadow-free illumination for night-time football & cricket.</small>
+                        <div class="p-3 rounded-3" style="background-color: #F4FAF6; border: 1px solid #E5EEE8;">
+                            <h5 class="fw-bold mb-1" style="color: #079B55;">High Mast Lights</h5>
+                            <small style="color: #64746B;">Bright shadow-free illumination for night-time football & cricket.</small>
                         </div>
                     </div>
                 </div>
 
                 <div class="d-flex gap-2 flex-wrap">
-                    <a href="{% url 'book_slot' %}" class="btn btn-success px-4 py-2 rounded-pill fw-bold">
+                    <a href="{% url 'book_slot' %}" class="btn btn-emerald px-4 py-2 rounded-pill fw-bold">
                         <i class="bi bi-calendar-check me-1"></i> Book a Slot
                     </a>
-                    <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20would%20like%20to%20know%20more%20about%20your%20facilities." target="_blank" rel="noopener" class="btn btn-outline-success px-4 py-2 rounded-pill fw-semibold">
-                        <i class="bi bi-whatsapp me-1"></i> WhatsApp
+                    <a href="https://wa.me/916238006820?text=Hello%20Friends%20Sports%20Hub,%20I%20would%20like%20to%20know%20more%20about%20your%20facilities." target="_blank" rel="noopener" class="btn btn-outline-emerald px-4 py-2 rounded-pill fw-semibold">
+                        <i class="bi bi-whatsapp me-1 text-success"></i> WhatsApp
                     </a>
-                    <a href="tel:6238006820" class="btn btn-outline-light px-4 py-2 rounded-pill">
-                        <i class="bi bi-telephone me-1"></i> Call 6238006820
+                    <a href="tel:6238006820" class="btn btn-outline-emerald px-4 py-2 rounded-pill">
+                        <i class="bi bi-telephone me-1 text-success"></i> Call 6238006820
                     </a>
                 </div>
             </div>
 
             <div class="col-lg-6">
                 <div class="position-relative">
-                    <img src="{% static 'images/turf_hero.jpg' %}" alt="Friends Sports Hub match under floodlights" class="img-fluid rounded-4 shadow-lg border border-secondary border-opacity-25 w-100" style="max-height: 480px; object-fit: cover;">
-                    <div class="position-absolute bottom-0 start-0 m-4 p-3 bg-black bg-opacity-90 rounded-3 border border-success border-opacity-50">
-                        <div class="text-success fw-bold small">Direct Inquiries & Bookings</div>
-                        <div class="text-white fw-bold">+91 6238006820</div>
+                    <img src="{% static 'images/turf_hero.jpg' %}" alt="Friends Sports Hub match under floodlights" class="img-fluid rounded-4 shadow-sm border w-100" style="max-height: 480px; object-fit: cover; border-color: #E5EEE8 !important;">
+                    <div class="position-absolute bottom-0 start-0 m-4 p-3 rounded-3 shadow-sm border" style="background: rgba(255, 255, 255, 0.95); border-color: #C6ECD4 !important;">
+                        <div class="fw-bold small" style="color: #079B55;">Direct Inquiries & Bookings</div>
+                        <div class="fw-bold" style="color: #172B21; font-size: 1.1rem;">+91 6238006820</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Venue Guidelines & Amenities -->
-        <div class="card glass-panel p-4 p-md-5">
-            <h3 class="text-white fw-bold mb-4 text-center">Hub Features & Amenities</h3>
+        <div class="card p-4 p-md-5 rounded-4 shadow-sm border" style="background-color: #F4FAF6; border-color: #E5EEE8 !important;">
+            <h3 class="fw-bold mb-4 text-center" style="color: #172B21;">Hub Features & Amenities</h3>
             <div class="row g-4 text-center text-md-start">
                 <div class="col-md-4">
-                    <div class="d-flex gap-2 flex-wrap">
-                        <div class="badge bg-success p-3 rounded-circle fs-4 text-white"><i class="bi bi-trophy"></i></div>
+                    <div class="d-flex gap-3 align-items-start">
+                        <div class="brand-logo-icon flex-shrink-0" style="width: 44px; height: 44px; font-size: 1.3rem;"><i class="bi bi-trophy"></i></div>
                         <div>
-                            <h5 class="text-white fw-bold mb-1">Tournaments & Leagues</h5>
-                            <p class="text-secondary small mb-0">Full support for corporate leagues, local tournaments, and friendly club fixtures with scoring space.</p>
+                            <h5 class="fw-bold mb-1" style="color: #172B21;">Tournaments & Leagues</h5>
+                            <p class="small mb-0" style="color: #64746B;">Full support for corporate leagues, local tournaments, and friendly club fixtures with scoring space.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-4">
-                    <div class="d-flex gap-2 flex-wrap">
-                        <div class="badge bg-success p-3 rounded-circle fs-4 text-white"><i class="bi bi-shield-check"></i></div>
+                    <div class="d-flex gap-3 align-items-start">
+                        <div class="brand-logo-icon flex-shrink-0" style="width: 44px; height: 44px; font-size: 1.3rem;"><i class="bi bi-shield-check"></i></div>
                         <div>
-                            <h5 class="text-white fw-bold mb-1">Safety & Cleanliness</h5>
-                            <p class="text-secondary small mb-0">High perimeter netting, sanitized dressing rooms, first aid kit, and pure drinking water on premises.</p>
+                            <h5 class="fw-bold mb-1" style="color: #172B21;">Safety & Cleanliness</h5>
+                            <p class="small mb-0" style="color: #64746B;">High perimeter netting, sanitized dressing rooms, first aid kit, and pure drinking water on premises.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-4">
-                    <div class="d-flex gap-2 flex-wrap">
-                        <div class="badge bg-success p-3 rounded-circle fs-4 text-white"><i class="bi bi-p-circle"></i></div>
+                    <div class="d-flex gap-3 align-items-start">
+                        <div class="brand-logo-icon flex-shrink-0" style="width: 44px; height: 44px; font-size: 1.3rem;"><i class="bi bi-p-circle"></i></div>
                         <div>
-                            <h5 class="text-white fw-bold mb-1">Free Parking</h5>
-                            <p class="text-secondary small mb-0">Spacious parking zone right beside the venue for both four-wheelers and motorcycles.</p>
+                            <h5 class="fw-bold mb-1" style="color: #172B21;">Free Parking</h5>
+                            <p class="small mb-0" style="color: #64746B;">Spacious parking zone right beside the venue for both four-wheelers and motorcycles.</p>
                         </div>
                     </div>
                 </div>
@@ -105,23 +105,23 @@
         </div>
 
         <!-- Location & Directions -->
-        <div class="card p-4 mt-4 border-success border-opacity-30 rounded-4 shadow" style="background: rgba(18, 30, 23, 0.7); backdrop-filter: blur(10px);">
+        <div class="card p-4 mt-4 rounded-4 shadow-sm border" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
             <div class="row align-items-center g-3">
                 <div class="col-md-8">
-                    <h4 class="text-white fw-bold mb-1 d-flex align-items-center gap-2">
-                        <i class="bi bi-geo-alt-fill text-danger"></i> Location & Timings
+                    <h4 class="fw-bold mb-1 d-flex align-items-center gap-2" style="color: #172B21;">
+                        <i class="bi bi-geo-alt-fill text-success"></i> Location & Timings
                     </h4>
-                    <p class="text-secondary mb-1">
-                        <strong class="text-white">Mulayankavu, Kulukkallur, Palakkad District, Kerala, India</strong>
+                    <p class="mb-1" style="color: #64746B;">
+                        <strong style="color: #172B21;">Mulayankavu, Kulukkallur, Palakkad District, Kerala, India</strong>
                     </p>
-                    <p class="text-muted small mb-0">
-                        <i class="bi bi-clock-fill text-info me-1"></i> Open Daily: 6:00 AM – 11:00 PM &nbsp;|&nbsp; 
+                    <p class="small mb-0" style="color: #8F9E96;">
+                        <i class="bi bi-clock-fill text-success me-1"></i> Open Daily: 6:00 AM – 11:00 PM &nbsp;|&nbsp; 
                         <i class="bi bi-telephone-fill text-success me-1"></i> Helpline: +91 6238006820
                     </p>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-outline-success rounded-pill px-4 py-2 fw-semibold">
-                        <i class="bi bi-map-fill me-1"></i> Get Directions
+                    <a href="https://maps.app.goo.gl/J1tQoft1vWQTDUio9" target="_blank" rel="noopener" class="btn btn-outline-emerald rounded-pill px-4 py-2 fw-semibold">
+                        <i class="bi bi-map-fill me-1 text-success"></i> Get Directions
                     </a>
                 </div>
             </div>

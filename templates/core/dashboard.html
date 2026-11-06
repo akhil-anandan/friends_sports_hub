@@ -4,18 +4,18 @@
 {% block title %}My Dashboard | Friends Sports Hub Mulayankavu{% endblock %}
 
 {% block content %}
-<div class="py-5" style="background-color: #070d09;">
+<div class="py-5" style="background-color: #FFFFFF;">
     <div class="container">
         
         <!-- Welcome Header -->
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <span class="badge bg-success bg-opacity-20 text-success px-3 py-1 rounded-pill mb-2">Customer Account</span>
-                <h1 class="h2 fw-bold text-white mb-1">Welcome, {{ user.first_name|default:user.username }}!</h1>
-                <p class="text-secondary small mb-0">Manage your turf bookings, view receipts, and reserve new slots.</p>
+                <span class="badge px-3 py-1 rounded-pill mb-2 fw-bold" style="background-color: #E8F7EE; color: #079B55; border: 1px solid #C6ECD4;">Customer Account</span>
+                <h1 class="h2 fw-bold mb-1" style="color: #172B21;">Welcome, {{ user.first_name|default:user.username }}!</h1>
+                <p class="small mb-0" style="color: #64746B;">Manage your turf bookings, view receipts, and reserve new slots.</p>
             </div>
             <div>
-                <a href="{% url 'book_slot' %}" class="btn btn-success fw-bold px-4 py-2 rounded-pill shadow">
+                <a href="{% url 'book_slot' %}" class="btn btn-emerald fw-bold px-4 py-2 rounded-pill shadow-sm">
                     <i class="bi bi-plus-circle me-1"></i> Book Another Slot
                 </a>
             </div>
@@ -24,42 +24,42 @@
         <!-- Metrics Row -->
         <div class="row g-3 mb-5">
             <div class="col-sm-6 col-md-4">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                <div class="card border rounded-4 p-3 shadow-sm" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="text-secondary small">Upcoming Slots</div>
-                            <div class="fs-2 fw-extrabold text-success">{{ active_bookings_count }}</div>
+                            <div class="small fw-semibold" style="color: #64746B;">Upcoming Slots</div>
+                            <div class="fs-2 fw-extrabold" style="color: #079B55;">{{ active_bookings_count }}</div>
                         </div>
-                        <div class="badge bg-success bg-opacity-20 text-success p-3 rounded-circle fs-4">
-                            <i class="bi bi-calendar-check"></i>
+                        <div class="brand-logo-icon" style="width: 48px; height: 48px; font-size: 1.4rem;">
+                            <i class="bi bi-calendar-check text-success"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-sm-6 col-md-4">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                <div class="card border rounded-4 p-3 shadow-sm" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="text-secondary small">Total Reservations</div>
-                            <div class="fs-2 fw-extrabold text-white">{{ total_bookings_count }}</div>
+                            <div class="small fw-semibold" style="color: #64746B;">Total Reservations</div>
+                            <div class="fs-2 fw-extrabold" style="color: #172B21;">{{ total_bookings_count }}</div>
                         </div>
-                        <div class="badge bg-secondary bg-opacity-20 text-light p-3 rounded-circle fs-4">
-                            <i class="bi bi-clock-history"></i>
+                        <div class="brand-logo-icon" style="width: 48px; height: 48px; font-size: 1.4rem; background-color: #F4FAF6;">
+                            <i class="bi bi-clock-history text-secondary"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-sm-12 col-md-4">
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-3 shadow-sm">
+                <div class="card border rounded-4 p-3 shadow-sm" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
-                            <div class="text-secondary small">Helpline Support</div>
-                            <div class="fs-5 fw-bold text-light">+91 6238006820</div>
+                            <div class="small fw-semibold" style="color: #64746B;">Helpline Support</div>
+                            <div class="fs-5 fw-bold" style="color: #079B55;">+91 6238006820</div>
                         </div>
-                        <a href="tel:6238006820" class="btn btn-sm btn-outline-success rounded-circle social-icon">
-                            <i class="bi bi-telephone-fill"></i>
+                        <a href="tel:6238006820" class="social-icon" title="Call Helpline">
+                            <i class="bi bi-telephone-fill text-success"></i>
                         </a>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
 
         <!-- Section 1: Upcoming Active Bookings -->
         <div class="mb-5">
-            <h4 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+            <h4 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: #172B21;">
                 <i class="bi bi-calendar-event text-success"></i> Upcoming Scheduled Matches
             </h4>
 
@@ -76,36 +76,36 @@
                 <div class="row g-3">
                     {% for booking in upcoming_bookings %}
                         <div class="col-lg-6">
-                            <div class="card sports-card p-4">
+                            <div class="card sports-card p-4 rounded-4 shadow-sm border" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
                                     <div>
-                                        <span class="badge bg-success px-3 py-1 rounded-pill small mb-1">
+                                        <span class="badge px-3 py-1 rounded-pill small mb-1 fw-bold" style="background-color: #E8F7EE; color: #079B55; border: 1px solid #C6ECD4;">
                                             {{ booking.get_status_display }}
                                         </span>
-                                        <h5 class="text-white fw-bold mb-0 mt-1">{{ booking.facility.name }}</h5>
-                                        <small class="text-success font-monospace">{{ booking.booking_id }}</small>
+                                        <h5 class="fw-bold mb-0 mt-1" style="color: #172B21;">{{ booking.facility.name }}</h5>
+                                        <small class="font-monospace fw-bold" style="color: #079B55;">{{ booking.booking_id }}</small>
                                     </div>
                                     <div class="text-end">
-                                        <div class="text-success fw-bold fs-5">₹{{ booking.total_price|floatformat:0 }}</div>
-                                        <small class="text-secondary">{{ booking.get_payment_status_display }}</small>
+                                        <div class="fw-bold fs-5" style="color: #079B55;">₹{{ booking.total_price|floatformat:0 }}</div>
+                                        <small style="color: #64746B;">{{ booking.get_payment_status_display }}</small>
                                     </div>
                                 </div>
 
-                                <div class="p-3 bg-dark rounded-3 border border-secondary border-opacity-25 mb-3">
+                                <div class="p-3 rounded-3 mb-3" style="background-color: #F4FAF6; border: 1px solid #E5EEE8;">
                                     <div class="d-flex align-items-center gap-3">
-                                        <div class="badge bg-black p-2 rounded text-success fs-5">
-                                            <i class="bi bi-calendar3"></i>
+                                        <div class="brand-logo-icon flex-shrink-0" style="width: 40px; height: 40px; font-size: 1.1rem;">
+                                            <i class="bi bi-calendar3 text-success"></i>
                                         </div>
                                         <div>
-                                            <div class="text-white fw-bold">{{ booking.booking_date|date:"l, d M Y" }}</div>
-                                            <div class="text-warning small">{{ booking.start_time|time:"g:i A" }} - {{ booking.end_time|time:"g:i A" }}</div>
+                                            <div class="fw-bold" style="color: #172B21;">{{ booking.booking_date|date:"l, d M Y" }}</div>
+                                            <div class="small fw-semibold" style="color: #B45309;">{{ booking.start_time|time:"g:i A" }} - {{ booking.end_time|time:"g:i A" }}</div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <a href="{% url 'booking_detail' booking.booking_id %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
-                                        <i class="bi bi-receipt me-1"></i> View Voucher
+                                    <a href="{% url 'booking_detail' booking.booking_id %}" class="btn btn-sm btn-outline-emerald rounded-pill px-3">
+                                        <i class="bi bi-receipt me-1 text-success"></i> View Voucher
                                     </a>
 
                                     {% if booking.is_cancellable %}
@@ -119,11 +119,11 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 p-5 text-center">
-                    <i class="bi bi-calendar-x fs-1 text-secondary mb-3 d-block"></i>
-                    <h5 class="text-white fw-bold mb-1">No Upcoming Bookings</h5>
-                    <p class="text-secondary small mb-4">You have no active slots scheduled right now. Book a turf or pool session today!</p>
-                    <a href="{% url 'book_slot' %}" class="btn btn-success rounded-pill px-4 py-2 fw-bold d-inline-block mx-auto">
+                <div class="card border rounded-4 p-5 text-center shadow-sm" style="background-color: #F4FAF6; border-color: #E5EEE8 !important;">
+                    <i class="bi bi-calendar-x fs-1 mb-3 d-block" style="color: #8F9E96;"></i>
+                    <h5 class="fw-bold mb-1" style="color: #172B21;">No Upcoming Bookings</h5>
+                    <p class="small mb-4" style="color: #64746B;">You have no active slots scheduled right now. Book a turf or pool session today!</p>
+                    <a href="{% url 'book_slot' %}" class="btn btn-emerald rounded-pill px-4 py-2 fw-bold d-inline-block mx-auto">
                         <i class="bi bi-calendar-plus me-1"></i> Reserve a Slot
                     </a>
                 </div>
@@ -132,15 +132,15 @@
 
         <!-- Section 2: Booking History -->
         <div>
-            <h4 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
-                <i class="bi bi-clock-history text-secondary"></i> Past / Cancelled History
+            <h4 class="fw-bold mb-3 d-flex align-items-center gap-2" style="color: #172B21;">
+                <i class="bi bi-clock-history text-success"></i> Past / Cancelled History
             </h4>
 
             {% if past_or_cancelled_bookings %}
-                <div class="card bg-black border border-secondary border-opacity-25 rounded-4 overflow-hidden shadow">
+                <div class="card border rounded-4 overflow-hidden shadow-sm" style="background-color: #FFFFFF; border-color: #E5EEE8 !important;">
                     <div class="table-responsive">
-                        <table class="table table-dark table-hover mb-0 align-middle">
-                            <thead class="border-secondary text-secondary small">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="small" style="background-color: #F4FAF6; color: #172B21;">
                                 <tr>
                                     <th class="ps-4">Reference</th>
                                     <th>Facility</th>
@@ -150,23 +150,23 @@
                                     <th class="text-end pe-4">Receipt</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style="color: #64746B;">
                                 {% for b in past_or_cancelled_bookings %}
                                     <tr>
-                                        <td class="ps-4 font-monospace small text-secondary">{{ b.booking_id }}</td>
-                                        <td class="fw-semibold text-white">{{ b.facility.name }}</td>
+                                        <td class="ps-4 font-monospace small" style="color: #8F9E96;">{{ b.booking_id }}</td>
+                                        <td class="fw-semibold" style="color: #172B21;">{{ b.facility.name }}</td>
                                         <td>
-                                            <div class="small">{{ b.booking_date|date:"d M Y" }}</div>
-                                            <div class="small text-secondary">{{ b.start_time|time:"g:i A" }}</div>
+                                            <div class="small fw-semibold" style="color: #172B21;">{{ b.booking_date|date:"d M Y" }}</div>
+                                            <div class="small" style="color: #8F9E96;">{{ b.start_time|time:"g:i A" }}</div>
                                         </td>
-                                        <td class="fw-bold text-success">₹{{ b.total_price|floatformat:0 }}</td>
+                                        <td class="fw-bold" style="color: #079B55;">₹{{ b.total_price|floatformat:0 }}</td>
                                         <td>
-                                            <span class="badge {% if b.status == 'CANCELLED' %}bg-danger bg-opacity-25 text-danger border border-danger border-opacity-50{% else %}bg-secondary{% endif %}">
+                                            <span class="badge rounded-pill px-2 py-1 small fw-bold {% if b.status == 'CANCELLED' %}" style="background-color: #FEE2E2; color: #DC2626; border: 1px solid #FECACA;{% else %}" style="background-color: #F4FAF6; color: #64746B; border: 1px solid #E5EEE8;{% endif %}">
                                                 {{ b.get_status_display }}
                                             </span>
                                         </td>
                                         <td class="text-end pe-4">
-                                            <a href="{% url 'booking_detail' b.booking_id %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                                            <a href="{% url 'booking_detail' b.booking_id %}" class="btn btn-sm btn-outline-emerald rounded-pill px-3">
                                                 View
                                             </a>
                                         </td>
@@ -177,7 +177,7 @@
                     </div>
                 </div>
             {% else %}
-                <p class="text-secondary small">No prior booking history found.</p>
+                <p class="small" style="color: #64746B;">No prior booking history found.</p>
             {% endif %}
         </div>
 
