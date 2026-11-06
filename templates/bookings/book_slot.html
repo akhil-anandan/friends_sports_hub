@@ -990,7 +990,7 @@ function closeBookingModal() {
   document.getElementById('bookingOverlay').classList.remove('show');
 }
 
-function submitToWhatsApp() {
+async function submitToWhatsApp() {
   const name  = document.getElementById('inputCustomerName').value.trim();
   const club  = document.getElementById('inputClubName').value.trim();
   const phone = document.getElementById('inputCustomerPhone').value.trim();
@@ -1010,11 +1010,11 @@ function submitToWhatsApp() {
     return;
   }
 
-  // Calculate end time
-  let end = '';
-  if (start && start.includes(':')) {
-    const parts = start.split(':');
-    end = (Number(parts[0]) + 1).toString().padStart(2, '0') + ':' + parts[1];
+  const btn = document.querySelector('.btn-submit-wa');
+  const originalBtnText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Locking slot in database...';
   }
 
   // Determine facility slug
@@ -1027,60 +1027,19 @@ function submitToWhatsApp() {
     facSlug = 'childrens-park';
   }
 
-  // 1. Check local & cloud synchronization for existing conflict
-  let list = [];
+  const baseUrl = (window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://friends-sports-hub.onrender.com'));
+
+  let reservationSuccess = false;
+  let canonicalBookingId = '';
+  let serverPrice = price;
+
   try {
-    list = JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
-  } catch(e) { list = []; }
-
-  const conflict = list.find(b =>
-    b.date === date &&
-    (b.facility_slug === facSlug || !b.facility_slug) &&
-    b.start_time.startsWith(start) &&
-    (b.status === 'PENDING' || b.status === 'PENDING_APPROVAL' || b.status === 'CONFIRMED' || b.status === 'APPROVED')
-  );
-
-  if (conflict) {
-    alert("Sorry! This slot has just been booked by another customer. Please select another available time slot.");
-    closeBookingModal();
-    if (window.renderSlots) window.renderSlots(date);
-    return;
-  }
-
-  const bookingId = 'BKG-FSH-' + Math.floor(100 + Math.random() * 900);
-  const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
-
-  const newBooking = {
-    id: bookingId,
-    customer_name: name,
-    customer_phone: phone,
-    club_name: club || '',
-    facility_slug: facSlug,
-    facility_name: fac,
-    date: date,
-    start_time: start,
-    end_time: end,
-    display_time: slot,
-    total_price: Number(price) || 900,
-    advance_amount: 0,
-    balance_amount: Number(price) || 900,
-    payment_status: 'UNPAID',
-    status: 'PENDING_APPROVAL',
-    expires_at: expiresAt,
-    source: 'ONLINE_WHATSAPP',
-    created_at: new Date().toISOString()
-  };
-
-  list.unshift(newBooking);
-  localStorage.setItem('fsh_locked_slots', JSON.stringify(list));
-  localStorage.setItem('fsh_data_initialized', 'true');
-
-  // Try server-side reservation API if available
-  try {
-    const baseUrl = (window.FSH_API_BASE_URL || window.localStorage.getItem('fsh_api_base_url') || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? '' : 'https://friends-sports-hub.onrender.com'));
-    fetch(`${baseUrl}/api/bookings/reserve/`, {
+    const res = await fetch(`${baseUrl}/api/bookings/reserve/`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      },
       body: JSON.stringify({
         facility_slug: facSlug,
         date: date,
@@ -1089,43 +1048,70 @@ function submitToWhatsApp() {
         customer_phone: phone,
         notes: club
       })
-    }).then(res => {
-      if (res.status === 409) {
-        alert("Sorry! This slot has just been booked by another customer. Please select another available time slot.");
-        closeBookingModal();
-        if (window.renderSlots) window.renderSlots(date);
-      }
-    }).catch(() => {});
-  } catch(e) {}
+    });
 
-  // 2. Push to cloud database if available
-  if (window.pushCloudBookings) {
-    window.pushCloudBookings(list);
+    const data = await res.json();
+
+    if (res.status === 409 || !data.success) {
+      alert(data.message || "Sorry! This slot has just been booked by another customer. Please select another available time slot.");
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = originalBtnText;
+      }
+      closeBookingModal();
+      if (window.reconcileServerState) {
+        await window.reconcileServerState(true);
+      } else if (window.renderSlots) {
+        window.renderSlots(date);
+      }
+      return;
+    }
+
+    if (res.ok && data.success) {
+      reservationSuccess = true;
+      canonicalBookingId = data.booking_id;
+      serverPrice = data.total_price || price;
+    }
+  } catch (err) {
+    alert("Network error connecting to booking server. Please verify internet connectivity and try again.");
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalBtnText;
+    }
+    return;
   }
 
-  // 3. Update DOM slots immediately
-  if (window.renderSlots) {
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = originalBtnText;
+  }
+
+  closeBookingModal();
+
+  // Reconcile and refresh availability slots immediately from server
+  if (window.reconcileServerState) {
+    await window.reconcileServerState(true);
+  } else if (window.renderSlots) {
     window.renderSlots(date);
-  } else if (window.syncBookingsToPage) {
-    window.syncBookingsToPage();
   }
 
   const message = [
     '🏟️ *BOOKING REQUEST — Friends Sports Hub*',
-    'Ref ID: ' + bookingId,
+    'Ref ID: ' + canonicalBookingId,
     '⚠️ Status: PENDING (Awaiting Owner Approval)',
     '',
     '📅 Date: ' + formatFriendlyDate(date),
     '⏰ Slot: ' + slot,
     '🏟️ Facility: ' + fac,
-    '💰 Rate: ₹' + price + ' / slot',
+    '💰 Rate: ₹' + serverPrice + ' / slot',
     '',
     '👤 Name: ' + name,
     '🏆 Club/Team: ' + (club || '—'),
     '📞 Phone: ' + phone,
     '',
     'Please approve/confirm my booking. Thank you!'
-  ].join('\n');
+  ].join('
+');
 
   const url = 'https://api.whatsapp.com/send?phone=' + OWNER_WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
   
@@ -1141,8 +1127,6 @@ function submitToWhatsApp() {
     link.click();
     link.remove();
   }
-  closeBookingModal();
-  alert('Slot ' + slot + ' request sent! The slot is now PENDING approval. Redirecting to WhatsApp to notify the owner (6238006820).');
 }
 
 function submitAdminBooking() {

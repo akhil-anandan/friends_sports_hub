@@ -12,6 +12,14 @@
   let currentBrokerIdx = 0;
   let lastReconciledTime = 0;
 
+  function getLocalTodayString() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   function getLocalBookings() {
     try {
       return JSON.parse(localStorage.getItem('fsh_locked_slots') || '[]');
@@ -32,7 +40,7 @@
     // 1. If on public booking / front page
     if (typeof window.renderSlots === 'function') {
       try {
-        const currentDate = window.currentSelectedDate || document.getElementById('slotDatePicker')?.value || document.querySelector('input[name="date"]')?.value || new Date().toISOString().split('T')[0];
+        const currentDate = window.currentSelectedDate || document.getElementById('slotDatePicker')?.value || document.querySelector('input[name="date"]')?.value || getLocalTodayString();
         window.renderSlots(currentDate);
       } catch(e) { console.warn('renderSlots error:', e); }
     }
@@ -46,7 +54,7 @@
 
     // 3. Update any available slot badges
     try {
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = getLocalTodayString();
       const selectedDate = window.currentSelectedDate || todayStr;
       const matrix = document.querySelector('.slots-matrix');
       if (matrix) {
@@ -72,14 +80,14 @@
     return 'https://friends-sports-hub.onrender.com';
   }
 
-  // Active Server API Reconciliation (Phase 8: Cache & Stale Data Prevention)
+  // Active Server API Reconciliation (PostgreSQL Single Source of Truth over HTTPS)
   async function reconcileServerState(force = false) {
     const now = Date.now();
-    if (!force && now - lastReconciledTime < 2000) return; // Prevent excessive thrashing within 2s
+    if (!force && now - lastReconciledTime < 1500) return; // Debounce rapid requests
     lastReconciledTime = now;
 
     try {
-      const targetDate = window.currentSelectedDate || document.getElementById('slotDatePicker')?.value || new Date().toISOString().split('T')[0];
+      const targetDate = window.currentSelectedDate || document.getElementById('slotDatePicker')?.value || getLocalTodayString();
       const facilitySlug = window.currentFacilitySlug || 'turf';
       const baseUrl = getApiBaseUrl();
       const apiUrl = `${baseUrl}/api/bookings/availability/?facility_slug=${encodeURIComponent(facilitySlug)}&date=${encodeURIComponent(targetDate)}&_t=${now}`;
@@ -95,27 +103,34 @@
       if (res.ok) {
         const data = await res.json();
         if (data && data.success && Array.isArray(data.slots)) {
-          // Map server slots into locked list
-          const activeBookings = getLocalBookings().filter(b => b.date !== targetDate);
+          // Reconcile server slots into activeBookings for this facility and date
+          const activeBookings = getLocalBookings().filter(b => 
+            !(b.date === targetDate && (b.facility_slug === facilitySlug || !b.facility_slug))
+          );
+          
           data.slots.forEach(s => {
-            if (s.status === 'PENDING_APPROVAL' || s.status === 'APPROVED' || s.status === 'CONFIRMED') {
+            if (s.status === 'PENDING_APPROVAL' || s.status === 'APPROVED' || s.status === 'CONFIRMED' || s.is_booked || s.is_pending) {
               activeBookings.push({
+                id: s.booking_id || ('BKG-' + s.start_time),
+                booking_id: s.booking_id,
                 date: targetDate,
                 time: s.start_time,
                 start_time: s.start_time,
                 end_time: s.end_time,
+                facility_slug: facilitySlug,
                 status: s.status,
-                customer_name: s.customer_name || 'Customer',
-                booking_id: s.booking_id
+                customer_name: s.customer_name || 'Booked Player',
+                total_price: s.price || 900
               });
             }
           });
+
           saveLocalBookings(activeBookings);
           triggerUIRefresh(activeBookings);
         }
       }
     } catch (err) {
-      // Offline fallback: continue using local state silently
+      // Offline fallback: UI continues using existing state
     }
   }
 
@@ -139,18 +154,18 @@
       mqttClient.on('connect', function() {
         isConnected = true;
         document.querySelectorAll('.fsh-live-indicator').forEach(el => {
-          el.innerHTML = '<span class="badge bg-success bg-opacity-25 text-success"><i class="bi bi-broadcast me-1"></i> Live Cloud Synced</span>';
+          el.innerHTML = '<span class="badge rounded-pill" style="background-color: #E8F7EE; color: #075B36; border: 1px solid #A7F3D0;"><i class="bi bi-broadcast me-1"></i> Live Cloud Synced</span>';
         });
 
         mqttClient.subscribe(SYNC_TOPIC, { qos: 0 }, function(err) {
           if (err) console.warn('Subscription error:', err);
         });
 
-        // Immediately reconcile server state on connection
+        // Reconcile server state immediately on connection
         reconcileServerState(true);
       });
 
-      mqttClient.on('message', function(topic, message, packet) {
+      mqttClient.on('message', function(topic, message) {
         if (topic === SYNC_TOPIC) {
           try {
             const raw = message.toString();
@@ -160,7 +175,7 @@
               triggerUIRefresh(cloudList);
             }
           } catch(e) {}
-          // Re-verify against server database
+          // Always re-verify against authoritative PostgreSQL database
           reconcileServerState(true);
         }
       });
@@ -200,7 +215,7 @@
 
   // Universal Fetch function
   window.fetchCloudBookings = async function() {
-    await reconcileServerState();
+    await reconcileServerState(true);
     return getLocalBookings();
   };
 
@@ -222,15 +237,20 @@
     }
   });
 
-  // Background reconciliation interval every 8 seconds
+  // Background HTTPS reconciliation interval every 6 seconds
   setInterval(function() {
     reconcileServerState(false);
-  }, 8000);
+  }, 6000);
 
-  // Start sync on page load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMqtt);
-  } else {
+  // Start HTTPS sync immediately on load without waiting for MQTT
+  function startSync() {
+    reconcileServerState(true);
     initMqtt();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startSync);
+  } else {
+    startSync();
   }
 })();

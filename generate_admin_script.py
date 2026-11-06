@@ -172,9 +172,65 @@ function saveBookings(list) {
   }
 }
 
-// Cloud Synchronization
+function getApiBaseUrl() {
+  if (window.FSH_API_BASE_URL) return window.FSH_API_BASE_URL;
+  const stored = window.localStorage.getItem('fsh_api_base_url');
+  if (stored) return stored;
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return '';
+  }
+  return 'https://friends-sports-hub.onrender.com';
+}
+
+// Active PostgreSQL Cloud Synchronization
 async function fetchCloudBookings() {
-  if (window.FSH_SYNC) return window.FSH_SYNC.getBookings();
+  const dateInput = document.querySelector('input[name="date"]');
+  const facilitySelect = document.querySelector('select[name="facility"]');
+  const selectedDate = (dateInput && dateInput.value) ? dateInput.value : getLocalTodayString();
+  const selectedFacility = (facilitySelect && facilitySelect.value) ? facilitySelect.value : 'turf';
+
+  const baseUrl = getApiBaseUrl();
+  try {
+    const res = await fetch(`${baseUrl}/api/bookings/availability/?facility_slug=${encodeURIComponent(selectedFacility)}&date=${encodeURIComponent(selectedDate)}&_t=${Date.now()}`, {
+      method: 'GET',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache'
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.success && Array.isArray(data.slots)) {
+        let list = getBookings();
+        list = list.filter(b => !(b.date === selectedDate && (b.facility_slug === selectedFacility || !b.facility_slug)));
+        data.slots.forEach(s => {
+          if (s.is_booked || s.is_pending || s.status === 'APPROVED' || s.status === 'CONFIRMED' || s.status === 'PENDING_APPROVAL') {
+            list.push({
+              id: s.booking_id || ('BKG-' + s.start_time),
+              booking_id: s.booking_id,
+              date: selectedDate,
+              start_time: s.start_time,
+              end_time: s.end_time,
+              display_time: s.display_time || (s.start_time + ' - ' + s.end_time),
+              facility_slug: selectedFacility,
+              facility_name: data.facility_name || FACILITY_NAMES[selectedFacility],
+              status: s.status,
+              customer_name: s.customer_name || 'Booked Player',
+              customer_phone: s.customer_phone || 'Registered at Counter',
+              total_price: s.price || 900,
+              advance_amount: (s.status === 'APPROVED' || s.status === 'CONFIRMED') ? 900 : 0,
+              balance_amount: (s.status === 'APPROVED' || s.status === 'CONFIRMED') ? 0 : 900,
+              payment_status: (s.status === 'APPROVED' || s.status === 'CONFIRMED') ? 'PAID' : 'UNPAID'
+            });
+          }
+        });
+        saveBookings(list);
+        return list;
+      }
+    }
+  } catch(e) {
+    console.warn('Admin live cloud sync error:', e);
+  }
   return getBookings();
 }
 
