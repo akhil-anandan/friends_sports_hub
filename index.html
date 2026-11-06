@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="static/css/style.css?v=20261106_v3">
+    <link rel="stylesheet" href="static/css/style.css?v=20261106_v4">
     
 <style>
   :root {
@@ -1275,9 +1275,9 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="static/js/main.js?v=20261106_v3"></script>
+    <script src="static/js/main.js?v=20261106_v4"></script>
     <script src="static/js/mqtt.min.js"></script>
-    <script src="static/js/fsh_sync.js?v=20261106_v3"></script>
+    <script src="static/js/fsh_sync.js?v=20261106_v4"></script>
     
 <script>
 const OWNER_WHATSAPP_NUMBER = '916238006820';
@@ -1756,6 +1756,8 @@ async function renderSlots(dateStr) {
     console.warn('Direct availability API fetch failed, falling back to local slots:', err);
   }
 
+  const selectedStartTime = document.getElementById('stateStart')?.value;
+
   matrix.innerHTML = '';
 
   if (serverSlots && serverSlots.length > 0) {
@@ -1788,7 +1790,8 @@ async function renderSlots(dateStr) {
           <span class="slot-badge-pill">Past</span>
         `;
       } else {
-        slotBox.className = 'slot-btn vacant';
+        const isSelected = selectedStartTime && (slot.start_time === selectedStartTime);
+        slotBox.className = 'slot-btn vacant' + (isSelected ? ' selected' : '');
         slotBox.title = 'Available for booking';
         slotBox.innerHTML = `
           <span class="tap-badge">TAP</span>
@@ -1828,7 +1831,8 @@ async function renderSlots(dateStr) {
           <span class="slot-badge-pill">Past</span>
         `;
       } else {
-        slotBox.className = 'slot-btn vacant';
+        const isSelected = selectedStartTime && (slot.start_time === selectedStartTime);
+        slotBox.className = 'slot-btn vacant' + (isSelected ? ' selected' : '');
         slotBox.title = 'Available for booking';
         slotBox.innerHTML = `
           <span class="tap-badge">TAP</span>
@@ -1863,6 +1867,8 @@ function handleDateChange(newDate) {
   document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => btn.classList.remove('selected'));
   const inputSelectedSlot = document.getElementById('inputSelectedSlot');
   if (inputSelectedSlot) inputSelectedSlot.value = '';
+  const sStart = document.getElementById('stateStart');
+  if (sStart) sStart.value = '';
 
   const url = new URL(window.location);
   url.searchParams.set('date', newDate);
@@ -1885,6 +1891,8 @@ function switchFacility(slug, event) {
   document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => btn.classList.remove('selected'));
   const inputSelectedSlot = document.getElementById('inputSelectedSlot');
   if (inputSelectedSlot) inputSelectedSlot.value = '';
+  const sStart = document.getElementById('stateStart');
+  if (sStart) sStart.value = '';
 
   const data = FACILITIES_DATA[slug];
 
