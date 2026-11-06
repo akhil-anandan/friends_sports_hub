@@ -30,9 +30,9 @@ shutil.copytree('static', static_dest)
 
 def clean_urls(html):
     # Static paths with cache-busting
-    html = re.sub(r'href="/static/css/style\.css(?:\?[^"]*)?"', 'href="static/css/style.css?v=20261106_v2"', html)
-    html = re.sub(r'src="/static/js/main\.js(?:\?[^"]*)?"', 'src="static/js/main.js?v=20261106_v2"', html)
-    html = re.sub(r'src="/static/js/fsh_sync\.js(?:\?[^"]*)?"', 'src="static/js/fsh_sync.js?v=20261106_v2"', html)
+    html = re.sub(r'href="/static/css/style\.css(?:\?[^"]*)?"', 'href="static/css/style.css?v=20261106_v3"', html)
+    html = re.sub(r'src="/static/js/main\.js(?:\?[^"]*)?"', 'src="static/js/main.js?v=20261106_v3"', html)
+    html = re.sub(r'src="/static/js/fsh_sync\.js(?:\?[^"]*)?"', 'src="static/js/fsh_sync.js?v=20261106_v3"', html)
     html = re.sub(r'href="/static/', 'href="static/', html)
     html = re.sub(r'src="/static/', 'src="static/', html)
     
@@ -418,6 +418,86 @@ function getApiBaseUrl() {
   return 'https://friends-sports-hub.onrender.com';
 }
 
+
+function selectSlot(slotEl, start, end, facilityId, facilityName, dateStr, price) {
+  if (typeof isSlotExpired === 'function' && isSlotExpired(dateStr, start)) {
+    alert('This slot time has already passed and cannot be booked.');
+    return;
+  }
+
+  // Visual highlight: ensure only ONE slot can be selected at a time
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+
+  if (slotEl) {
+    slotEl.classList.add('selected');
+  } else {
+    const matched = Array.from(document.querySelectorAll('.slots-matrix .slot-btn.vacant')).find(b =>
+      b.getAttribute('data-start') === start || b.querySelector('.time-text')?.textContent.trim() === start
+    );
+    if (matched) matched.classList.add('selected');
+  }
+
+  openBookingModal(start, end, facilityId, facilityName, dateStr, price);
+}
+window.selectSlot = selectSlot;
+
+function openBookingModal(start, end, facilityId, facilityName, dateStr, price) {
+  if (typeof isSlotExpired === 'function' && isSlotExpired(dateStr, start)) {
+    alert('This slot time has already passed and cannot be booked.');
+    return;
+  }
+
+  // Visually highlight in matrix
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  const matched = Array.from(document.querySelectorAll('.slots-matrix .slot-btn.vacant')).find(b =>
+    b.getAttribute('data-start') === start || b.querySelector('.time-text')?.textContent.trim() === start
+  );
+  if (matched) matched.classList.add('selected');
+
+  const slotDisplay = start + ' – ' + end;
+  const titleEl = document.getElementById('modalSlotTitle');
+  if (titleEl) titleEl.textContent = '📅 Slot: ' + slotDisplay;
+  const subtitleEl = document.getElementById('modalSlotSubtitle');
+  if (subtitleEl) subtitleEl.textContent =
+    facilityName + '  ·  ' + formatFriendlyDate(dateStr) + '  ·  ₹' + price + ' / slot';
+
+  const selectedInput = document.getElementById('inputSelectedSlot');
+  if (selectedInput) {
+    selectedInput.value = slotDisplay + ' (' + formatFriendlyDate(dateStr) + ')';
+  }
+
+  const sFacId = document.getElementById('stateFacilityId');
+  if (sFacId) sFacId.value = facilityId;
+  const sFac = document.getElementById('stateFacilityName');
+  if (sFac) sFac.value = facilityName;
+  const sDate = document.getElementById('stateDate');
+  if (sDate) sDate.value = dateStr;
+  const sStart = document.getElementById('stateStart');
+  if (sStart) sStart.value = start;
+  const sPrice = document.getElementById('statePrice');
+  if (sPrice) sPrice.value = price;
+
+  const modalBox = document.getElementById('bookingModalBox');
+  if (modalBox) modalBox.classList.add('open');
+  const overlay = document.getElementById('bookingOverlay');
+  if (overlay) overlay.classList.add('show');
+  const nameInput = document.getElementById('inputCustomerName');
+  if (nameInput) nameInput.focus();
+}
+window.openBookingModal = openBookingModal;
+
+function closeBookingModal() {
+  const modalBox = document.getElementById('bookingModalBox');
+  if (modalBox) modalBox.classList.remove('open');
+  const overlay = document.getElementById('bookingOverlay');
+  if (overlay) overlay.classList.remove('show');
+}
+window.closeBookingModal = closeBookingModal;
+
 // PostgreSQL-Backed Real-Time Availability Slot Renderer (Port 443 HTTPS)
 async function renderSlots(dateStr) {
   if (!dateStr) dateStr = currentSelectedDate;
@@ -438,13 +518,7 @@ async function renderSlots(dateStr) {
 
   try {
     const apiUrl = `${baseUrl}/api/bookings/availability/?facility_slug=${encodeURIComponent(facSlug)}&date=${encodeURIComponent(dateStr)}&_t=${Date.now()}`;
-    const res = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache'
-      }
-    });
+    const res = await fetch(apiUrl, { method: 'GET' });
     if (res.ok) {
       const data = await res.json();
       if (data && data.success && Array.isArray(data.slots)) {
@@ -498,8 +572,12 @@ async function renderSlots(dateStr) {
           <div class="duration-text">– ${slot.end_time}</div>
           <span class="slot-badge-pill">✓ Vacant</span>
         `;
-        slotBox.onclick = function() {
-          openBookingModal(slot.start_time, slot.end_time, '1', facData.name, dateStr, facData.rate);
+        slotBox.setAttribute('data-start', slot.start_time);
+        slotBox.setAttribute('role', 'button');
+        slotBox.setAttribute('tabindex', '0');
+        slotBox.onclick = function(e) {
+          if (e) e.preventDefault();
+          selectSlot(slotBox, slot.start_time, slot.end_time, '1', facData.name, dateStr, facData.rate);
         };
       }
 
@@ -534,8 +612,12 @@ async function renderSlots(dateStr) {
           <div class="duration-text">– ${slot.end}</div>
           <span class="slot-badge-pill">✓ Vacant</span>
         `;
-        slotBox.onclick = function() {
-          openBookingModal(slot.start, slot.end, '1', facData.name, dateStr, facData.rate);
+        slotBox.setAttribute('data-start', slot.start);
+        slotBox.setAttribute('role', 'button');
+        slotBox.setAttribute('tabindex', '0');
+        slotBox.onclick = function(e) {
+          if (e) e.preventDefault();
+          selectSlot(slotBox, slot.start, slot.end, '1', facData.name, dateStr, facData.rate);
         };
       }
       matrix.appendChild(slotBox);
@@ -553,6 +635,11 @@ function handleDateChange(newDate) {
   if (!newDate) return;
   currentSelectedDate = newDate;
 
+  // Clear previous slot selection
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => btn.classList.remove('selected'));
+  const inputSelectedSlot = document.getElementById('inputSelectedSlot');
+  if (inputSelectedSlot) inputSelectedSlot.value = '';
+
   const url = new URL(window.location);
   url.searchParams.set('date', newDate);
   window.history.replaceState({}, '', url);
@@ -569,6 +656,11 @@ function switchFacility(slug, event) {
   if (!FACILITIES_DATA[slug]) slug = 'turf';
   currentFacilitySlug = slug;
   window.currentFacilitySlug = slug;
+
+  // Clear previous slot selection
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => btn.classList.remove('selected'));
+  const inputSelectedSlot = document.getElementById('inputSelectedSlot');
+  if (inputSelectedSlot) inputSelectedSlot.value = '';
 
   const data = FACILITIES_DATA[slug];
 

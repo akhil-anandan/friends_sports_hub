@@ -794,6 +794,41 @@ a:hover {
 
 .slot-btn.vacant:active { transform: scale(0.98); }
 
+/* Selected Slot Highlight */
+.slot-btn.selected, .slot-card.selected {
+  background-color: var(--primary-green) !important;
+  border-color: var(--dark-green) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(7, 155, 85, 0.35) !important;
+}
+.slot-btn.selected .time-text, .slot-card.selected .slot-time {
+  color: #FFFFFF !important;
+}
+.slot-btn.selected .duration-text {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.slot-btn.selected .slot-badge-pill, .slot-card.selected .slot-status-pill {
+  background: #FFFFFF !important;
+  color: var(--primary-green) !important;
+  border-color: #FFFFFF !important;
+  font-weight: 800 !important;
+}
+.slot-btn.selected .tap-badge {
+  color: #FFFFFF !important;
+}
+
+.slot-btn.booked,
+.slot-btn.past,
+.slot-btn.pending,
+.slot-card.booked,
+.slot-card.past,
+.slot-card.pending {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+
 .slot-btn.pending, .slot-card.pending {
   background-color: var(--status-pending-bg);
   border-color: var(--status-pending-border);

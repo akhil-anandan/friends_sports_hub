@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="static/css/style.css?v=20261106_v2">
+    <link rel="stylesheet" href="static/css/style.css?v=20261106_v3">
     
 <style>
   :root {
@@ -385,6 +385,36 @@
   }
   .slot-btn.vacant:active { transform: scale(0.98); }
 
+  .slot-btn.selected {
+    background: #079B55 !important;
+    border-color: #075B36 !important;
+    color: #FFFFFF !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(7, 155, 85, 0.35) !important;
+  }
+  .slot-btn.selected .time-text {
+    color: #FFFFFF !important;
+  }
+  .slot-btn.selected .duration-text {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+  .slot-btn.selected .slot-badge-pill {
+    background: #FFFFFF !important;
+    color: #079B55 !important;
+    border-color: #FFFFFF !important;
+    font-weight: 800 !important;
+  }
+  .slot-btn.selected .tap-badge {
+    color: #FFFFFF !important;
+  }
+
+  .slot-btn.booked,
+  .slot-btn.past,
+  .slot-btn.pending {
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+  }
+
   .slot-btn.booked {
     background: #FEE2E2;
     border-color: #FECACA;
@@ -517,7 +547,9 @@
       border-radius: 22px 22px 0 0;
       padding: 16px 20px 28px;
       transform: translateY(115%);
-      transition: transform 0.28s cubic-bezier(0.32, 1, 0.23, 1);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.28s cubic-bezier(0.32, 1, 0.23, 1), opacity 0.2s ease;
     }
     .booking-modal-box.open {
       transform: translateY(0);
@@ -919,7 +951,7 @@
               Live Slot Schedule
             </h3>
             <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-1 rounded-pill fw-bold">
-              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">7</span> Slots Available
+              <i class="bi bi-check-circle-fill me-1"></i> <span id="availableSlotsBadge">6</span> Slots Available
             </span>
           </div>
           <div class="engine-date-label">
@@ -942,7 +974,7 @@
 
         <!-- Status Legend -->
         <div class="slot-legend-strip">
-          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">7</span> Available)</div>
+          <div class="legend-item"><span class="legend-dot vacant"></span> Vacant (<span id="legendVacantCount">6</span> Available)</div>
           <div class="legend-item"><span class="legend-dot pending"></span> Pending Approval</div>
           <div class="legend-item"><span class="legend-dot booked"></span> Booked</div>
           <div class="legend-item"><span class="legend-dot past"></span> Past</div>
@@ -1033,18 +1065,16 @@
             
           
             
-              <div class="slot-btn vacant"
-                   onclick="openBookingModal('16:00', '17:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
-                <span class="tap-badge">TAP</span>
+              <div class="slot-btn past" title="This slot time has already passed">
                 <div class="time-text">16:00</div>
                 <div class="duration-text">– 17:00</div>
-                <span class="slot-badge-pill">✓ Vacant</span>
+                <span class="slot-badge-pill">Past</span>
               </div>
             
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('17:00', '18:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
+                   data-start="17:00" onclick="selectSlot(this, '17:00', '18:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">17:00</div>
                 <div class="duration-text">– 18:00</div>
@@ -1054,7 +1084,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('18:00', '19:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
+                   data-start="18:00" onclick="selectSlot(this, '18:00', '19:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">18:00</div>
                 <div class="duration-text">– 19:00</div>
@@ -1064,7 +1094,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('19:00', '20:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
+                   data-start="19:00" onclick="selectSlot(this, '19:00', '20:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">19:00</div>
                 <div class="duration-text">– 20:00</div>
@@ -1074,7 +1104,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('20:00', '21:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
+                   data-start="20:00" onclick="selectSlot(this, '20:00', '21:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">20:00</div>
                 <div class="duration-text">– 21:00</div>
@@ -1084,7 +1114,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('21:00', '22:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
+                   data-start="21:00" onclick="selectSlot(this, '21:00', '22:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">21:00</div>
                 <div class="duration-text">– 22:00</div>
@@ -1094,7 +1124,7 @@
           
             
               <div class="slot-btn vacant"
-                   onclick="openBookingModal('22:00', '23:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
+                   data-start="22:00" onclick="selectSlot(this, '22:00', '23:00', '1', 'Football \u0026 Cricket Turf', '2026-11-06', '900')">
                 <span class="tap-badge">TAP</span>
                 <div class="time-text">22:00</div>
                 <div class="duration-text">– 23:00</div>
@@ -1134,6 +1164,11 @@
   <input type="hidden" id="statePrice">
 
   <!-- Customer Entry Form -->
+  <div class="field-group">
+    <label class="field-label">Selected Time Slot</label>
+    <input type="text" id="inputSelectedSlot" class="field-input" readonly style="background: var(--hub-light-bg); font-weight: 700; color: var(--hub-accent);" placeholder="Choose a time slot">
+  </div>
+
   <div class="field-group">
     <label class="field-label">Your Name <span class="text-danger">*</span></label>
     <input type="text" id="inputCustomerName" class="field-input" placeholder="e.g. Rahul Kumar" autocomplete="name">
@@ -1240,21 +1275,61 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="static/js/main.js?v=20261106_v2"></script>
+    <script src="static/js/main.js?v=20261106_v3"></script>
     <script src="static/js/mqtt.min.js"></script>
-    <script src="static/js/fsh_sync.js?v=20261106_v2"></script>
+    <script src="static/js/fsh_sync.js?v=20261106_v3"></script>
     
 <script>
 const OWNER_WHATSAPP_NUMBER = '916238006820';
+
+function selectSlot(slotEl, start, end, facilityId, facilityName, dateStr, price) {
+  if (typeof isSlotExpired === 'function' && isSlotExpired(dateStr, start)) {
+    alert('This slot time has already passed and cannot be booked.');
+    return;
+  }
+
+  // Visual highlight: ensure only ONE slot can be selected at a time
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+
+  if (slotEl) {
+    slotEl.classList.add('selected');
+  } else {
+    const matched = Array.from(document.querySelectorAll('.slots-matrix .slot-btn.vacant')).find(b =>
+      b.getAttribute('data-start') === start || b.querySelector('.time-text')?.textContent.trim() === start
+    );
+    if (matched) matched.classList.add('selected');
+  }
+
+  openBookingModal(start, end, facilityId, facilityName, dateStr, price);
+}
+window.selectSlot = selectSlot;
 
 function openBookingModal(start, end, facilityId, facilityName, dateStr, price) {
   if (typeof isSlotExpired === 'function' && isSlotExpired(dateStr, start)) {
     alert('This slot time has already passed and cannot be booked.');
     return;
   }
-  document.getElementById('modalSlotTitle').textContent = '📅 Slot: ' + start + ' – ' + end;
+
+  // Highlight selected slot
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  const matched = Array.from(document.querySelectorAll('.slots-matrix .slot-btn.vacant')).find(b =>
+    b.getAttribute('data-start') === start || b.querySelector('.time-text')?.textContent.trim() === start
+  );
+  if (matched) matched.classList.add('selected');
+
+  const slotDisplay = start + ' – ' + end;
+  document.getElementById('modalSlotTitle').textContent = '📅 Slot: ' + slotDisplay;
   document.getElementById('modalSlotSubtitle').textContent =
     facilityName + '  ·  ' + formatFriendlyDate(dateStr) + '  ·  ₹' + price + ' / slot';
+
+  const selectedInput = document.getElementById('inputSelectedSlot');
+  if (selectedInput) {
+    selectedInput.value = slotDisplay + ' (' + formatFriendlyDate(dateStr) + ')';
+  }
 
   document.getElementById('stateFacilityId').value = facilityId;
   document.getElementById('stateFacilityName').value = facilityName;
@@ -1271,6 +1346,7 @@ function openBookingModal(start, end, facilityId, facilityName, dateStr, price) 
   document.getElementById('bookingOverlay').classList.add('show');
   document.getElementById('inputCustomerName').focus();
 }
+window.openBookingModal = openBookingModal;
 
 function closeBookingModal() {
   document.getElementById('bookingModalBox').classList.remove('open');
@@ -1323,10 +1399,7 @@ async function submitToWhatsApp() {
   try {
     const res = await fetch(`${baseUrl}/api/bookings/reserve/`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         facility_slug: facSlug,
         date: date,
@@ -1397,8 +1470,7 @@ async function submitToWhatsApp() {
     '📞 Phone: ' + phone,
     '',
     'Please approve/confirm my booking. Thank you!'
-  ].join('
-');
+  ].join('\n');
 
   const url = 'https://api.whatsapp.com/send?phone=' + OWNER_WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
   
@@ -1570,6 +1642,86 @@ function getApiBaseUrl() {
   return 'https://friends-sports-hub.onrender.com';
 }
 
+
+function selectSlot(slotEl, start, end, facilityId, facilityName, dateStr, price) {
+  if (typeof isSlotExpired === 'function' && isSlotExpired(dateStr, start)) {
+    alert('This slot time has already passed and cannot be booked.');
+    return;
+  }
+
+  // Visual highlight: ensure only ONE slot can be selected at a time
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+
+  if (slotEl) {
+    slotEl.classList.add('selected');
+  } else {
+    const matched = Array.from(document.querySelectorAll('.slots-matrix .slot-btn.vacant')).find(b =>
+      b.getAttribute('data-start') === start || b.querySelector('.time-text')?.textContent.trim() === start
+    );
+    if (matched) matched.classList.add('selected');
+  }
+
+  openBookingModal(start, end, facilityId, facilityName, dateStr, price);
+}
+window.selectSlot = selectSlot;
+
+function openBookingModal(start, end, facilityId, facilityName, dateStr, price) {
+  if (typeof isSlotExpired === 'function' && isSlotExpired(dateStr, start)) {
+    alert('This slot time has already passed and cannot be booked.');
+    return;
+  }
+
+  // Visually highlight in matrix
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  const matched = Array.from(document.querySelectorAll('.slots-matrix .slot-btn.vacant')).find(b =>
+    b.getAttribute('data-start') === start || b.querySelector('.time-text')?.textContent.trim() === start
+  );
+  if (matched) matched.classList.add('selected');
+
+  const slotDisplay = start + ' – ' + end;
+  const titleEl = document.getElementById('modalSlotTitle');
+  if (titleEl) titleEl.textContent = '📅 Slot: ' + slotDisplay;
+  const subtitleEl = document.getElementById('modalSlotSubtitle');
+  if (subtitleEl) subtitleEl.textContent =
+    facilityName + '  ·  ' + formatFriendlyDate(dateStr) + '  ·  ₹' + price + ' / slot';
+
+  const selectedInput = document.getElementById('inputSelectedSlot');
+  if (selectedInput) {
+    selectedInput.value = slotDisplay + ' (' + formatFriendlyDate(dateStr) + ')';
+  }
+
+  const sFacId = document.getElementById('stateFacilityId');
+  if (sFacId) sFacId.value = facilityId;
+  const sFac = document.getElementById('stateFacilityName');
+  if (sFac) sFac.value = facilityName;
+  const sDate = document.getElementById('stateDate');
+  if (sDate) sDate.value = dateStr;
+  const sStart = document.getElementById('stateStart');
+  if (sStart) sStart.value = start;
+  const sPrice = document.getElementById('statePrice');
+  if (sPrice) sPrice.value = price;
+
+  const modalBox = document.getElementById('bookingModalBox');
+  if (modalBox) modalBox.classList.add('open');
+  const overlay = document.getElementById('bookingOverlay');
+  if (overlay) overlay.classList.add('show');
+  const nameInput = document.getElementById('inputCustomerName');
+  if (nameInput) nameInput.focus();
+}
+window.openBookingModal = openBookingModal;
+
+function closeBookingModal() {
+  const modalBox = document.getElementById('bookingModalBox');
+  if (modalBox) modalBox.classList.remove('open');
+  const overlay = document.getElementById('bookingOverlay');
+  if (overlay) overlay.classList.remove('show');
+}
+window.closeBookingModal = closeBookingModal;
+
 // PostgreSQL-Backed Real-Time Availability Slot Renderer (Port 443 HTTPS)
 async function renderSlots(dateStr) {
   if (!dateStr) dateStr = currentSelectedDate;
@@ -1590,13 +1742,7 @@ async function renderSlots(dateStr) {
 
   try {
     const apiUrl = `${baseUrl}/api/bookings/availability/?facility_slug=${encodeURIComponent(facSlug)}&date=${encodeURIComponent(dateStr)}&_t=${Date.now()}`;
-    const res = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache'
-      }
-    });
+    const res = await fetch(apiUrl, { method: 'GET' });
     if (res.ok) {
       const data = await res.json();
       if (data && data.success && Array.isArray(data.slots)) {
@@ -1650,8 +1796,12 @@ async function renderSlots(dateStr) {
           <div class="duration-text">– ${slot.end_time}</div>
           <span class="slot-badge-pill">✓ Vacant</span>
         `;
-        slotBox.onclick = function() {
-          openBookingModal(slot.start_time, slot.end_time, '1', facData.name, dateStr, facData.rate);
+        slotBox.setAttribute('data-start', slot.start_time);
+        slotBox.setAttribute('role', 'button');
+        slotBox.setAttribute('tabindex', '0');
+        slotBox.onclick = function(e) {
+          if (e) e.preventDefault();
+          selectSlot(slotBox, slot.start_time, slot.end_time, '1', facData.name, dateStr, facData.rate);
         };
       }
 
@@ -1686,8 +1836,12 @@ async function renderSlots(dateStr) {
           <div class="duration-text">– ${slot.end}</div>
           <span class="slot-badge-pill">✓ Vacant</span>
         `;
-        slotBox.onclick = function() {
-          openBookingModal(slot.start, slot.end, '1', facData.name, dateStr, facData.rate);
+        slotBox.setAttribute('data-start', slot.start);
+        slotBox.setAttribute('role', 'button');
+        slotBox.setAttribute('tabindex', '0');
+        slotBox.onclick = function(e) {
+          if (e) e.preventDefault();
+          selectSlot(slotBox, slot.start, slot.end, '1', facData.name, dateStr, facData.rate);
         };
       }
       matrix.appendChild(slotBox);
@@ -1705,6 +1859,11 @@ function handleDateChange(newDate) {
   if (!newDate) return;
   currentSelectedDate = newDate;
 
+  // Clear previous slot selection
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => btn.classList.remove('selected'));
+  const inputSelectedSlot = document.getElementById('inputSelectedSlot');
+  if (inputSelectedSlot) inputSelectedSlot.value = '';
+
   const url = new URL(window.location);
   url.searchParams.set('date', newDate);
   window.history.replaceState({}, '', url);
@@ -1721,6 +1880,11 @@ function switchFacility(slug, event) {
   if (!FACILITIES_DATA[slug]) slug = 'turf';
   currentFacilitySlug = slug;
   window.currentFacilitySlug = slug;
+
+  // Clear previous slot selection
+  document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => btn.classList.remove('selected'));
+  const inputSelectedSlot = document.getElementById('inputSelectedSlot');
+  if (inputSelectedSlot) inputSelectedSlot.value = '';
 
   const data = FACILITIES_DATA[slug];
 

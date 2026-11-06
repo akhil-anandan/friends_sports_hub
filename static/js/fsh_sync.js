@@ -92,13 +92,7 @@
       const baseUrl = getApiBaseUrl();
       const apiUrl = `${baseUrl}/api/bookings/availability/?facility_slug=${encodeURIComponent(facilitySlug)}&date=${encodeURIComponent(targetDate)}&_t=${now}`;
 
-      const res = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache'
-        }
-      });
+      const res = await fetch(apiUrl, { method: 'GET' });
 
       if (res.ok) {
         const data = await res.json();
