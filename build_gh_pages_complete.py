@@ -30,9 +30,9 @@ shutil.copytree('static', static_dest)
 
 def clean_urls(html):
     # Static paths with cache-busting
-    html = re.sub(r'href="/static/css/style\.css(?:\?[^"]*)?"', 'href="static/css/style.css?v=20261106_v3"', html)
-    html = re.sub(r'src="/static/js/main\.js(?:\?[^"]*)?"', 'src="static/js/main.js?v=20261106_v3"', html)
-    html = re.sub(r'src="/static/js/fsh_sync\.js(?:\?[^"]*)?"', 'src="static/js/fsh_sync.js?v=20261106_v3"', html)
+    html = re.sub(r'href="/static/css/style\.css(?:\?[^"]*)?"', 'href="static/css/style.css?v=20261106_v4"', html)
+    html = re.sub(r'src="/static/js/main\.js(?:\?[^"]*)?"', 'src="static/js/main.js?v=20261106_v4"', html)
+    html = re.sub(r'src="/static/js/fsh_sync\.js(?:\?[^"]*)?"', 'src="static/js/fsh_sync.js?v=20261106_v4"', html)
     html = re.sub(r'href="/static/', 'href="static/', html)
     html = re.sub(r'src="/static/', 'src="static/', html)
     
@@ -532,6 +532,8 @@ async function renderSlots(dateStr) {
     console.warn('Direct availability API fetch failed, falling back to local slots:', err);
   }
 
+  const selectedStartTime = document.getElementById('stateStart')?.value;
+
   matrix.innerHTML = '';
 
   if (serverSlots && serverSlots.length > 0) {
@@ -564,7 +566,8 @@ async function renderSlots(dateStr) {
           <span class="slot-badge-pill">Past</span>
         `;
       } else {
-        slotBox.className = 'slot-btn vacant';
+        const isSelected = selectedStartTime && (slot.start_time === selectedStartTime);
+        slotBox.className = 'slot-btn vacant' + (isSelected ? ' selected' : '');
         slotBox.title = 'Available for booking';
         slotBox.innerHTML = `
           <span class="tap-badge">TAP</span>
@@ -604,7 +607,8 @@ async function renderSlots(dateStr) {
           <span class="slot-badge-pill">Past</span>
         `;
       } else {
-        slotBox.className = 'slot-btn vacant';
+        const isSelected = selectedStartTime && (slot.start_time === selectedStartTime);
+        slotBox.className = 'slot-btn vacant' + (isSelected ? ' selected' : '');
         slotBox.title = 'Available for booking';
         slotBox.innerHTML = `
           <span class="tap-badge">TAP</span>
@@ -639,6 +643,8 @@ function handleDateChange(newDate) {
   document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => btn.classList.remove('selected'));
   const inputSelectedSlot = document.getElementById('inputSelectedSlot');
   if (inputSelectedSlot) inputSelectedSlot.value = '';
+  const sStart = document.getElementById('stateStart');
+  if (sStart) sStart.value = '';
 
   const url = new URL(window.location);
   url.searchParams.set('date', newDate);
@@ -661,6 +667,8 @@ function switchFacility(slug, event) {
   document.querySelectorAll('.slots-matrix .slot-btn').forEach(btn => btn.classList.remove('selected'));
   const inputSelectedSlot = document.getElementById('inputSelectedSlot');
   if (inputSelectedSlot) inputSelectedSlot.value = '';
+  const sStart = document.getElementById('stateStart');
+  if (sStart) sStart.value = '';
 
   const data = FACILITIES_DATA[slug];
 

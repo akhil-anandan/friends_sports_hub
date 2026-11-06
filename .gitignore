@@ -22,3 +22,8 @@ postgres.log
 skills-lock.json
 scratch/
 database_backups/neon_preclaim_backup*
+
+node_modules/
+verify_live_*.js
+live_screenshot_*.png
+
